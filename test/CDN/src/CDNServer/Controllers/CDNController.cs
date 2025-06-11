@@ -8,6 +8,19 @@ public class CDNController : ControllerBase {
   private readonly ILogger<CDNController> _logger;
   private readonly string _rootPath;
 
+  private readonly string[] _allowedFileExtensions = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".mp4",
+    ".mp3",
+    ".wav",
+    ".ogg",
+    ".webm"
+  ];
+
   public CDNController(ILogger<CDNController> logger) {
     _logger = logger;
     _rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "cdn");
@@ -46,18 +59,7 @@ public class CDNController : ControllerBase {
       _logger.LogWarning("File name contains spaces");
       return BadRequest("File name contains spaces");
     }
-    if (fileExtension is null
-    // || !fileExtension.Contains(".png")
-    // || !fileExtension.Contains(".jpg")
-    // || !fileExtension.Contains(".jpeg")
-    // || !fileExtension.Contains(".gif")
-    // || !fileExtension.Contains(".webp")
-    // || !fileExtension.Contains(".mp4")
-    // || !fileExtension.Contains(".mp3")
-    // || !fileExtension.Contains(".wav")
-    // || !fileExtension.Contains(".ogg")
-    // || !fileExtension.Contains(".webm")
-    ) {
+    if (fileExtension is null || _allowedFileExtensions.Contains(fileExtension.ToLower()) is false) {
       _logger.LogWarning("Invalid file extension");
       return BadRequest("Invalid file extension");
     }
