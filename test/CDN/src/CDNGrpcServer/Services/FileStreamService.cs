@@ -23,6 +23,9 @@ public class FileStreamService : FileGrpcStream.FileGrpcStreamBase {
 
     fileInfo.FileName = file_name;
 
+    var file_path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "cdn", file_name);
+    await File.WriteAllBytesAsync(file_path, fileData.ToArray());
+
     return fileInfo;
   }
 
@@ -34,9 +37,22 @@ public class FileStreamService : FileGrpcStream.FileGrpcStreamBase {
       throw new RpcException(new Status(StatusCode.NotFound, "File not found"));
     }
 
-    var file_data = await File.ReadAllBytesAsync(file_path);
+    const int bufferSize = 64 * 1024;
+    var buffer = new byte[bufferSize];
 
-    await responseStream.WriteAsync(new DownloadFileResponse { FileData = Google.Protobuf.ByteString.CopyFrom(file_data) });
+    using var fs = File.OpenRead(file_path);
+    bool isFirstRead = true;
+    int bytesRead;
+
+    while ((bytesRead = await fs.ReadAsync(buffer, 0, bufferSize)) > 0) {
+      var chunk = new DownloadFileResponse {
+        FileName = isFirstRead ? file_name : "",
+        FileData = Google.Protobuf.ByteString.CopyFrom(buffer, 0, bytesRead)
+      };
+
+      await responseStream.WriteAsync(chunk);
+      isFirstRead = false;
+    }
   }
 
   public override async Task<DeleteFileResponse> DeleteFile(DeleteFileRequest request, ServerCallContext context) {
