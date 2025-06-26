@@ -8,11 +8,12 @@ using Pocco.CDN.Protos;
 namespace CDNGrpcServer.Test;
 
 public class UnitTest1 {
+  private static readonly GrpcChannel _channel = GrpcChannel.ForAddress("http://localhost:5261");
+  private static readonly FileGrpcStream.FileGrpcStreamClient _client = new FileGrpcStream.FileGrpcStreamClient(_channel);
+
   [Fact]
   public async Task FileUploadTest() {
-    using var channel = GrpcChannel.ForAddress("http://localhost:5261");
-    var client = new FileGrpcStream.FileGrpcStreamClient(channel);
-    using var call = client.UploadFile();
+    using var call = _client.UploadFile();
 
     const int bufferSize = 64 * 1024;
     var buffer = new byte[bufferSize];
@@ -37,14 +38,12 @@ public class UnitTest1 {
 
     Console.WriteLine($"File uploaded: {response.FileName}");
     fs.Close();
+    call.Dispose();
   }
 
   [Fact]
   public async Task FileDownloadTest() {
-    using var channel = GrpcChannel.ForAddress("http://localhost:5261");
-    var client = new FileGrpcStream.FileGrpcStreamClient(channel);
-
-    using var call = client.DownloadFile(new DownloadFileRequest {
+    using var call = _client.DownloadFile(new DownloadFileRequest {
       FileName = "test.txt"
     });
     using var fs = File.OpenWrite("test_downloaded.txt");
@@ -55,5 +54,6 @@ public class UnitTest1 {
 
     Console.WriteLine("File downloaded");
     fs.Close();
+    call.Dispose();
   }
 }
