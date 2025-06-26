@@ -18,7 +18,7 @@ public class UnitTest1 {
     const int bufferSize = 64 * 1024;
     var buffer = new byte[bufferSize];
 
-    var filename = "test.txt";
+    var filename = "test.png";
     using var fs = File.OpenRead(filename);
     bool isFirstRead = true;
     int bytesRead;
@@ -44,9 +44,9 @@ public class UnitTest1 {
   [Fact]
   public async Task FileDownloadTest() {
     using var call = _client.DownloadFile(new DownloadFileRequest {
-      FileName = "test.txt"
+      FileName = "test.png"
     });
-    using var fs = File.OpenWrite("test_downloaded.txt");
+    using var fs = File.OpenWrite("test_downloaded.png");
 
     await foreach (var chunk in call.ResponseStream.ReadAllAsync()) {
       await fs.WriteAsync(chunk.FileData.ToByteArray());
