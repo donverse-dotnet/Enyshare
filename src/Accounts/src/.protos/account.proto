@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.Accounts.Protos";
+
+package account;
+
+// The account service definition.
+
+service UserAccounts {
+
+  // Sends a account
+
+  rpc  RegisterAccount(RegisterAccountRequest) returns (RegisterAccountReply);
+
+  rpc UpdateAccount(UpdateAccountRequest) returns (UpdateAccountReply);
+
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountReply);
+}
+
+// The request message.
+
+message RegisterAccountRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message UpdateAccountRequest {
+    string name = 1;
+    bytes iconData = 2;
+    string statusMessage = 3;
+    string password = 4;
+    string email = 5;
+    bool notice = 6;
+}
+
+message DeleteAccountRequest {
+    string accountId = 1;
+}
+// The response message.
+
+message RegisterAccountReply {
+  string message = 1;
+}
+
+
+message UpdateAccountReply {
+    string message = 1;
+}
+
+message DeleteAccountReply {
+    string message = 1;
+}
