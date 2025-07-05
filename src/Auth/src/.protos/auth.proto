@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthServer
+{
+    rpc SignIn(SignInRequest) returns(AuthResponse);
+    rpc SignOut(TokenRequest) returns(SignOutRespnse);
+    rpc VerifyToken(TokenRequest) returns(VerifyResponse);
+    rpc CheckPermission(PermissionRwquest) returns(PermissionResponse);
+}
+
+message SignInRequest
+{
+    string email = 1;
+    string password = 2;
+}
+
+message TokenRequest
+{
+    string access_token = 1;
+    string resource = 2;
+    string action = 3;
+}
+
+message AuthResponse
+{
+    string access_token = 1;
+    string refresh_token = 2;
+    int64 expires_in = 3;
+}
+
+message SignOutRespnse
+{
+    bool success = 1;
+}
+
+message VerifyResponse
+{
+    bool valid = 1;
+    string user_id = 2;
+}
+
+message PermissionRwquest
+{
+    string access_token = 1;
+    string resource = 2;
+    string action = 3;
+}
+
+message PermissionResponse
+{
+    bool allowed = 1;
+}
