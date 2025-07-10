@@ -6,12 +6,12 @@ using Pocco.Svc.EventBridge.Utilities;
 
 namespace Pocco.Svc.EventBridge.Services;
 
-public class EventDispatchService(
+public class EventDispatchGrpcService(
   [FromServices] EventStoreTasksDeployer eventStoreTasksDeployer,
   [FromServices] EventDeployInvoker eventDeployInvoker,
-  ILogger<EventDispatchService> logger
+  ILogger<EventDispatchGrpcService> logger
 ) : Events.EventsBase {
-  private readonly ILogger<EventDispatchService> _logger = logger;
+  private readonly ILogger<EventDispatchGrpcService> _logger = logger;
   private readonly EventStoreTasksDeployer _eventStoreTasksDeployer = eventStoreTasksDeployer;
   private readonly EventDeployInvoker _eventDeployInvoker = eventDeployInvoker;
 
