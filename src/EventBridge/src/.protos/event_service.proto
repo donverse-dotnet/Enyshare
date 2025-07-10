@@ -5,8 +5,54 @@ package event_service;
 
 
 service Events {
-  // Sends an event
-  rpc SubscribeEventStream (SubscribeEventStreamRequest) returns (stream SubscribeEventStreamData);
+    // Event deploy request
+    rpc DeployEvent (DeployEventRequest) returns (DeployEventResponse);
+
+    // Subscribe to the event stream for a specific account.
+    rpc SubscribeEventStream (SubscribeEventStreamRequest) returns (stream SubscribeEventStreamData);
+}
+
+message DeployEventRequest {
+    string account_id = 1;
+    oneof event_data {
+        AccountCreationRequestedEvent account_creation_requested_event = 2;
+        AccountCreatedEvent account_created_event = 3;
+        AccountCreationFailedEvent account_creation_failed_event = 4;
+        AccountUpdatedRequestedEvent account_updated_requested_event = 5;
+        AccountUpdatedEvent account_updated_event = 6;
+        AccountUpdateFailedEvent account_update_failed_event = 7;
+        AccountDeletionRequestedEvent account_deletion_requested_event = 8;
+        AccountDeletedEvent account_deleted_event = 9;
+        AccountDeletionFailedEvent account_deletion_failed_event = 10;
+
+        OrganizationCreationRequestedEvent organization_creation_requested_event = 11;
+        OrganizationCreatedEvent organization_created_event = 12;
+        OrganizationCreationFailedEvent organization_creation_failed_event = 13;
+        OrganizationUpdatedRequestedEvent organization_updated_requested_event = 14;
+        OrganizationUpdatedEvent organization_updated_event = 15;
+        OrganizationUpdateFailedEvent organization_update_failed_event = 16;
+        OrganizationDeletionRequestedEvent organization_deletion_requested_event = 17;
+        OrganizationDeletedEvent organization_deleted_event = 18;
+        OrganizationDeletionFailedEvent organization_deletion_failed_event = 19;
+
+        MessageCreatedEvent message_created_event = 20;
+        MessageUpdatedEvent message_updated_event = 21;
+        MessageDeletedEvent message_deleted_event = 22;
+
+        OrganizationChannelCreationRequestedEvent organization_channel_creation_requested_event = 23;
+        OrganizationChannelCreatedEvent organization_channel_created_event = 24;
+        OrganizationChannelCreationFailedEvent organization_channel_creation_failed_event = 25;
+        OrganizationChannelUpdatedRequestedEvent organization_channel_updated_requested_event = 26;
+        OrganizationChannelUpdatedEvent organization_channel_updated_event = 27;
+        OrganizationChannelUpdateFailedEvent organization_channel_update_failed_event = 28;
+        OrganizationChannelDeletionRequestedEvent organization_channel_deletion_requested_event = 29;
+        OrganizationChannelDeletedEvent organization_channel_deleted_event = 30;
+        OrganizationChannelDeletionFailedEvent organization_channel_deletion_failed_event = 31;
+    }
+}
+
+message DeployEventResponse {
+    string event_id = 1;
 }
 
 message SubscribeEventStreamRequest {
