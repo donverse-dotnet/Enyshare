@@ -3,6 +3,10 @@ using Pocco.Svc.EventBridge.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<EventSender>();
+builder.Services.AddSingleton<EventDeployInvoker>();
+builder.Services.AddSingleton<EventStoreTasksDeployer>();
+
 builder.Services.AddGrpc();
 
 var app = builder.Build();
