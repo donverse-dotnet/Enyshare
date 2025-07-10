@@ -1,8 +1,18 @@
+using MongoDB.Driver;
+
 using Pocco.Svc.EventBridge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton(sp => {
+  var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("MongoDb");
+  if (string.IsNullOrEmpty(connectionString)) {
+    throw new InvalidOperationException("MongoDB connection string is not configured.");
+  }
+  return new MongoClient(connectionString);
+});
+
 builder.Services.AddSingleton<EventSender>();
 builder.Services.AddSingleton<EventDeployInvoker>();
 builder.Services.AddSingleton<EventStoreTasksDeployer>();
