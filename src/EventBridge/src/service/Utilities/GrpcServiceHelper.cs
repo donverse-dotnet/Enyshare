@@ -1,42 +1,52 @@
 namespace Pocco.Svc.EventBridge.Utilities;
 
 public static class GrpcServiceHelper {
-  public static object GetEventData(SubscribeEventStreamData eventData) {
-    return eventData.EventDataCase switch {
-      // Account関連のイベントデータ
-      SubscribeEventStreamData.EventDataOneofCase.AccountCreationRequestedEvent => eventData.AccountCreationRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountCreatedEvent => eventData.AccountCreatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountCreationFailedEvent => eventData.AccountCreationFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountUpdatedRequestedEvent => eventData.AccountUpdatedRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountUpdatedEvent => eventData.AccountUpdatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountUpdateFailedEvent => eventData.AccountUpdateFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountDeletionRequestedEvent => eventData.AccountDeletionRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountDeletedEvent => eventData.AccountDeletedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.AccountDeletionFailedEvent => eventData.AccountDeletionFailedEvent,
-      // Organization関連のイベントデータ
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationCreatedEvent => eventData.OrganizationCreatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationCreationFailedEvent => eventData.OrganizationCreationFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationUpdatedRequestedEvent => eventData.OrganizationUpdatedRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationUpdatedEvent => eventData.OrganizationUpdatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationUpdateFailedEvent => eventData.OrganizationUpdateFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationDeletionRequestedEvent => eventData.OrganizationDeletionRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationDeletedEvent => eventData.OrganizationDeletedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationDeletionFailedEvent => eventData.OrganizationDeletionFailedEvent,
-      // Message関連のイベントデータ
-      SubscribeEventStreamData.EventDataOneofCase.MessageCreatedEvent => eventData.MessageCreatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.MessageUpdatedEvent => eventData.MessageUpdatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.MessageDeletedEvent => eventData.MessageDeletedEvent,
-      // OrganizationChannel関連のイベントデータ
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelCreationRequestedEvent => eventData.OrganizationChannelCreationRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelCreatedEvent => eventData.OrganizationChannelCreatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelCreationFailedEvent => eventData.OrganizationChannelCreationFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelUpdatedRequestedEvent => eventData.OrganizationChannelUpdatedRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelUpdatedEvent => eventData.OrganizationChannelUpdatedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelUpdateFailedEvent => eventData.OrganizationChannelUpdateFailedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelDeletionRequestedEvent => eventData.OrganizationChannelDeletionRequestedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelDeletedEvent => eventData.OrganizationChannelDeletedEvent,
-      SubscribeEventStreamData.EventDataOneofCase.OrganizationChannelDeletionFailedEvent => eventData.OrganizationChannelDeletionFailedEvent,
-      _ => throw new ArgumentException("Unsupported event data type")
+  public enum EventCategory {
+    Account,
+    Organization,
+    Message,
+    Other
+  }
+
+  public static EventCategory GetEventCategory(DeployEventRequest.EventDataOneofCase eventType) {
+    return eventType switch {
+      // Account関連のイベント
+      DeployEventRequest.EventDataOneofCase.AccountCreationRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountCreatedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountCreationFailedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountUpdatedRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountUpdatedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountUpdateFailedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountDeletionRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountDeletedEvent or
+      DeployEventRequest.EventDataOneofCase.AccountDeletionFailedEvent => EventCategory.Account,
+
+      // Organization関連のイベント
+      DeployEventRequest.EventDataOneofCase.OrganizationCreatedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationCreationFailedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationUpdatedRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationUpdatedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationUpdateFailedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationDeletionRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationDeletedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationDeletionFailedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelCreationRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelCreatedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelCreationFailedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelUpdatedRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelUpdatedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelUpdateFailedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelDeletionRequestedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelDeletedEvent or
+      DeployEventRequest.EventDataOneofCase.OrganizationChannelDeletionFailedEvent => EventCategory.Organization,
+
+      // Message関連のイベント
+      DeployEventRequest.EventDataOneofCase.MessageCreatedEvent or
+      DeployEventRequest.EventDataOneofCase.MessageUpdatedEvent or
+      DeployEventRequest.EventDataOneofCase.MessageDeletedEvent => EventCategory.Message,
+
+      // その他のイベント
+      _ => EventCategory.Other
     };
   }
 
