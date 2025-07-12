@@ -1,7 +1,5 @@
 using Grpc.Core;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Pocco.Svc.EventBridge.Utilities;
 
 namespace Pocco.Svc.EventBridge.Services;

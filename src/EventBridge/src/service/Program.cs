@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-
 using Pocco.Svc.EventBridge.Services;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,9 +1,6 @@
 using Grpc.Core;
-
 using Microsoft.AspNetCore.Mvc;
-
 using MongoDB.Driver;
-
 using Pocco.Svc.EventBridge.Utilities;
 
 namespace Pocco.Svc.EventBridge.Services;
@@ -11,14 +8,16 @@ namespace Pocco.Svc.EventBridge.Services;
 public class EventSender(
   [FromServices] MongoClient mongoClient,
   [FromServices] ILogger<EventSender> logger
-) {
+)
+{
   public readonly Dictionary<string, IServerStreamWriter<SubscribeEventStreamData>> ClientList = [];
   public readonly Dictionary<string, EventData> EventSendQueue = [];
 
   private readonly MongoClient _mongoClient = mongoClient;
   private readonly ILogger<EventSender> _logger = logger;
 
-  public class EventData(string eventId, DeployEventRequest.EventDataOneofCase eventType, object data) {
+  public class EventData(string eventId, DeployEventRequest.EventDataOneofCase eventType, object data)
+  {
     public readonly string EventId = eventId;
     public readonly DeployEventRequest.EventDataOneofCase EventType = eventType;
     public readonly object Data = data;
@@ -27,15 +26,19 @@ public class EventSender(
   public async Task AddClientAsync(
     string accountId,
     IServerStreamWriter<SubscribeEventStreamData> responseStream
-  ) {
-    if (!ClientList.ContainsKey(accountId)) {
+  )
+  {
+    if (!ClientList.ContainsKey(accountId))
+    {
       ClientList[accountId] = responseStream;
       await Task.CompletedTask;
     }
   }
 
-  public async Task RemoveClientAsync(string accountId) {
-    if (ClientList.ContainsKey(accountId) is true) {
+  public async Task RemoveClientAsync(string accountId)
+  {
+    if (ClientList.ContainsKey(accountId) is true)
+    {
       ClientList.Remove(accountId);
       await Task.CompletedTask;
     }
@@ -44,14 +47,18 @@ public class EventSender(
   public async Task<bool> AddEventToQueueAsync(
     string eventId,
     DeployEventRequest eventData
-  ) {
-    if (EventSendQueue.ContainsKey(eventId) is false) {
+  )
+  {
+    if (EventSendQueue.ContainsKey(eventId) is false)
+    {
       EventSendQueue[eventId] = new EventData(
         eventId,
         eventData.EventDataCase,
         data: GrpcServiceHelper.GetEventData(eventData)
       );
-    } else {
+    }
+    else
+    {
       // 上書きする
       EventSendQueue[eventId] = new EventData(
         eventId,
@@ -63,10 +70,12 @@ public class EventSender(
     return true;
   }
 
-  public List<IServerStreamWriter<SubscribeEventStreamData>> SelectTargetClients(DeployEventRequest.EventDataOneofCase eventType, string id) {
+  public List<IServerStreamWriter<SubscribeEventStreamData>> SelectTargetClients(DeployEventRequest.EventDataOneofCase eventType, string id)
+  {
     var eventCategory = GrpcServiceHelper.GetEventCategory(eventType);
 
-    var targetClientIds = eventCategory switch {
+    var targetClientIds = eventCategory switch
+    {
       GrpcServiceHelper.EventCategory.Account => _mongoClient.GetDatabase("pocco")
                                                              .GetCollection<FakeAccount>("accounts")
                                                              .Find(account => account.ListenUserEvents.Contains(id))
@@ -91,10 +100,14 @@ public class EventSender(
       .ToList();
   }
 
-  public async Task SendToAffectedClientsAsync(List<IServerStreamWriter<SubscribeEventStreamData>> clients, string eventId, DeployEventRequest eventData) {
-    foreach (var client in clients) {
-      try {
-        await client.WriteAsync(new SubscribeEventStreamData {
+  public async Task SendToAffectedClientsAsync(List<IServerStreamWriter<SubscribeEventStreamData>> clients, string eventId, DeployEventRequest eventData)
+  {
+    foreach (var client in clients)
+    {
+      try
+      {
+        await client.WriteAsync(new SubscribeEventStreamData
+        {
           EventId = eventId,
           AuthorId = eventData.AccountId,
           // TODO: イベントデータは複数代入してはいけないので、処理を分散させる
@@ -128,7 +141,9 @@ public class EventSender(
           OrganizationChannelDeletedEvent = eventData.OrganizationChannelDeletedEvent,
           OrganizationChannelDeletionFailedEvent = eventData.OrganizationChannelDeletionFailedEvent
         });
-      } catch (Exception ex) {
+      }
+      catch (Exception ex)
+      {
         _logger.LogError(ex, "Failed to send event data to client");
       }
     }
@@ -139,7 +154,8 @@ public class EventSender(
 /// テスト用のダミーアカウントクラス
 /// このクラスは、テストやモックの目的で使用されます。
 /// </summary>
-public class FakeAccount {
+public class FakeAccount
+{
   public string Id { get; set; } = "fake-account-id";
   public string Name { get; set; } = "Fake Account";
   public string Email { get; set; } = "fake@email.com";
