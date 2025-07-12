@@ -7,54 +7,73 @@ namespace Pocco.Svc.EventBridge.Services;
 public class EventDispatchGrpcService(
   [FromServices] EventStoreTasksDeployer eventStoreTasksDeployer,
   [FromServices] EventDeployInvoker eventDeployInvoker,
-  ILogger<EventDispatchGrpcService> logger
+  [FromServices] EventSender eventSender,
+  [FromServices] ILogger<EventDispatchGrpcService> logger
 ) : Events.EventsBase {
   private readonly ILogger<EventDispatchGrpcService> _logger = logger;
   private readonly EventStoreTasksDeployer _eventStoreTasksDeployer = eventStoreTasksDeployer;
   private readonly EventDeployInvoker _eventDeployInvoker = eventDeployInvoker;
+  private readonly EventSender _eventSender = eventSender;
 
   public override async Task<DeployEventResponse> DeployEvent(DeployEventRequest request, ServerCallContext context) {
     // Receive
     _logger.LogInformation("Received DeployEvent request: {Request}", request);
-
-    // Id
-    var eventId = Guid.NewGuid().ToString();
-
-    // Save event data
-    bool saveEventDataTask = await _eventStoreTasksDeployer.SaveEventDataAsync(
-      eventId,
+    // Create id
+    var uuid = Guid.NewGuid().ToString();
+    var unix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    var index = Random.Shared.Next(100000, 999999);
+    var id = $"{unix}_{uuid}_{index}";
+    // Save event data to database
+    var isSaved = await _eventStoreTasksDeployer.SaveEventDataAsync(
+      id,
       request.EventDataCase,
       GrpcServiceHelper.GetEventData(request)
     );
-    // If save event data success, add queue to deploy event
     // If save event data failed, return error
-    if (!saveEventDataTask) {
+    if (!isSaved) {
       _logger.LogError("Failed to save event data for request: {Request}", request);
       throw new RpcException(new Status(StatusCode.Internal, "Failed to save event data"));
     }
-    _logger.LogInformation("Event data saved successfully for request: {Request}", request);
 
-    bool addEventToQueueTask = await _eventDeployInvoker.AddEventToQueueAsync(
-      eventId,
+    // Add event deploy queue
+    var isQueued = await _eventDeployInvoker.AddEventToQueueAsync(
+      id,
       request
     );
-
-    // If add event to queue success, return response
     // If add event to queue failed, return error
-    if (!addEventToQueueTask) {
+    if (!isQueued) {
       _logger.LogError("Failed to add event to queue for request: {Request}", request);
       throw new RpcException(new Status(StatusCode.Internal, "Failed to add event to queue"));
     }
-    _logger.LogInformation("Event added to queue successfully for request: {Request}", request);
-    // Remove event data from database
-    // TODO
 
-    return new DeployEventResponse() {
-      EventId = eventId,
+    // Return response
+    _logger.LogInformation("Event added to queue successfully for request: {Request}", request);
+    return new DeployEventResponse {
+      EventId = id,
     };
   }
 
-  public override Task SubscribeEventStream(SubscribeEventStreamRequest request, IServerStreamWriter<SubscribeEventStreamData> responseStream, ServerCallContext context) {
-    return base.SubscribeEventStream(request, responseStream, context);
+  public override async Task SubscribeEventStream(SubscribeEventStreamRequest request, IServerStreamWriter<SubscribeEventStreamData> responseStream, ServerCallContext context) {
+    _logger.LogInformation("Client subscribed to event stream: {Request}", request);
+
+    while (context.CancellationToken.IsCancellationRequested is false) {
+      // Add client to event sender
+      await _eventSender.AddClientAsync(request.AccountId, responseStream);
+
+      // Wait for cancellation
+      await Task.Delay(1000, context.CancellationToken);
+
+      // Check if the client is still connected
+      if (context.CancellationToken.IsCancellationRequested) {
+        _logger.LogInformation("Client disconnected: {AccountId}", request.AccountId);
+        break;
+      }
+    }
+
+    // Remove client from event sender when the stream is closed
+    await _eventSender.RemoveClientAsync(request.AccountId);
+    _logger.LogInformation("Client removed from event stream: {AccountId}", request.AccountId);
+
+    await Task.CompletedTask;
   }
 }
