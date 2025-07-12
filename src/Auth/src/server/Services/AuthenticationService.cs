@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.VisualBasic;
+using MyGrpcApp.Service;
 
 public class AuthServiceImpl : AuthServer.AuthServerBase
 {
