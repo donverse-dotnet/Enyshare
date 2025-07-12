@@ -10,7 +10,7 @@ service UserAccounts {
 
   // Sends a account
 
-  rpc  RegisterAccount(RegisterAccountRequest) returns (RegisterAccountReply);
+  rpc RegisterAccount(RegisterAccountRequest) returns (RegisterAccountReply);
 
   rpc UpdateAccount(UpdateAccountRequest) returns (UpdateAccountReply);
 
