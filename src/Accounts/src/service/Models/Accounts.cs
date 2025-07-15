@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 
 namespace Pocco.Svc.Accounts.Users {
-  public class User {
+  public class Accounts {
     public ObjectId id { get; set; }
     public string Email { get; set; }
     public string PasswordHash { get; set; }

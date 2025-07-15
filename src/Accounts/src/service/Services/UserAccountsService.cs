@@ -15,37 +15,43 @@ namespace Pocco.Svc.Accounts.Services;
 
 
 public class UserAccountsService : UserAccounts.UserAccountsBase {
-  private readonly IMongoCollection<User> _userCollection;
+  private readonly IMongoCollection<Accounts> _acountsCollection;
   private readonly PasswordHasher<object> _hasher = new();
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context) {
     var hashedPassword = _hasher.HashPassword(null, request.Password);
-    var user = new User {
+    var accounts = new Pocco.Svc.Accounts.Users.Accounts {
       Email = request.Email,
       PasswordHash = hashedPassword,
       IsEmailVerified = request.IsEmailVerified,
       Onetimecode = request.Onetimecode,
     };
 
-    await _userCollection.InsertOneAsync(user);
+    await _accountsCollection.InsertOneAsync(accounts);
     return new RegisterAccountReply();
   }
 
   public override async Task<UpdateAccountReply> UpdateAccount(UpdateAccountRequest request, ServerCallContext context) {
-    var user = new Pocco.Svc.Accounts.Users.User {
+    var accounts = new Pocco.Svc.Accounts.Users.Accounts {
       Username = request.Username,
       Avatarurl = request.Avatarurl,
       Statusmessage = request.StatusMessage,
       Role = request.Role,
       IsActive = request.IsActive,
-
-
+      CreateAt = request.CreateAt,
+      UpdateAt = request.UpdateAt,
+      PasswordUpdateAt = request.PasswordUpdateAt,
+      EmailUpdateAt = request.EmailUpdateAt,
+      LastLoginAt = request.LastLoginAt,
     };
-
+    await _accountsCollection.InsertOneAsync(accounts);
     return new UpdateAccountReply();
   }
 
   public override async Task<DeleteAccountReply> DeleteAccount(DeleteAccountRequest request, ServerCallContext context) {
-    string accountId = request.AccountId;
+    var accounts = new Pocco.Svc.Accounts.Users.Accounts{
+      DeletionRequestAt = request.DeletionRequestAt
+    };
+    await _acountsCollection.InsertOneAsync(accounts);
     return new DeleteAccountReply();
   }
 }
