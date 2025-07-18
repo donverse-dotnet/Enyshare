@@ -1,6 +1,10 @@
 using Pocco.Svc.Accounts.Services;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MongoDatabaseSettings>(
+    builder.Configuration.GetSection("MongoDB"));
 
 // Add services to the container.
 builder.Services.AddGrpc();

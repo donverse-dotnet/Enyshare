@@ -25,12 +25,14 @@ message RegisterAccountRequest {
 }
 
 message UpdateAccountRequest {
-    string name = 1;
-    bytes iconData = 2;
-    string statusMessage = 3;
-    string password = 4;
-    string email = 5;
-    bool notice = 6;
+    string id = 1;
+    string name = 2;
+    bytes iconData = 3;
+    string statusMessage = 4;
+    string password = 5;
+    string email = 6;
+    bool notice = 7;
+    
 }
 
 message DeleteAccountRequest {
@@ -40,13 +42,16 @@ message DeleteAccountRequest {
 
 message RegisterAccountReply {
   string message = 1;
+  bool Succes = 2;
 }
 
 
 message UpdateAccountReply {
     string message = 1;
+    bool Succes = 2;
 }
 
 message DeleteAccountReply {
     string message = 1;
+    bool Succes = 2;
 }
