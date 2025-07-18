@@ -22,21 +22,30 @@ service UserAccounts {
 message RegisterAccountRequest {
   string email = 1;
   string password = 2;
+  
 }
 
 message UpdateAccountRequest {
     string id = 1;
     string name = 2;
-    bytes iconData = 3;
+    string iconData = 3;
     string statusMessage = 4;
     string password = 5;
     string email = 6;
     bool notice = 7;
+    string role = 8;
+    bool isActive = 9;
+
+    bool updateAt = 10;
+    bool passwordUpdateAt = 11;
+    bool emailUpdateAt = 12;
+    bool lastLoginAt = 13;
     
 }
 
 message DeleteAccountRequest {
     string accountId = 1;
+    bool deletionRequestAt = 2;
 }
 // The response message.
 

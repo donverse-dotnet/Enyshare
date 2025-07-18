@@ -29,20 +29,12 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
 
   private readonly PasswordHasher<object> _hasher = new();
 
-  public UserAccountsService(IMongoClient mongoClient)
-  {
-    IMongoDatabase _entitiesDb = database.GetDatabase("Entities");
-    var acounts = _entitiesDb.GetCollection<Account>("Accounts");
-    var accountSettings = _entitiesDb.GetCollection<Setting>("AccountSettings");
-  }
-
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context)
   {
     var hashedPassword = _hasher.HashPassword(null, request.Password);
     var model = new Account {
       Email = request.Email,
       PasswordHash = hashedPassword,
-      Onetimecode = request.Onetimecode,
       CreateAt = DateTime.UtcNow,
       IsEmailVerified = false
     };
@@ -54,43 +46,73 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
   public override async Task<UpdateAccountReply> UpdateAccount(UpdateAccountRequest request, ServerCallContext context) {
 
     var filter = Builders<Account>.Filter.Eq(a => a.id, ObjectId.Parse(request.Id));
+    var updateBuilder = Builders<Account>.Update;
+    var updates = new List<UpdateDefinition<Account>>();
 
-    var update = Builders<Account>.Update
-        .Set(a => a.Username, request.Username)
-        .Set(a => a.Avatarurl, request.Avatarurl)
-        .Set(a => a.Statusmessage, request.Statusmessage)
-        .Set(a => a.Role, request.Role)
-        .Set(a => a.IsActive, request.IsActive);
+    updates.Add(updateBuilder.Set(a => a.Username, request.Name));
+    updates.Add(updateBuilder.Set(a => a.Email, request.Email));
+    updates.Add(updateBuilder.Set(a => a.Avatarurl, request.IconData));
+    updates.Add(updateBuilder.Set(a => a.Statusmessage, request.StatusMessage));
+    updates.Add(updateBuilder.Set(a => a.Role, request.Role));
+    updates.Add(updateBuilder.Set(a => a.IsActive, request.IsActive));
+    updates.Add(updateBuilder.Set(a => a.PasswordHash, request.Password));
 
-    /*,
-    ,
-     = request.StatusMessage,
-    Role = request.Role,
-    IsActive = request.IsActive,
-    UpdateAt = request.UpdateAt,
-    PasswordUpdateAt = request.PasswordUpdateAt,
-    EmailUpdateAt = request.EmailUpdateAt,
-    LastLoginAt = request.LastLoginAt,
-  };*/
+    if (request.UpdateAt) {
+      updates.Add(updateBuilder.Set(a => a.UpdateAt, DateTime.UtcNow));
+    }
 
+
+    if (request.PasswordUpdateAt) {
+      updates.Add(updateBuilder.Set(a => a.PasswordUpdateAt, DateTime.UtcNow));
+    }
+
+
+    if (request.EmailUpdateAt) {
+      updates.Add(updateBuilder.Set(a => a.EmailUpdateAt, DateTime.UtcNow));
+    }
+
+
+    if (request.LastLoginAt) {
+      updates.Add(updateBuilder.Set(a => a.LastLoginAt, DateTime.UtcNow));
+    }
+
+
+    var update = updateBuilder.Combine(updates);
     var result = await _accounts.UpdateOneAsync(filter, update);
 
     if (result.ModifiedCount > 0) {
-      return new UpdateAccountReply
-      {
+      return new UpdateAccountReply {
         Succes = true,
         Message = "Account updated successfully."
       };
+    } else {
+      return new UpdateAccountReply {
+        Succes = false,
+        Message = "No account was updated. Check if the ID is correct."
+      };
     }
-    await _accountsCollection.InsertOneAsync(accounts);
-    return new UpdateAccountReply();
   }
 
   public override async Task<DeleteAccountReply> DeleteAccount(DeleteAccountRequest request, ServerCallContext context) {
-    var accounts = new Account {
-      DeletionRequestAt = request.DeletionRequestAt
-    };
-    await _acountsCollection.InsertOneAsync(accounts);
-    return new DeleteAccountReply();
+    if (!ObjectId.TryParse(request.AccountId, out var objectId)) {
+      return new DeleteAccountReply {
+        Succes = false,
+        Message = "Invalid account ID format."
+      };
+    }
+
+    var result = await _accounts.DeleteOneAsync(a => a.id == objectId);
+
+    if (result.DeletedCount > 0) {
+      return new DeleteAccountReply {
+        Succes = true,
+        Message = "Account deleted successfully."
+      };
+    } else {
+      return new DeleteAccountReply {
+        Succes = false,
+        Message = "Account not found or already deleted."
+      };
+    }
   }
 }
