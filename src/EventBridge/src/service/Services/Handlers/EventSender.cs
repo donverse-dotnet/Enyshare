@@ -2,57 +2,73 @@ using System.Threading.Channels;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Pocco.Svc.EventBridge.Protobufs.Services;
 using Pocco.Svc.EventBridge.Utilities;
 
-namespace Pocco.Svc.EventBridge.Services;
+namespace Pocco.Svc.EventBridge.Services.Handlers;
 
-public class EventSender {
-  public readonly IAsyncEnumerable<KeyValuePair<string, EventData>> EventQueue = _eventChannel.Reader.ReadAllAsync();
-  public readonly Dictionary<string, IServerStreamWriter<SubscribeEventStreamData>> ClientList = [];
+// TODO: Rename to EventDispatcher
+// TODO: Fix event data handling to avoid multiple assignments
 
-  private static readonly Channel<KeyValuePair<string, EventData>> _eventChannel = Channel.CreateUnbounded<KeyValuePair<string, EventData>>();
+public class EventDispatcher : IDisposable {
+  public readonly IAsyncEnumerable<KeyValuePair<string, V0EventData>> EventQueue = _eventChannel.Reader.ReadAllAsync();
+  public readonly Dictionary<string, IServerStreamWriter<V0EventData>> ClientList = [];
+
+  private static readonly Channel<KeyValuePair<string, V0EventData>> _eventChannel = Channel.CreateUnbounded<KeyValuePair<string, V0EventData>>();
   private readonly MongoClient _mongoClient;
-  private readonly ILogger<EventSender> _logger;
+  private readonly ILogger<EventDispatcher> _logger;
+  private readonly CancellationTokenSource _cancellationTokenSource = new();
+  private readonly CancellationToken _cancellationToken;
 
-  public EventSender(
+  public EventDispatcher(
     [FromServices] MongoClient mongoClient,
-    [FromServices] ILogger<EventSender> logger
+    [FromServices] ILogger<EventDispatcher> logger
   ) {
     // Initialize the event queue channel
     _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
     _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    _cancellationToken = _cancellationTokenSource.Token;
 
     // Start the event queue processing
-    Task.Run(InvokeEventQueue);
+    Task.Run(async () => {
+      await InvokeEventQueue(_cancellationToken);
+    });
   }
 
-  private async Task InvokeEventQueue() {
+  public void Dispose() {
+    _eventChannel.Writer.TryComplete();
+    _cancellationTokenSource.Cancel();
+    _cancellationTokenSource.Dispose();
+    _logger.LogInformation("EventSender disposed and event channel completed.");
+  }
+
+  private async Task InvokeEventQueue(CancellationToken cancellationToken = default) {
     await foreach (var eventData in EventQueue) {
       await Task.Run(async () => {
         var (eventId, data) = eventData;
-        var clients = SelectTargetClients(data.EventType, eventId);
+        var clients = SelectTargetClients(data.PayloadCase, eventId);
         if (clients.Count > 0) {
-          if (data.Data is null) {
+          if (data is null) {
             _logger.LogWarning("Event data is null for event ID: {EventId}", eventId);
             return;
           }
 
-          await SendToAffectedClientsAsync(clients, eventId, data.Data);
+          await SendToAffectedClientsAsync(clients, eventId);
         }
       });
     }
   }
 
 
-  public class EventData(string eventId, DeployEventRequest.EventDataOneofCase eventType, DeployEventRequest data) {
-    public readonly string EventId = eventId;
-    public readonly DeployEventRequest.EventDataOneofCase EventType = eventType;
-    public readonly DeployEventRequest Data = data;
-  }
+  // public class EventData(string eventId, EventData.PayloadOneofCase eventType, DeployEventRequest data) {
+  //   public readonly string EventId = eventId;
+  //   public readonly DeployEventRequest.EventDataOneofCase EventType = eventType;
+  //   public readonly DeployEventRequest Data = data;
+  // }
 
   public async Task AddClientAsync(
     string accountId,
-    IServerStreamWriter<SubscribeEventStreamData> responseStream
+    IServerStreamWriter<V0EventData> responseStream
   ) {
     if (!ClientList.ContainsKey(accountId)) {
       ClientList[accountId] = responseStream;
@@ -69,20 +85,20 @@ public class EventSender {
 
   public async Task<bool> AddEventToQueueAsync(
     string eventId,
-    DeployEventRequest eventData
+    V0EventData eventData
   ) {
     if (string.IsNullOrEmpty(eventId) || eventData is null) {
       _logger.LogError("Invalid event data or event ID: {EventId}", eventId);
       return false;
     }
 
-    var eventType = eventData.EventDataCase;
-    if (eventType == DeployEventRequest.EventDataOneofCase.None) {
+    var eventType = eventData.PayloadCase;
+    if (eventType == V0EventData.PayloadOneofCase.None) {
       _logger.LogError("Event data type is unset for event ID: {EventId}", eventId);
       return false;
     }
-    var eventDataObj = new EventData(eventId, eventType, eventData);
-    var success = _eventChannel.Writer.TryWrite(new KeyValuePair<string, EventData>(eventId, eventDataObj));
+    var eventDataObj = new object() as V0EventData;
+    var success = _eventChannel.Writer.TryWrite(new KeyValuePair<string, V0EventData>(eventId, eventDataObj));
     if (!success) {
       _logger.LogError("Failed to write event data to channel for event ID: {EventId}", eventId);
       return false;
@@ -92,7 +108,7 @@ public class EventSender {
     return true;
   }
 
-  public List<IServerStreamWriter<SubscribeEventStreamData>> SelectTargetClients(DeployEventRequest.EventDataOneofCase eventType, string id) {
+  public List<IServerStreamWriter<V0EventData>> SelectTargetClients(V0EventData.PayloadOneofCase eventType, string id) {
     var eventCategory = GrpcServiceHelper.GetEventCategory(eventType);
 
     var targetClientIds = eventCategory switch {
@@ -120,42 +136,11 @@ public class EventSender {
       .ToList();
   }
 
-  public async Task SendToAffectedClientsAsync(List<IServerStreamWriter<SubscribeEventStreamData>> clients, string eventId, DeployEventRequest eventData) {
+  public async Task SendToAffectedClientsAsync(List<IServerStreamWriter<V0EventData>> clients, string eventId) {
     foreach (var client in clients) {
       try {
-        await client.WriteAsync(new SubscribeEventStreamData {
-          EventId = eventId,
-          AuthorId = eventData.AccountId,
+        await client.WriteAsync(new V0EventData {
           // TODO: イベントデータは複数代入してはいけないので、処理を分散させる
-          AccountCreationRequestedEvent = eventData.AccountCreationRequestedEvent,
-          AccountCreatedEvent = eventData.AccountCreatedEvent,
-          AccountCreationFailedEvent = eventData.AccountCreationFailedEvent,
-          AccountUpdatedRequestedEvent = eventData.AccountUpdatedRequestedEvent,
-          AccountUpdatedEvent = eventData.AccountUpdatedEvent,
-          AccountUpdateFailedEvent = eventData.AccountUpdateFailedEvent,
-          AccountDeletionRequestedEvent = eventData.AccountDeletionRequestedEvent,
-          AccountDeletedEvent = eventData.AccountDeletedEvent,
-          AccountDeletionFailedEvent = eventData.AccountDeletionFailedEvent,
-          OrganizationCreatedEvent = eventData.OrganizationCreatedEvent,
-          OrganizationCreationFailedEvent = eventData.OrganizationCreationFailedEvent,
-          OrganizationUpdatedRequestedEvent = eventData.OrganizationUpdatedRequestedEvent,
-          OrganizationUpdatedEvent = eventData.OrganizationUpdatedEvent,
-          OrganizationUpdateFailedEvent = eventData.OrganizationUpdateFailedEvent,
-          OrganizationDeletionRequestedEvent = eventData.OrganizationDeletionRequestedEvent,
-          OrganizationDeletedEvent = eventData.OrganizationDeletedEvent,
-          OrganizationDeletionFailedEvent = eventData.OrganizationDeletionFailedEvent,
-          MessageCreatedEvent = eventData.MessageCreatedEvent,
-          MessageUpdatedEvent = eventData.MessageUpdatedEvent,
-          MessageDeletedEvent = eventData.MessageDeletedEvent,
-          OrganizationChannelCreationRequestedEvent = eventData.OrganizationChannelCreationRequestedEvent,
-          OrganizationChannelCreatedEvent = eventData.OrganizationChannelCreatedEvent,
-          OrganizationChannelCreationFailedEvent = eventData.OrganizationChannelCreationFailedEvent,
-          OrganizationChannelUpdatedRequestedEvent = eventData.OrganizationChannelUpdatedRequestedEvent,
-          OrganizationChannelUpdatedEvent = eventData.OrganizationChannelUpdatedEvent,
-          OrganizationChannelUpdateFailedEvent = eventData.OrganizationChannelUpdateFailedEvent,
-          OrganizationChannelDeletionRequestedEvent = eventData.OrganizationChannelDeletionRequestedEvent,
-          OrganizationChannelDeletedEvent = eventData.OrganizationChannelDeletedEvent,
-          OrganizationChannelDeletionFailedEvent = eventData.OrganizationChannelDeletionFailedEvent
         });
       } catch (Exception ex) {
         _logger.LogError(ex, "Failed to send event data to client");
