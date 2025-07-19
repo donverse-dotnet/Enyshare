@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Protobuf Include="..\.protos\account.proto" GrpcServices="Server" />
+    <Protobuf Include="..\.protos\uisetting.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

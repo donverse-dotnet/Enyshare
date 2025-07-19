@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "uisetting.proto";
+
 option csharp_namespace = "Pocco.Svc.Accounts.Protos";
 
 package account;
@@ -41,6 +43,7 @@ message UpdateAccountRequest {
     bool emailUpdateAt = 12;
     bool lastLoginAt = 13;
     
+    uisetting.UiSetting settings = 14;
 }
 
 message DeleteAccountRequest {

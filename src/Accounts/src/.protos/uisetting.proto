@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.Accounts.Protos";
+
+package uisetting;
+
+message UiSetting {
+  string id = 1;
+  string accountId = 2;
+  LayoutSetting layout = 3;
+  AccessibilitySetting accessibility = 4;
+  NotificationSetting notifications = 5;
+  InteractionSetting interaction = 6;
+  ExtensionAppSetting extensionApps = 7;
+}
+
+message LayoutSetting {
+  ResponsiveSetting responsive = 1;
+
+  //tab or sidebar
+  string navigationMode = 2;
+
+  //light or dark
+  string themeMode = 3;
+  CustomThemeSetting customTheme = 4;
+}
+
+message ResponsiveSetting {
+  bool enable = 1;
+
+  //pc or mobile or tablet
+  repeated string preferredDevices = 2;
+}
+
+message CustomThemeSetting {
+  //color
+  string primaryColor = 1;
+
+  // font
+  string fontFamily = 2;
+}
+
+message AccessibilitySetting {
+  bool highContrast = 1;
+  bool keyboardNavigation = 2;
+
+  //normal or high or custom
+  string contrastLevel = 3;
+}
+
+message NotificationSetting {
+  bool email = 1;
+  bool push = 2;
+  bool showBadge = 3;
+  int32 unreadCount = 4;
+}
+
+message InteractionSetting {
+  bool enableVoting = 1;
+  bool enableReactions = 2;
+  repeated string reactionTypes = 3;
+}
+
+message ExtensionAppSetting {
+  bool chatbotEnabled = 1;
+  repeated string miniGames = 2;
+  map<string, string> externalAppUrls = 3;
+}

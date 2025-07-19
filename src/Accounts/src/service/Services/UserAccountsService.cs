@@ -31,7 +31,10 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
 
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context)
   {
-    var hashedPassword = _hasher.HashPassword(null, request.Password);
+    var user = new Account {
+      Email = request.Email,
+    };
+    var hashedPassword = _hasher.HashPassword(user, request.Password);
     var model = new Account {
       Email = request.Email,
       PasswordHash = hashedPassword,
@@ -91,6 +94,8 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
         Message = "No account was updated. Check if the ID is correct."
       };
     }
+
+    
   }
 
   public override async Task<DeleteAccountReply> DeleteAccount(DeleteAccountRequest request, ServerCallContext context) {
