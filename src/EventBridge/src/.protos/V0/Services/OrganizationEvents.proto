@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs";
+package pocco.svc.eventbridge.protobufs;
+
+import "V0/Types/BaseEvent.proto";
+import "V0/Types/Organization/MessageCreatedEvent.proto";
+import "V0/Types/Organization/MessageUpdatedEvent.proto";
+import "V0/Types/Organization/MessageDeletedEvent.proto";
+import "V0/Types/Organization/MessageReactionAddedEvent.proto";
+import "V0/Types/Organization/MessageReactionRemovedEvent.proto";
+
+
+service V0OrganizationEvents {
+    // // org actions
+    // // publish organization created
+    // rpc PublishOrganizationCreated (OrganizationCreatedEvent) returns (PublishResponse);
+    // // publish organization updated
+    // rpc PublishOrganizationUpdated (OrganizationUpdatedEvent) returns (PublishResponse);
+    // // publish organization moderated
+    // rpc PublishOrganizationModerated (OrganizationModeratedEvent) returns (PublishResponse);
+    // // publish organization disabled
+    // rpc PublishOrganizationDisabled (OrganizationDisabledEvent) returns (PublishResponse);
+
+    // // org channel actions
+    // // publish organization channel created
+    // rpc PublishOrganizationChannelCreated (OrganizationChannelCreatedEvent) returns (PublishResponse);
+    // // publish organization channel updated
+    // rpc PublishOrganizationChannelUpdated (OrganizationChannelUpdatedEvent) returns (PublishResponse);
+    // // publish organization channel deleted
+    // rpc PublishOrganizationChannelDeleted (OrganizationChannelDeletedEvent) returns (PublishResponse);
+
+    // // org role actions
+    // // publish organization role created
+    // rpc PublishOrganizationRoleCreated (OrganizationRoleCreatedEvent) returns (PublishResponse);
+    // // publish organization role updated
+    // rpc PublishOrganizationRoleUpdated (OrganizationRoleUpdatedEvent) returns (PublishResponse);
+    // // publish organization role deleted
+    // rpc PublishOrganizationRoleDeleted (OrganizationRoleDeletedEvent) returns (PublishResponse);
+
+    // // org member actions
+    // // publish organization member joined
+    // rpc PublishOrganizationMemberJoined (OrganizationMemberJoinedEvent) returns (PublishResponse);
+    // // publish organization member updated
+    // rpc PublishOrganizationMemberUpdated (OrganizationMemberUpdatedEvent) returns (PublishResponse);
+    // // publish organization member left
+    // rpc PublishOrganizationMemberLeft (OrganizationMemberLeftEvent) returns (PublishResponse);
+
+    // org message actions
+    // publish organization message created
+    rpc PublishOrganizationMessageCreated (
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageCreatedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish organization message updated
+    rpc PublishOrganizationMessageUpdated (
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageUpdatedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish organization message deleted
+    rpc PublishOrganizationMessageDeleted (
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageDeletedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish organization message bulk deleted
+    // rpc PublishOrganizationMessageBulkDeleted (OrganizationMessageBulkDeletedEvent) returns (PublishResponse);
+
+    // publish organization message reaction added
+    rpc PublishOrganizationMessageReactionAdded (
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionAddedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish organization message reaction removed
+    rpc PublishOrganizationMessageReactionRemoved (
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionRemovedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish organization message reaction bulk removed
+    // rpc PublishOrganizationMessageReactionBulkRemoved (OrganizationMessageReactionBulkRemovedEvent) returns (PublishResponse);
+}

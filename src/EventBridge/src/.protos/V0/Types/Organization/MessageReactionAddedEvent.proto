@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
+package pocco.svc.eventbridge.protobufs.types;
+
+import "V0/Types/BaseEvent.proto";
+import "V0/Types/Organization/MessageModel.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message V0OrganizationMessageReactionAddedEvent {
+    // ベースイベント
+    pocco.svc.eventbridge.protobufs.types.V0BaseEvent base_event = 1;
+
+    // 組織ID
+    string organization_id = 2;
+    // チャットID
+    string chat_id = 3;
+    // メッセージID
+    string message_id = 4;
+
+    // リアクション
+    pocco.svc.eventbridge.protobufs.types.V0MessageReactionModel reaction = 5;
+
+    // イベントの発生日時
+    google.protobuf.Timestamp created_at = 6;
+}
