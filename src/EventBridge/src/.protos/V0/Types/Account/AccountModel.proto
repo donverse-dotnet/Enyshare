@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
+package pocco.svc.eventbridge.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+
+message V0AccountModel {
+    string account_id = 1;
+    string email = 2;
+    bool email_verified = 3;
+    string username = 4;
+    string avatar_url = 5;
+    string status_message = 6;
+    string role = 7;
+    bool is_active = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    google.protobuf.Timestamp deletion_requested_at = 11;
+}

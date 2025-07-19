@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs";
+package pocco.svc.eventbridge.protobufs;
+
+import "V0/Types/BaseEvent.proto";
+import "V0/Types/Account/CreatedEvent.proto";
+import "V0/Types/Account/UpdatedEvent.proto";
+import "V0/Types/Account/ModeratedEvent.proto";
+import "V0/Types/Account/DisabledEvent.proto";
+
+
+service V0AccountEvents {
+    // publish account created
+    rpc V0PublishAccountCreated (
+        pocco.svc.eventbridge.protobufs.types.V0AccountCreatedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish account updated
+    rpc V0PublishAccountUpdated (
+        pocco.svc.eventbridge.protobufs.types.V0AccountUpdatedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish account moderated
+    rpc V0PublishAccountModerated (
+        pocco.svc.eventbridge.protobufs.types.V0AccountModeratedEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+
+    // publish account disabled
+    rpc V0PublishAccountDisabled (
+        pocco.svc.eventbridge.protobufs.types.V0AccountDisabledEvent
+    ) returns (pocco.svc.eventbridge.protobufs.types.V0PublishResponse);
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
+package pocco.svc.eventbridge.protobufs.types;
+
+import "V0/Types/BaseEvent.proto";
+import "V0/Types/Account/AccountModel.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message V0AccountUpdatedEvent {
+    // ベースイベント
+    pocco.svc.eventbridge.protobufs.types.V0BaseEvent base_event = 1;
+
+    // アカウントデータ
+    pocco.svc.eventbridge.protobufs.types.V0AccountModel account_model = 2;
+
+    // イベントの発生日時
+    google.protobuf.Timestamp created_at = 3;
+}
