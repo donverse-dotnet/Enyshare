@@ -1,5 +1,7 @@
 using MongoDB.Driver;
 using Pocco.Svc.EventBridge.Services;
+using Pocco.Svc.EventBridge.Services.Handlers;
+using Pocco.Svc.EventBridge.Services.Listeners;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ builder.Services.AddSingleton(sp => {
   return new MongoClient(connectionString);
 });
 
-builder.Services.AddSingleton<EventSender>();
+builder.Services.AddSingleton<EventDispatcher>();
 builder.Services.AddSingleton<EventDeployInvoker>();
 builder.Services.AddSingleton<EventStoreTasksDeployer>();
 
@@ -22,7 +24,9 @@ builder.Services.AddGrpcReflection();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<EventDispatchGrpcService>();
+app.MapGrpcService<EventSubscriber>();
+app.MapGrpcService<AccountEventListener>();
+app.MapGrpcService<OrganizationEventListener>();
 app.MapGrpcReflectionService();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 

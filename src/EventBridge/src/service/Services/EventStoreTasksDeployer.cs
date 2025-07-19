@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Pocco.Svc.EventBridge.Protobufs.Services;
 
 namespace Pocco.Svc.EventBridge.Services;
 
@@ -11,7 +12,7 @@ public class EventStoreTasksDeployer(
   private readonly MongoClient _mongoClient = mongoClient;
   private readonly ILogger<EventStoreTasksDeployer> _logger = logger;
 
-  public async Task<bool> SaveEventDataAsync(string eventId, DeployEventRequest.EventDataOneofCase eventType, object eventData) {
+  public async Task<bool> SaveEventDataAsync(string eventId, V0EventData.PayloadOneofCase eventType, object eventData) {
     var database = _mongoClient.GetDatabase("EventStore");
     var collection = database.GetCollection<BsonDocument>("Events");
 
