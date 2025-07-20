@@ -18,5 +18,6 @@ namespace Pocco.Svc.Accounts.Users {
     public DateTime? EmailUpdateAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletionRequestAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; } = DateTime.UtcNow;
+
   }
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Accounts.Protos";
+option csharp_namespace = "Pocco.Svc.Accounts.Protos.Ui";
 
 package uisetting;
 

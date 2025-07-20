@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-import "uisetting.proto";
 
-option csharp_namespace = "Pocco.Svc.Accounts.Protos";
-
+option csharp_namespace = "Pocco.Svc.Accounts.Protos.Account";
 package account;
+
+import "uisetting.proto";
 
 // The account service definition.
 
@@ -43,7 +43,7 @@ message UpdateAccountRequest {
     bool emailUpdateAt = 12;
     bool lastLoginAt = 13;
     
-    uisetting.UiSetting settings = 14;
+    uisetting.UiSetting accountUisettings = 14;
 }
 
 message DeleteAccountRequest {

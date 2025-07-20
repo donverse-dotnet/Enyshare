@@ -1,8 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
-using Google.Protobuf;
-
 using Grpc.Core;
 
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Svc.Accounts.Protos;
+using Pocco.Svc.Accounts.Protos.Account;
+using Pocco.Svc.Accounts.UiMapper;
 using Pocco.Svc.Accounts.Users;
 using Pocco.Svc.Accounts.UsersSettings;
 
@@ -82,6 +78,9 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
 
     var update = updateBuilder.Combine(updates);
     var result = await _accounts.UpdateOneAsync(filter, update);
+
+    var Setting = AccountSettingMapper.ToModel(request.AccountUisettings);
+    Setting.;
 
     if (result.ModifiedCount > 0) {
       return new UpdateAccountReply {

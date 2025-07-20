@@ -36,13 +36,13 @@ public class LayoutSetting{
     public CustomThemeSetting CustomTheme { get; set; }
 }
 
-    public class ResponsiveSetting {
-        [BsonElement("enable")]
-        public bool Enable { get; set; }
+public class ResponsiveSetting {
+    [BsonElement("enable")]
+    public bool Enable { get; set; }
 
-        [BsonElement("preferredDevices")]
-        public List<string> PreferredDevices { get; set; } // ["pc", "mobile", "tablet"]
-    }
+    [BsonElement("preferredDevices")]
+    public  List<string> PreferredDevices { get; set; } // ["pc", "mobile", "tablet"]
+}
 
 public class CustomThemeSetting
 {
@@ -55,9 +55,6 @@ public class CustomThemeSetting
 
 public class AccessibilitySetting
 {
-    [BsonElement("fontSize")]
-    public string FontSize { get; set; }
-
     [BsonElement("highContrast")]
     public bool HighContrast { get; set; }
 
@@ -95,16 +92,16 @@ public class InteractionSetting{
 
     [BsonElement("reactionTypes")]
     public List<string> ReactionTypes { get; set; }
-    }
+}
 
 public class ExtensionAppSetting {
-        [BsonElement("chatbotEnabled")]
-        public bool ChatbotEnabled { get; set; }
+    [BsonElement("chatbotEnabled")]
+    public bool ChatbotEnabled { get; set; }
 
-        [BsonElement("miniGames")]
-        public List<string> MiniGames { get; set; }
+    [BsonElement("miniGames")]
+    public List<string> MiniGames { get; set; }
 
-        [BsonElement("externalAppUrls")]
-        public Dictionary<string, string> ExternalAppUrls { get; set; }
-    }
+    [BsonElement("externalAppUrls")]
+    public Dictionary<string, string> ExternalAppUrls { get; set; }
+}
 }
