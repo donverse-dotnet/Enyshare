@@ -1,11 +1,13 @@
 using Grpc.Core;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 using Pocco.Svc.Accounts.Protos.Account;
+using Pocco.Svc.Accounts.Protos.Ui;
 using Pocco.Svc.Accounts.UiMapper;
 using Pocco.Svc.Accounts.Users;
 using Pocco.Svc.Accounts.UsersSettings;
@@ -28,7 +30,7 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context)
   {
     var user = new Account {
-      Email = request.Email,
+      Email = request.Email
     };
     var hashedPassword = _hasher.HashPassword(user, request.Password);
     var model = new Account {
@@ -44,6 +46,7 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
 
   public override async Task<UpdateAccountReply> UpdateAccount(UpdateAccountRequest request, ServerCallContext context) {
 
+    var userId = request.UserId;
     var filter = Builders<Account>.Filter.Eq(a => a.id, ObjectId.Parse(request.Id));
     var updateBuilder = Builders<Account>.Update;
     var updates = new List<UpdateDefinition<Account>>();
@@ -79,8 +82,11 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
     var update = updateBuilder.Combine(updates);
     var result = await _accounts.UpdateOneAsync(filter, update);
 
-    var Setting = AccountSettingMapper.ToModel(request.AccountUisettings);
-    Setting.;
+    var uiSetting = AccountSettingMapper.ToModel(request.AccountUisettings, userId);
+    uiSetting.UserId = userId;
+
+    var uiFilter = Builders<Setting>.Filter.Eq(u => u.UserId, userId);
+    await _accountsettings.ReplaceOneAsync(uiFilter, uiSetting, new ReplaceOptions { IsUpsert = true });
 
     if (result.ModifiedCount > 0) {
       return new UpdateAccountReply {

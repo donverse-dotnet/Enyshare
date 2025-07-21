@@ -4,36 +4,36 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Pocco.Svc.Accounts.UsersSettings {
     public class Setting {
         public ObjectId id { get; set; }
-        public ObjectId userid { get; set; }
+        public required string UserId { get; set; }
 
         [BsonElement("layout")]
-        public LayoutSetting Layout { get; set; }
+        public required LayoutSetting Layout { get; set; }
 
         [BsonElement("accessibility")]
-        public AccessibilitySetting Accessibility { get; set; }
+        public required AccessibilitySetting Accessibility { get; set; }
 
         [BsonElement("notifications")]
-        public NotificationSetting Notifications { get; set; }
+        public required NotificationSetting Notifications { get; set; }
 
         [BsonElement("interaction")]
-        public InteractionSetting Interaction { get; set; }
+        public required InteractionSetting Interaction { get; set; }
 
         [BsonElement("extensionApps")]
-        public ExtensionAppSetting ExtensionApps { get; set; }
+        public required ExtensionAppSetting ExtensionApps { get; set; }
     }
 
 public class LayoutSetting{
     [BsonElement("responsive")]
-    public ResponsiveSetting Responsive { get; set; }
+    public required ResponsiveSetting Responsive { get; set; }
 
     [BsonElement("navigationMode")]
-    public string NavigationMode { get; set; } // "tab" or "sidebar"
+    public required string NavigationMode { get; set; } // "tab" or "sidebar"
 
     [BsonElement("themeMode")]
-    public string ThemeMode { get; set; } // "light" or "dark"
+    public required string ThemeMode { get; set; } // "light" or "dark"
 
     [BsonElement("customTheme")]
-    public CustomThemeSetting CustomTheme { get; set; }
+    public required CustomThemeSetting CustomTheme { get; set; }
 }
 
 public class ResponsiveSetting {
@@ -41,16 +41,16 @@ public class ResponsiveSetting {
     public bool Enable { get; set; }
 
     [BsonElement("preferredDevices")]
-    public  List<string> PreferredDevices { get; set; } // ["pc", "mobile", "tablet"]
+    public  required List<string> PreferredDevices { get; set; } // ["pc", "mobile", "tablet"]
 }
 
 public class CustomThemeSetting
 {
     [BsonElement("primaryColor")]
-    public string PrimaryColor { get; set; }
+    public required string PrimaryColor { get; set; }
 
     [BsonElement("fontFamily")]
-    public string FontFamily { get; set; }
+    public required string FontFamily { get; set; }
 }
 
 public class AccessibilitySetting
@@ -62,7 +62,7 @@ public class AccessibilitySetting
     public bool KeyboardNavigation { get; set; }
 
     [BsonElement("contrastLevel")]
-    public string ContrastLevel { get; set; }
+    public required string ContrastLevel { get; set; }
 }
 
 public class NotificationSetting
@@ -91,7 +91,7 @@ public class InteractionSetting{
     public bool EnableReactions { get; set; }
 
     [BsonElement("reactionTypes")]
-    public List<string> ReactionTypes { get; set; }
+    public required List<string> ReactionTypes { get; set; }
 }
 
 public class ExtensionAppSetting {
@@ -99,9 +99,9 @@ public class ExtensionAppSetting {
     public bool ChatbotEnabled { get; set; }
 
     [BsonElement("miniGames")]
-    public List<string> MiniGames { get; set; }
+    public required List<string> MiniGames { get; set; }
 
     [BsonElement("externalAppUrls")]
-    public Dictionary<string, string> ExternalAppUrls { get; set; }
+    public required Dictionary<string, string> ExternalAppUrls { get; set; }
 }
 }

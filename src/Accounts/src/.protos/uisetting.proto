@@ -2,16 +2,15 @@ syntax = "proto3";
 
 option csharp_namespace = "Pocco.Svc.Accounts.Protos.Ui";
 
-package uisetting;
+package ui;
 
 message UiSetting {
   string id = 1;
-  string accountId = 2;
-  LayoutSetting layout = 3;
-  AccessibilitySetting accessibility = 4;
-  NotificationSetting notifications = 5;
-  InteractionSetting interaction = 6;
-  ExtensionAppSetting extensionApps = 7;
+  LayoutSetting layout = 2;
+  AccessibilitySetting accessibility = 3;
+  NotificationSetting notifications = 4;
+  InteractionSetting interaction = 5;
+  ExtensionAppSetting extensionApps = 6;
 }
 
 message LayoutSetting {
