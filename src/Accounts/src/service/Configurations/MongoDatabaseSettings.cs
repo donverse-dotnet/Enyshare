@@ -2,12 +2,12 @@ using System;
 
 namespace Pocco.Svc.Accounts.Settings {
     public class MongoDatabaseSettings {
-        public string ConnectionString { get; set; } = null!;
-        public string DatabaseName { get; set; } = null!;
-        public MongoCollection Collection { get; set; } = null!;
+        public string ConnectionString { get; set; } = string.Empty;
+        public string DatabaseName { get; set; } = string.Empty;
+        public MongoCollection Collection { get; set; } = new MongoCollection();
     }
     public class MongoCollection {
-        public string Accounts { get; set; } = null;
-        public string AccountSettings { get; set; } = null;
+        public string Accounts { get; set; } = "Accounts";
+        public string AccountSettings { get; set; } = "AccountSettings";
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+using Pocco.Svc.Accounts.HashHelper;
 using Pocco.Svc.Accounts.Protos.Account;
 using Pocco.Svc.Accounts.Protos.Ui;
 using Pocco.Svc.Accounts.UiMapper;
@@ -25,17 +26,12 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
     _accountsettings = database.GetCollection<Setting>("Settings");
   }
 
-  private readonly PasswordHasher<object> _hasher = new();
-
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context)
   {
-    var user = new Account {
-      Email = request.Email
-    };
-    var hashedPassword = _hasher.HashPassword(user, request.Password);
+    var hashed = PasswordHelper.Hash(request.Password);
     var model = new Account {
       Email = request.Email,
-      PasswordHash = hashedPassword,
+      PasswordHash = hashed,
       CreateAt = DateTime.UtcNow,
       IsEmailVerified = false
     };
