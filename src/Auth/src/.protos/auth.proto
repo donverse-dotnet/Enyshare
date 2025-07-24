@@ -2,53 +2,50 @@ syntax = "proto3";
 
 package auth;
 
-service AuthServer
-{
-    rpc SignIn(SignInRequest) returns(AuthResponse);
-    rpc SignOut(TokenRequest) returns(SignOutRespnse);
-    rpc VerifyToken(TokenRequest) returns(VerifyResponse);
-    rpc CheckPermission(PermissionRwquest) returns(PermissionResponse);
+service AuthService {
+    rpc SignIn(SignInRequest) returns (SignInResponse);
+    rpc SignOut(SignOutRequest) returns (SignOutResponse);
+    rpc UpdateAccount(UpdateAccountRequest) returns (UpdateAccountResponse);
+    rpc HoldSession(HoldSessionRequest) returns (HoldSessionResponse);
 }
 
-message SignInRequest
-{
+message SignInRequest {
     string email = 1;
     string password = 2;
 }
 
-message TokenRequest
-{
-    string access_token = 1;
-    string resource = 2;
-    string action = 3;
-}
-
-message AuthResponse
-{
-    string access_token = 1;
-    string refresh_token = 2;
-    int64 expires_in = 3;
-}
-
-message SignOutRespnse
-{
+message SignInResponse {
     bool success = 1;
+    string token = 2;
+    string errorMessage = 3;
 }
 
-message VerifyResponse
-{
-    bool valid = 1;
-    string user_id = 2;
+message SignOutRequest {
+    string token = 1;
 }
 
-message PermissionRwquest
-{
-    string access_token = 1;
-    string resource = 2;
-    string action = 3;
+message SignOutResponse {
+    bool success = 1;
+    string errorMessage = 2;
 }
 
-message PermissionResponse
-{
-    bool allowed = 1;
+message UpdateAccountRequest {
+    string token = 1; // 認証済みユーザーのトークン
+    string email = 2; // 新しいメールアドレス
+    string password = 3; // 新しいパスワード
+}
+
+message UpdateAccountResponse {
+    bool success = 1;
+    string errorMessage = 2;
+}
+
+message HoldSessionRequest {
+    string token = 1;
+    int32 duration = 2; // セッションを保持する期間（秒単位）
+}
+
+message HoldSessionResponse {
+    bool success = 1;
+    string errorMessage = 2;
 }

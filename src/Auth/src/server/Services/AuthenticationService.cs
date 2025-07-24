@@ -1,53 +1,93 @@
 using Grpc.Core;
-using Auth;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.VisualBasic;
-using MyGrpcApp.Service;
+using auth;
+using System;
 
-public class AuthServiceImpl : AuthServer.AuthServerBase
+public class AuthenticationService : AuthService.AuthServiceBase
 {
-  // 仮のユーザーデータ
-  private readonly Dictionary<string, string> users = new()
-  {
-    {"alice@example.com", "password123" },
-    {"bob@example.com", "securepass" }
-  };
+    // サインイン処理
+    public override Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context)
+    {
+        // 仮の認証ロジック
+        bool isAuthenticated = (request.Email == "test@example.com" && request.Password == "password123");
+        string token = isAuthenticated ? Guid.NewGuid().ToString() : null;
 
-  private const string SecretKey = "your_super_secret_key_12345";
+        // トークンを保存する処理を追加（例: データベースなど）
+        if (isAuthenticated)
+        {
+            SaveTokenToDatabase(request.Email, token);
+        }
 
-  public override Task<AuthResponse> SignIn(SignInRequest request, ServerCallContext context) {
-    if (!users.TryGetValue(request.Email, out var storePassword) || storePassword != request.Password) {
-      throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid email or password"));
+        return Task.FromResult(new SignInResponse
+        {
+            Success = isAuthenticated,
+            Token = token,
+            ErrorMessage = isAuthenticated ? null : "Invalid email or password"
+        });
     }
 
-    var tokenHandler = new JwtSecurityTokenHandler();
-    var key = Encoding.ASCII.GetBytes(SecretKey);
-
-    var tokenDescriptor = new SecurityTokenDescriptor {
-      Subject = new ClaimsIdentity(new[]
-      {
-        new Claim(ClaimTypes.Email, request.Email),
-        new Claim("role", "user")
-      }),
-      Expires = DateTime.UtcNow.AddHours(1),
-      SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-    };
-
-    var token = tokenHandler.CreateToken(tokenDescriptor);
-    var accessToken = tokenHandler.WriteToken(token);
-
-    var response = new AuthResponse
+    // サインアウト処理
+    public override Task<SignOutResponse> SignOut(SignOutRequest request, ServerCallContext context)
     {
-      AccessToken = accessToken,
-      RefreshToken = "dummy_refresh_token",
-      ExpiresIn = 3600
-    };
+        // トークンの無効化ロジック
+        bool isTokenValid = RevokeTokenInDatabase(request.Token);
 
-    return Task.FromResult(response);
-  }
+        return Task.FromResult(new SignOutResponse
+        {
+            Success = isTokenValid,
+            ErrorMessage = isTokenValid ? null : "Invalid token"
+        });
+    }
+
+    // アカウントの更新処理
+    public override Task<UpdateAccountResponse> UpdateAccount(UpdateAccountRequest request, ServerCallContext context)
+    {
+        // 仮のアカウント更新ロジック
+        bool isUpdated = UpdateUserDetailsInDatabase(request.Token, request.Email, request.Password);
+
+        return Task.FromResult(new UpdateAccountResponse
+        {
+            Success = isUpdated,
+            ErrorMessage = isUpdated ? null : "Failed to update account"
+        });
+    }
+
+    // セッション保持処理
+    public override Task<HoldSessionResponse> HoldSession(HoldSessionRequest request, ServerCallContext context)
+    {
+        // 仮のセッション更新ロジック
+        bool isHeld = ExtendSessionInDatabase(request.Token, request.Duration);
+
+        return Task.FromResult(new HoldSessionResponse
+        {
+            Success = isHeld,
+            ErrorMessage = isHeld ? null : "Failed to hold session"
+        });
+    }
+
+    // ヘルパーメソッドの例
+    private void SaveTokenToDatabase(string email, string token)
+    {
+        // トークン保存処理（仮実装）
+        Console.WriteLine($"Token saved for {email}: {token}");
+    }
+
+    private bool RevokeTokenInDatabase(string token)
+    {
+        // トークン無効化処理（仮実装）
+        return !string.IsNullOrEmpty(token);
+    }
+
+    private bool UpdateUserDetailsInDatabase(string token, string email, string password)
+    {
+        // ユーザー情報更新処理（仮実装）
+        Console.WriteLine($"Updating user details. Token: {token}, Email: {email}, Password: {password}");
+        return true;
+    }
+
+    private bool ExtendSessionInDatabase(string token, int duration)
+    {
+        // セッション拡張処理（仮実装）
+        Console.WriteLine($"Extending session for Token: {token}, Duration: {duration} seconds");
+        return true;
+    }
 }
