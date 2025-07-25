@@ -23,11 +23,10 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
   public UserAccountsService(IMongoClient mongoClient) {
     var database = mongoClient.GetDatabase("Entities");
     _accounts = database.GetCollection<Account>("Accounts");
-    _accountsettings = database.GetCollection<Setting>("Settings");
+    _accountsettings = database.GetCollection<Setting>("AccountSettings");
   }
 
-  public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context)
-  {
+  public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context) {
     var hashed = PasswordHelper.Hash(request.Password);
     var model = new Account {
       Email = request.Email,
@@ -96,7 +95,7 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
       };
     }
 
-    
+
   }
 
   public override async Task<DeleteAccountReply> DeleteAccount(DeleteAccountRequest request, ServerCallContext context) {
