@@ -24,7 +24,8 @@ service UserAccounts {
 message RegisterAccountRequest {
   string email = 1;
   string password = 2;
-  
+  bool isEmailVerified = 3;
+  bool creatAt = 4;
 }
 
 message UpdateAccountRequest {
