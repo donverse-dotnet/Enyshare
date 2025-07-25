@@ -1,53 +1,126 @@
+using System;
+using System.Text;
 using Grpc.Core;
-using Auth;
 using System.Collections.Generic;
+using Pocco.Srv.Auth;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using MongoDB.Bson.Serialization.Serializers;
+using DnsClient.Protocol;
+using Microsoft.AspNetCore.Http.Features;
+using BCrypt.Net;
 using Microsoft.VisualBasic;
-using MyGrpcApp.Service;
 
-public class AuthServiceImpl : AuthServer.AuthServerBase
+
+namespace Pocco.Srv.Auth.Services;
+
+public class AuthenticationGrpcService : AuthService.AuthServiceBase
 {
-  // 仮のユーザーデータ
-  private readonly Dictionary<string, string> users = new()
-  {
-    {"alice@example.com", "password123" },
-    {"bob@example.com", "securepass" }
-  };
+  private ClaimsPrincipal? VerifyToken(string token) {
+    var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key");
+    var tokenHandler = new JwtSecurityTokenHandler();
+    var validationParameters = new TokenValidationParameters {
+      ValidateIssuerSigningKey = true,
+      IssuerSigningKey = new SymmetricSecurityKey(key),
+      ValidateIssuer = false,
+      ValidateAudience = false,
+      ValidateLifetime = true,
+      ClockSkew = TimeSpan.Zero
+    };
 
-  private const string SecretKey = "your_super_secret_key_12345";
+    try {
+      SecurityToken validatedToken;
+      var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+      return principal;
+    } catch {
+      return null;
+    }
+  }
+    public override async Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context) {
+    SignInResponse response = new SignInResponse();
 
-  public override Task<AuthResponse> SignIn(SignInRequest request, ServerCallContext context) {
-    if (!users.TryGetValue(request.Email, out var storePassword) || storePassword != request.Password) {
-      throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid email or password"));
+    // MongoDBに接続してUsersコレクション取得
+    MongoClient client = new MongoClient("mongodb://localhost:27017");
+    IMongoDatabase database = client.GetDatabase("MyAppDb");
+    IMongoCollection<BsonDocument> userCollection = database.GetCollection<BsonDocument>("Users");
+
+    // Emailでユーザー検索
+    FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("Email", request.Email);
+    var matchedUsers = await userCollection.Find(filter).ToListAsync();
+
+
+    if (matchedUsers.Count == 1) {
+      var userDoc = matchedUsers[0];
+      string storedHash = userDoc["PasswordHash"].AsString;
+
+      // パスワード照合（BCrypt）
+      bool verified = BCrypt.Net.BCrypt.Verify(request.Password, storedHash);
+
+      if (BCrypt.Net.BCrypt.Verify(request.Password, storedHash)) {
+        // トークン生成（JWT）
+        var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key");
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenDescriptor = new SecurityTokenDescriptor {
+          Subject = new ClaimsIdentity(new[] {
+                        new Claim(ClaimTypes.Name, request.Email)
+                    }),
+          Expires = DateTime.UtcNow.AddHours(1),
+          SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature
+            )
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        response.Token = tokenHandler.WriteToken(token);
+        response.Success = true;
+        return response;
+      }
     }
 
-    var tokenHandler = new JwtSecurityTokenHandler();
-    var key = Encoding.ASCII.GetBytes(SecretKey);
+    // 認証失敗
+    response.Token = "";
+    response.Success = false;
+    return response;
+  }
 
-    var tokenDescriptor = new SecurityTokenDescriptor {
-      Subject = new ClaimsIdentity(new[]
-      {
-        new Claim(ClaimTypes.Email, request.Email),
-        new Claim("role", "user")
-      }),
-      Expires = DateTime.UtcNow.AddHours(1),
-      SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-    };
+  public override async Task<SignOutResponse> SignOut(SignOutRequest request, ServerCallContext context) {
+    SignOutResponse response = new SignOutResponse();
 
-    var token = tokenHandler.CreateToken(tokenDescriptor);
-    var accessToken = tokenHandler.WriteToken(token);
+    var principal = VerifyToken(request.Token);
+    if (principal == null) {
+      response.Success = false;
+      response.Message = "";
+      response.ErrorMessage = "無効なトークンです";
+      return response;
+    }
 
-    var response = new AuthResponse
-    {
-      AccessToken = accessToken,
-      RefreshToken = "dummy_refresh_token",
-      ExpiresIn = 3600
-    };
+    // MongoDB接続
+      MongoClient client = new MongoClient("mongodb://localhost:27017");
+    IMongoDatabase database = client.GetDatabase("MyAppDB");
+    IMongoCollection<BsonDocument> sessionCollection = database.GetCollection<BsonDocument>("Sessions");
 
-    return Task.FromResult(response);
+    // session_idでセッション情報を検索
+    var filter = Builders<BsonDocument>.Filter.Eq("SessionId", request.SessionId);
+    var sessionDoc = await sessionCollection.Find(filter).FirstOrDefaultAsync();
+
+    if (sessionDoc != null) {
+      // セッションが存在すれば削除
+      await sessionCollection.DeleteOneAsync(filter);
+
+      response.Success = true;
+      response.Message = "セッションが無効化されました";
+    } else {
+      response.Success = false;
+      response.Message = "メッセージが見つかりません";
+    }
+
+    return response;
   }
 }
