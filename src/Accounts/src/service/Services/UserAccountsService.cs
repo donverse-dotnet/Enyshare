@@ -36,7 +36,10 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
     };
 
     await _accounts.InsertOneAsync(model);
-    return new RegisterAccountReply();
+    return new RegisterAccountReply {
+      Succes = true,
+      Message = "Account Registed successfully."
+    };
   }
 
   public override async Task<UpdateAccountReply> UpdateAccount(UpdateAccountRequest request, ServerCallContext context) {
@@ -46,13 +49,13 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
     var updateBuilder = Builders<Account>.Update;
     var updates = new List<UpdateDefinition<Account>>();
 
-    updates.Add(updateBuilder.Set(a => a.Username, request.Name));
-    updates.Add(updateBuilder.Set(a => a.Email, request.Email));
-    updates.Add(updateBuilder.Set(a => a.Avatarurl, request.IconData));
-    updates.Add(updateBuilder.Set(a => a.Statusmessage, request.StatusMessage));
-    updates.Add(updateBuilder.Set(a => a.Role, request.Role));
-    updates.Add(updateBuilder.Set(a => a.IsActive, request.IsActive));
-    updates.Add(updateBuilder.Set(a => a.PasswordHash, request.Password));
+    updates.Add(updateBuilder.Set(a => a.Username, request.Name)
+    .Set(a => a.Email, request.Email)
+    .Set(a => a.Avatarurl, request.IconData)
+    .Set(a => a.Statusmessage, request.StatusMessage)
+    .Set(a => a.Role, request.Role)
+    .Set(a => a.IsActive, request.IsActive)
+    .Set(a => a.PasswordHash, request.Password));
 
     if (request.UpdateAt) {
       updates.Add(updateBuilder.Set(a => a.UpdateAt, DateTime.UtcNow));
