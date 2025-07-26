@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Pocco.Svc.Accounts.UsersSettings {
+namespace Pocco.Svc.Accounts.Services.UsersSettings {
     public class Setting {
         public ObjectId id { get; set; }
         public required string UserId { get; set; }

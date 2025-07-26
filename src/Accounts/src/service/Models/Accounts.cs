@@ -1,6 +1,6 @@
 using MongoDB.Bson;
 
-namespace Pocco.Svc.Accounts.Users {
+namespace Pocco.Svc.Accounts.Services.Users {
   public class Account {
     public ObjectId id { get; set; }
     public required string Email { get; set; }

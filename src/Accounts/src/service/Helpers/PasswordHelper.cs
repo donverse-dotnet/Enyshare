@@ -1,6 +1,5 @@
-using System;
 
-namespace Pocco.Svc.Accounts.HashHelper {
+namespace Pocco.Svc.Accounts.Services.HashHelper {
     public static class PasswordHelper {
         public static string Hash(string plain) {
             using var sha = System.Security.Cryptography.SHA256.Create();

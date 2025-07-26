@@ -1,18 +1,13 @@
-using System;
-using System.Security.Cryptography.X509Certificates;
-
-using Microsoft.Extensions.Configuration.UserSecrets;
 
 using MongoDB.Driver;
 
-using Pocco.Svc.Accounts.Protos.Account;
-using Pocco.Svc.Accounts.Protos.Ui;
-using Pocco.Svc.Accounts.Users;
-using Pocco.Svc.Accounts.UsersSettings;
+using Pocco.Svc.Accounts.Services.Protos.Ui;
 
-namespace Pocco.Svc.Accounts.UiMapper {
+using Pocco.Svc.Accounts.Services.UsersSettings;
+
+namespace Pocco.Svc.Accounts.Services.UiMapper {
     public static class AccountSettingMapper {
-        public static  Setting ToModel(UiSetting proto, string userId) {
+        public static Setting ToModel(UiSetting proto, string userId) {
             return new Setting {
                 UserId = userId,
 

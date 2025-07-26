@@ -1,17 +1,13 @@
 using Grpc.Core;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration.UserSecrets;
-
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Svc.Accounts.HashHelper;
-using Pocco.Svc.Accounts.Protos.Account;
-using Pocco.Svc.Accounts.Protos.Ui;
-using Pocco.Svc.Accounts.UiMapper;
-using Pocco.Svc.Accounts.Users;
-using Pocco.Svc.Accounts.UsersSettings;
+using Pocco.Svc.Accounts.Services.HashHelper;
+using Pocco.Svc.Accounts.Services.Protos.Account;
+using Pocco.Svc.Accounts.Services.UiMapper;
+using Pocco.Svc.Accounts.Services.Users;
+using Pocco.Svc.Accounts.Services.UsersSettings;
 
 namespace Pocco.Svc.Accounts.Services;
 

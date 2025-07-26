@@ -1,8 +1,6 @@
 using Pocco.Svc.Accounts.Services;
 using MongoDB.Driver;
 
-using Microsoft.Extensions.Options;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IMongoClient>(sp => {
