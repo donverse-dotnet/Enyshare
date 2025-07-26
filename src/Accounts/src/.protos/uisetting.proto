@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Pocco.Svc.Accounts.Services.Protos.Ui";
 
-package ui;
+package ui.alpha.v1_0;
 
 message UiSetting {
   string id = 1;
