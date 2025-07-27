@@ -3,11 +3,11 @@ using Grpc.Core;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Svc.Accounts.Services.HashHelper;
-using Pocco.Svc.Accounts.Services.Protos.Account;
-using Pocco.Svc.Accounts.Services.UiMapper;
-using Pocco.Svc.Accounts.Services.Users;
-using Pocco.Svc.Accounts.Services.UsersSettings;
+using Pocco.Svc.Accounts.Helpers;
+using Pocco.Svc.Accounts.Protos.Account;
+using Pocco.Svc.Accounts.Mappers;
+using Pocco.Svc.Accounts.Models;
+
 
 namespace Pocco.Svc.Accounts.Services;
 

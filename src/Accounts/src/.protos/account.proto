@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 
-option csharp_namespace = "Pocco.Svc.Accounts.Services.Protos.Account";
+option csharp_namespace = "Pocco.Svc.Accounts.Protos.Account";
 package account.alpha.v1_0;
 
 import "uisetting.proto";

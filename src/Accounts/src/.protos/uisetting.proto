@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Accounts.Services.Protos.Ui";
+option csharp_namespace = "Pocco.Svc.Accounts.Protos.Ui";
 
 package ui.alpha.v1_0;
 
