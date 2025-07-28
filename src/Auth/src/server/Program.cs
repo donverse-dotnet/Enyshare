@@ -1,9 +1,16 @@
 using Pocco.Srv.Auth.Services;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+builder.Services.AddSingleton<IMongoClient>(sp =>
+new MongoClient("mongodb://localhost:27017"));
+
+builder.Services.AddSingleton(sp =>
+sp.GetRequiredService<IMongoClient>().GetDatabase("MyAppDb"));
 
 var app = builder.Build();
 

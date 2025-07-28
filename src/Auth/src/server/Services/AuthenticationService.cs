@@ -9,19 +9,44 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using MongoDB.Bson.Serialization.Serializers;
-using DnsClient.Protocol;
-using Microsoft.AspNetCore.Http.Features;
-using BCrypt.Net;
-using Microsoft.VisualBasic;
 
 
 namespace Pocco.Srv.Auth.Services;
 
-public class AuthenticationGrpcService : AuthService.AuthServiceBase
-{
+public class AuthenticationGrpcService : AuthService.AuthServiceBase {
+  private class AccountsModel {
+    [BsonId]
+    public ObjectId Id { get; set; }
+
+    [BsonElement("Email")]
+    public string? Email { get; set; }
+
+    [BsonElement("PasswordHash")]
+    public string? PasswordHash { get; set; }
+
+    [BsonElement("CreatedAt")]
+    public DateTime CreatedAt { get; set; }
+  }
+
+  private readonly IMongoCollection<AccountsModel> _userCollection;
+
+  private List<string?> emails = new();
+
+  public AuthenticationGrpcService(IMongoDatabase database) {
+    _userCollection = database.GetCollection<AccountsModel>("Users");
+  }
+  public async Task InitializeAsync(SignInRequest req) {
+    emails = await _userCollection
+    .Find(x => x.Email == req.Email)
+    .Project(x => x.Email)
+    .ToListAsync();
+  }
+
+  private static MongoClient dbClient = new MongoClient("mongodb://localhost:27017");
+  private static IMongoDatabase database = dbClient.GetDatabase("MyAppDb");
+
+  private IMongoCollection<AccountsModel> userCollection = database.GetCollection<AccountsModel>("Users");
+  private IMongoCollection<BsonDocument> sessionCollection = database.GetCollection<BsonDocument>("Sessions");
   private ClaimsPrincipal? VerifyToken(string token) {
     var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key");
     var tokenHandler = new JwtSecurityTokenHandler();
@@ -45,19 +70,14 @@ public class AuthenticationGrpcService : AuthService.AuthServiceBase
     public override async Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context) {
     SignInResponse response = new SignInResponse();
 
-    // MongoDBに接続してUsersコレクション取得
-    MongoClient client = new MongoClient("mongodb://localhost:27017");
-    IMongoDatabase database = client.GetDatabase("MyAppDb");
-    IMongoCollection<BsonDocument> userCollection = database.GetCollection<BsonDocument>("Users");
-
     // Emailでユーザー検索
-    FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("Email", request.Email);
+    FilterDefinition<AccountsModel> filter = Builders<AccountsModel>.Filter.Eq(x => x.Email, request.Email);
     var matchedUsers = await userCollection.Find(filter).ToListAsync();
 
 
     if (matchedUsers.Count == 1) {
       var userDoc = matchedUsers[0];
-      string storedHash = userDoc["PasswordHash"].AsString;
+      string? storedHash = userDoc.PasswordHash;
 
       // パスワード照合（BCrypt）
       bool verified = BCrypt.Net.BCrypt.Verify(request.Password, storedHash);
@@ -101,14 +121,17 @@ public class AuthenticationGrpcService : AuthService.AuthServiceBase
       return response;
     }
 
-    // MongoDB接続
-      MongoClient client = new MongoClient("mongodb://localhost:27017");
-    IMongoDatabase database = client.GetDatabase("MyAppDB");
-    IMongoCollection<BsonDocument> sessionCollection = database.GetCollection<BsonDocument>("Sessions");
-
     // session_idでセッション情報を検索
     var filter = Builders<BsonDocument>.Filter.Eq("SessionId", request.SessionId);
     var sessionDoc = await sessionCollection.Find(filter).FirstOrDefaultAsync();
+
+    string sessionAccountId = sessionDoc["AccountId"].AsString;
+
+    if (sessionAccountId != request.AccountId) {
+      response.Success = false;
+      response.Message = "アカウントIDが一致しません";
+      return response;
+    }
 
     if (sessionDoc != null) {
       // セッションが存在すれば削除
