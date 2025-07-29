@@ -13,6 +13,7 @@ public class JwtTokenHandler(ILogger<JwtTokenHandler> logger) : IJwtTokenHandler
   private readonly ILogger<JwtTokenHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
   private readonly string _secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ??
                   throw new InvalidOperationException("JWT_SECRET_KEY environment variable is not set.");
+  private const int _tokenRefreshThresholdMinutes = 5; // トークンの更新閾値（分）
 
   public string GenerateToken(ClaimsPrincipal principal, DateTime expiration) {
     ArgumentNullException.ThrowIfNull(principal);
@@ -37,6 +38,21 @@ public class JwtTokenHandler(ILogger<JwtTokenHandler> logger) : IJwtTokenHandler
     }
 
     var principal = VerifyToken(token) ?? throw new InvalidOperationException("Invalid token.");
+    var identity = principal.Identity as ClaimsIdentity;
+
+    var exp = (identity?.FindFirst(ClaimTypes.Expiration)?.Value) ?? throw new InvalidOperationException("Token does not contain an expiration claim.");
+    var expTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp)).UtcDateTime;
+
+    // 新しい有効期限が現在の有効期限よりも後であることを確認
+    if (expTime >= newExpiration || newExpiration <= DateTime.UtcNow) {
+      throw new InvalidOperationException("New expiration date must be later than the current expiration date.");
+    }
+
+    // 現在の有効期限が残り5分以上であることを確認
+    if ((expTime - DateTime.UtcNow).TotalMinutes >= _tokenRefreshThresholdMinutes) {
+      return token; // トークンを更新しない
+    }
+
     return GenerateToken(principal, newExpiration);
   }
 

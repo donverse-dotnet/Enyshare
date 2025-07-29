@@ -20,7 +20,21 @@ public partial class V0AuthServiceImpl {
 
     var newToken = _jwtTokenHandler.RegenerateToken(request.Token, DateTime.UtcNow.AddHours(1));
 
-    var sessionData = new V0SessionDataWrapper {
+    if (string.Equals(newToken, request.Token) is true) {
+      _logger.LogInformation("Token has not changed, skipping database update. SessionId: {SessionId}", request.SessionId);
+      var noChangeSession = new V0SessionDataWrapper {
+        SessionId = request.SessionId,
+        AccountId = request.AccountId,
+        Token = newToken,
+        CreatedAt = request.CreatedAt,
+        ExpiresAt = request.ExpiresAt,
+        UpdatedAt = request.UpdatedAt
+      };
+      return noChangeSession.ToV0SessionData();
+    }
+
+    // セッション情報をMongoDBに保存
+    var newSessionData = new V0SessionDataWrapper {
       SessionId = request.SessionId,
       AccountId = request.AccountId,
       Token = newToken,
@@ -29,10 +43,9 @@ public partial class V0AuthServiceImpl {
       UpdatedAt = Timestamp.FromDateTime(DateTime.UtcNow)
     };
 
-    // セッション情報をMongoDBに保存
     var dbUpdateResult = await _sessionsCollection.ReplaceOneAsync(
       x => x.SessionId == request.SessionId,
-      sessionData,
+      newSessionData,
       new ReplaceOptions { IsUpsert = true }
     );
 
@@ -42,6 +55,6 @@ public partial class V0AuthServiceImpl {
       _logger.LogInformation("Session data updated successfully for SessionId: {SessionId}", request.SessionId);
     }
 
-    return sessionData.ToV0SessionData();
+    return newSessionData.ToV0SessionData();
   }
 }
