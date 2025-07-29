@@ -1,41 +1,47 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using Google.Protobuf.WellKnownTypes;
 
-using Microsoft.IdentityModel.Tokens;
+using Grpc.Core;
 
-using Pocco.Libs.Protobufs.Services;
+using MongoDB.Driver;
+
+using Pocco.Libs.Protobufs.Types;
 
 
 namespace Pocco.Srv.Auth.Services;
 
-public class AuthorizationService : AuthService.AuthServiceBase {
-  private readonly TokenValidationParameters _tokenValidationParameters;
+public partial class V0AuthServiceImpl {
+  public override async Task<V0SessionData> Auth(V0SessionData request, ServerCallContext context) {
+    var principal = _jwtTokenHandler.VerifyToken(request.Token);
 
-  public AuthorizationService(TokenValidationParameters tokenValidationParameters) {
-    _tokenValidationParameters = tokenValidationParameters;
-  }
-
-  public ClaimsPrincipal? ValidateToken(string token) {
-    var tokenHandler = new JwtSecurityTokenHandler();
-
-    try {
-      var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters,
-      out SecurityToken validatedToken);
-
-      if (validatedToken is JwtSecurityToken jwtToken &&
-      jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
-        return principal;
-      }
-    } catch (Exception ex) {
-      Console.WriteLine($"Token validation failed: {ex.Message}");
+    if (principal is null) {
+      _logger.LogWarning("Invalid token provided.");
+      throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid token."));
     }
-    return null;
-  }
 
-  public bool IsAuthorized(ClaimsPrincipal principal, string requiredRole) {
-    if (principal == null || !(principal.Identity?.IsAuthenticated ?? false))
-      return false;
+    var newToken = _jwtTokenHandler.RegenerateToken(request.Token, DateTime.UtcNow.AddHours(1));
 
-    return principal.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == requiredRole);
+    var sessionData = new V0SessionData {
+      SessionId = request.SessionId,
+      AccountId = request.AccountId,
+      Token = newToken,
+      CreatedAt = request.CreatedAt,
+      ExpiresAt = Timestamp.FromDateTime(DateTime.UtcNow.AddHours(1)),
+      UpdatedAt = Timestamp.FromDateTime(DateTime.UtcNow)
+    };
+
+    // セッション情報をMongoDBに保存
+    var dbUpdateResult = await _sessionsCollection.ReplaceOneAsync(
+      x => x.SessionId == request.SessionId,
+      sessionData,
+      new ReplaceOptions { IsUpsert = true }
+    );
+
+    if (dbUpdateResult.IsAcknowledged && dbUpdateResult.ModifiedCount == 0) {
+      _logger.LogWarning("Session data not updated for SessionId: {SessionId}", request.SessionId);
+    } else {
+      _logger.LogInformation("Session data updated successfully for SessionId: {SessionId}", request.SessionId);
+    }
+
+    return sessionData;
   }
 }

@@ -1,21 +1,27 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+
+using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.Types;
 
 
 namespace Pocco.Srv.Auth.Services;
 
-public class AuthenticationGrpcService : AuthService.AuthServiceBase {
+public partial class V0AuthServiceImpl(
+  [FromServices] JwtTokenHandler jwtTokenHandler,
+  ILogger<V0AuthServiceImpl> logger
+) : V0AuthService.V0AuthServiceBase {
+
+  // TODO: ユーザーモデルをアカウントサービスから持ってくる
   private class AccountsModel {
     [BsonId]
     public ObjectId Id { get; set; }
@@ -30,121 +36,84 @@ public class AuthenticationGrpcService : AuthService.AuthServiceBase {
     public DateTime CreatedAt { get; set; }
   }
 
-  private readonly IMongoCollection<AccountsModel> _userCollection;
+  private readonly ILogger<V0AuthServiceImpl> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+  private readonly JwtTokenHandler _jwtTokenHandler = jwtTokenHandler ?? throw new ArgumentNullException(nameof(jwtTokenHandler));
 
-  private List<string?> emails = new();
+  private static readonly string _connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ??
+                  throw new InvalidOperationException("MONGO_CONNECTION_STRING environment variable is not set.");
+  private static readonly MongoClient _dbClient = new(_connectionString);
+  private static readonly IMongoDatabase _database = _dbClient.GetDatabase("Entities");
+  private readonly IMongoCollection<AccountsModel> _usersCollection = _database.GetCollection<AccountsModel>("Accounts");
+  private readonly IMongoCollection<V0SessionData> _sessionsCollection = _database.GetCollection<V0SessionData>("Sessions");
 
-  public AuthenticationGrpcService(IMongoDatabase database) {
-    _userCollection = database.GetCollection<AccountsModel>("Users");
-  }
-  public async Task InitializeAsync(SignInRequest req) {
-    emails = await _userCollection
-    .Find(x => x.Email == req.Email)
-    .Project(x => x.Email)
-    .ToListAsync();
-  }
+  public override async Task<V0SessionData> SignIn(V0SignInRequest request, ServerCallContext context) {
+    // Emailでユーザー検索
+    var user = await _usersCollection.Find(x => x.Email == request.Email && x.PasswordHash == request.Password).FirstOrDefaultAsync();
 
-  private static MongoClient dbClient = new MongoClient("mongodb://localhost:27017");
-  private static IMongoDatabase database = dbClient.GetDatabase("MyAppDb");
+    if (user is null) {
+      _logger.LogWarning("User not found for email: {Email}", request.Email);
+      throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid email or password."));
+    }
 
-  private IMongoCollection<AccountsModel> userCollection = database.GetCollection<AccountsModel>("Users");
-  private IMongoCollection<BsonDocument> sessionCollection = database.GetCollection<BsonDocument>("Sessions");
-  private ClaimsPrincipal? VerifyToken(string token) {
-    var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key");
-    var tokenHandler = new JwtSecurityTokenHandler();
-    var validationParameters = new TokenValidationParameters {
-      ValidateIssuerSigningKey = true,
-      IssuerSigningKey = new SymmetricSecurityKey(key),
-      ValidateIssuer = false,
-      ValidateAudience = false,
-      ValidateLifetime = true,
-      ClockSkew = TimeSpan.Zero
+    // ユーザーが見つかった場合、トークンを作成
+    var claims = new List<Claim> {
+      new(ClaimTypes.Name, request.Email),
+      new("UserId", user.Id.ToString()) // ユーザーモデルをアカウントサービスから持ってくる
+    };
+    string token = _jwtTokenHandler.GenerateToken(new ClaimsPrincipal(new ClaimsIdentity(claims)), DateTime.UtcNow.AddHours(1));
+    var sessionId = ObjectId.GenerateNewId().ToString();
+
+    var sessionData = new V0SessionData {
+      SessionId = sessionId,
+      AccountId = user.Id.ToString(),
+      Token = token,
+      CreatedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      ExpiresAt = Timestamp.FromDateTime(DateTime.UtcNow.AddHours(1)),
+      UpdatedAt = Timestamp.FromDateTime(DateTime.UtcNow)
     };
 
-    try {
-      SecurityToken validatedToken;
-      var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
-      return principal;
-    } catch {
-      return null;
-    }
-  }
-  public override async Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context) {
-    SignInResponse response = new SignInResponse();
+    // セッション情報をMongoDBに保存
+    await _sessionsCollection.InsertOneAsync(sessionData);
 
-    // Emailでユーザー検索
-    FilterDefinition<AccountsModel> filter = Builders<AccountsModel>.Filter.Eq(x => x.Email, request.Email);
-    var matchedUsers = await userCollection.Find(filter).ToListAsync();
-
-
-    if (matchedUsers.Count == 1) {
-      var userDoc = matchedUsers[0];
-      string? storedHash = userDoc.PasswordHash;
-
-      // パスワード照合（BCrypt）
-      bool verified = BCrypt.Net.BCrypt.Verify(request.Password, storedHash);
-
-      if (BCrypt.Net.BCrypt.Verify(request.Password, storedHash)) {
-        // トークン生成（JWT）
-        var key = Encoding.ASCII.GetBytes("your-very-secure-secret-key");
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var tokenDescriptor = new SecurityTokenDescriptor {
-          Subject = new ClaimsIdentity(new[] {
-                        new Claim(ClaimTypes.Name, request.Email)
-                    }),
-          Expires = DateTime.UtcNow.AddHours(1),
-          SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature
-            )
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        response.Token = tokenHandler.WriteToken(token);
-        response.Success = true;
-        return response;
-      }
-    }
-
-    // 認証失敗
-    response.Token = "";
-    response.Success = false;
-    return response;
+    _logger.LogInformation("User signed in: {Email}", request.Email);
+    return sessionData;
   }
 
-  public override async Task<SignOutResponse> SignOut(SignOutRequest request, ServerCallContext context) {
-    SignOutResponse response = new SignOutResponse();
+  public override async Task<V0SignOutResponse> SignOut(V0SessionData request, ServerCallContext context) {
+    var principal = _jwtTokenHandler.VerifyToken(request.Token);
 
-    var principal = VerifyToken(request.Token);
-    if (principal == null) {
-      response.Success = false;
-      response.Message = "";
-      response.ErrorMessage = "無効なトークンです";
-      return response;
+    if (principal is null) {
+      return new V0SignOutResponse {
+        Success = false,
+        ErrorMessage = "無効なトークンです。強制的にサインアウトします。",
+      };
     }
 
     // session_idでセッション情報を検索
     var filter = Builders<BsonDocument>.Filter.Eq("SessionId", request.SessionId);
-    var sessionDoc = await sessionCollection.Find(filter).FirstOrDefaultAsync();
+    var sessionData = await _sessionsCollection.Find(x => x.AccountId == request.AccountId && x.SessionId == request.SessionId).FirstOrDefaultAsync();
 
-    string sessionAccountId = sessionDoc["AccountId"].AsString;
-
-    if (sessionAccountId != request.AccountId) {
-      response.Success = false;
-      response.Message = "アカウントIDが一致しません";
-      return response;
+    if (sessionData is null) {
+      return new V0SignOutResponse {
+        Success = false,
+        ErrorMessage = "セッションが見つかりません。強制的にサインアウトします。"
+      };
     }
 
-    if (sessionDoc != null) {
-      // セッションが存在すれば削除
-      await sessionCollection.DeleteOneAsync(filter);
+    var dbDeleteResult = await _sessionsCollection.DeleteOneAsync(x => x.AccountId == request.AccountId && x.SessionId == request.SessionId);
 
-      response.Success = true;
-      response.Message = "セッションが無効化されました";
-    } else {
-      response.Success = false;
-      response.Message = "メッセージが見つかりません";
+    if (dbDeleteResult.DeletedCount == 0) {
+      return new V0SignOutResponse {
+        Success = false,
+        ErrorMessage = "セッションの削除に失敗しました。強制的にサインアウトします。"
+      };
     }
+
+    _logger.LogInformation("User signed out: {Email}", principal.Identity?.Name);
+    var response = new V0SignOutResponse {
+      Success = true,
+      ErrorMessage = string.Empty
+    };
 
     return response;
   }
