@@ -1,14 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 
-using Grpc.Core;
-
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-using Pocco.Srv.Auth;
+using Pocco.Libs.Protobufs.Services;
+
 
 namespace Pocco.Srv.Auth.Services;
 
@@ -27,8 +23,7 @@ public class AuthorizationService : AuthService.AuthServiceBase {
       out SecurityToken validatedToken);
 
       if (validatedToken is JwtSecurityToken jwtToken &&
-      jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-      {
+      jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
         return principal;
       }
     } catch (Exception ex) {

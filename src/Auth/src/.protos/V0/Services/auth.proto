@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Srv.Auth";
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
 
-package auth;
+package pocco.libs.protobufs.services;
 
 service AuthService {
     rpc SignIn(SignInRequest) returns (SignInResponse);

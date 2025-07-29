@@ -1,14 +1,16 @@
-using System;
-using System.Text;
-using Grpc.Core;
-using System.Collections.Generic;
-using Pocco.Srv.Auth;
-using MongoDB.Driver;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
+
+using Grpc.Core;
+
 using Microsoft.IdentityModel.Tokens;
+
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
+
+using Pocco.Libs.Protobufs.Services;
 
 
 namespace Pocco.Srv.Auth.Services;
@@ -67,7 +69,7 @@ public class AuthenticationGrpcService : AuthService.AuthServiceBase {
       return null;
     }
   }
-    public override async Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context) {
+  public override async Task<SignInResponse> SignIn(SignInRequest request, ServerCallContext context) {
     SignInResponse response = new SignInResponse();
 
     // Emailでユーザー検索
