@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+
+package pocco.libs.protobufs.services;
+
+import "V0/Types/SignInRequest.proto";
+import "V0/Types/SignOutResponse.proto";
+import "V0/Types/SessionData.proto";
+
+
+// 認証サービス
+service V0AuthService {
+    // ログイン
+    rpc SignIn(
+        pocco.libs.protobufs.types.V0SignInRequest
+    ) returns (pocco.libs.protobufs.types.V0SessionData);
+    // ログアウト
+    rpc SignOut(
+        pocco.libs.protobufs.types.V0SessionData
+    ) returns (pocco.libs.protobufs.types.V0SignOutResponse);
+    // セッションの認可
+    rpc Auth(
+        pocco.libs.protobufs.types.V0SessionData
+    ) returns (pocco.libs.protobufs.types.V0SessionData);
+}

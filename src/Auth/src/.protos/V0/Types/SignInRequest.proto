@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+
+// ログインフォームのsubmitアクションからのリクエスト
+message V0SignInRequest {
+    // メールアドレス
+    string email = 1;
+    // パスワード（ハッシュ化済み）
+    string password = 2;
+}
