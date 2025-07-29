@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="../.protos/V0/Services/auth.proto" GrpcServices="Server" />
+    <!-- Enums -->
+
+    <!-- Types -->
+    <Protobuf Include="..\.protos\V0\Types\SignInRequest.proto" ProtoRoot="..\.protos" GrpcServices="None" />
+    <Protobuf Include="..\.protos\V0\Types\SignOutResponse.proto" ProtoRoot="..\.protos" GrpcServices="None" />
+    <Protobuf Include="..\.protos\V0\Types\SessionData.proto" ProtoRoot="..\.protos" GrpcServices="None" />
+
+    <!-- Services -->
+    <Protobuf Include="../.protos/V0/Services/auth.proto" ProtoRoot="..\.protos" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
