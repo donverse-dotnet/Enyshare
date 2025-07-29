@@ -21,8 +21,7 @@ public partial class V0AuthServiceImpl(
   ILogger<V0AuthServiceImpl> logger
 ) : V0AuthService.V0AuthServiceBase {
 
-  // TODO: ユーザーモデルをアカウントサービスから持ってくる
-  private class AccountsModel {
+  public class AccountsModel {
     [BsonId]
     public ObjectId Id { get; set; }
 
@@ -34,6 +33,41 @@ public partial class V0AuthServiceImpl(
 
     [BsonElement("CreatedAt")]
     public DateTime CreatedAt { get; set; }
+
+    [BsonExtraElements]
+    public BsonDocument? ExtraElements { get; set; } // 他のフィールド
+  }
+  public class V0SessionDataWrapper {
+    // セッションID
+    [BsonId]
+    [BsonElement("SessionId")]
+    public string SessionId { get; set; } = string.Empty;
+    // アカウントID
+    [BsonElement("AccountId")]
+    public string AccountId { get; set; } = string.Empty;
+    // トークン
+    [BsonElement("Token")]
+    public string Token { get; set; } = string.Empty;
+    // 有効期限（UNIXタイムスタンプ）
+    [BsonElement("ExpiresAt")]
+    public Timestamp? ExpiresAt { get; set; }
+    // 作成日時（UNIXタイムスタンプ）
+    [BsonElement("CreatedAt")]
+    public Timestamp? CreatedAt { get; set; }
+    // 更新日時（UNIXタイムスタンプ）
+    [BsonElement("UpdatedAt")]
+    public Timestamp? UpdatedAt { get; set; }
+
+    public V0SessionData ToV0SessionData() {
+      return new V0SessionData {
+        SessionId = SessionId,
+        AccountId = AccountId,
+        Token = Token,
+        ExpiresAt = ExpiresAt,
+        CreatedAt = CreatedAt,
+        UpdatedAt = UpdatedAt
+      };
+    }
   }
 
   private readonly ILogger<V0AuthServiceImpl> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -44,7 +78,7 @@ public partial class V0AuthServiceImpl(
   private static readonly MongoClient _dbClient = new(_connectionString);
   private static readonly IMongoDatabase _database = _dbClient.GetDatabase("Entities");
   private readonly IMongoCollection<AccountsModel> _usersCollection = _database.GetCollection<AccountsModel>("Accounts");
-  private readonly IMongoCollection<V0SessionData> _sessionsCollection = _database.GetCollection<V0SessionData>("Sessions");
+  private readonly IMongoCollection<V0SessionDataWrapper> _sessionsCollection = _database.GetCollection<V0SessionDataWrapper>("Sessions");
 
   public override async Task<V0SessionData> SignIn(V0SignInRequest request, ServerCallContext context) {
     // Emailでユーザー検索
@@ -58,12 +92,12 @@ public partial class V0AuthServiceImpl(
     // ユーザーが見つかった場合、トークンを作成
     var claims = new List<Claim> {
       new(ClaimTypes.Name, request.Email),
-      new("UserId", user.Id.ToString()) // ユーザーモデルをアカウントサービスから持ってくる
+      new("UserId", user.Id.ToString())
     };
     string token = _jwtTokenHandler.GenerateToken(new ClaimsPrincipal(new ClaimsIdentity(claims)), DateTime.UtcNow.AddHours(1));
     var sessionId = ObjectId.GenerateNewId().ToString();
 
-    var sessionData = new V0SessionData {
+    var sessionData = new V0SessionDataWrapper {
       SessionId = sessionId,
       AccountId = user.Id.ToString(),
       Token = token,
@@ -76,7 +110,7 @@ public partial class V0AuthServiceImpl(
     await _sessionsCollection.InsertOneAsync(sessionData);
 
     _logger.LogInformation("User signed in: {Email}", request.Email);
-    return sessionData;
+    return sessionData.ToV0SessionData();
   }
 
   public override async Task<V0SignOutResponse> SignOut(V0SessionData request, ServerCallContext context) {
@@ -90,7 +124,6 @@ public partial class V0AuthServiceImpl(
     }
 
     // session_idでセッション情報を検索
-    var filter = Builders<BsonDocument>.Filter.Eq("SessionId", request.SessionId);
     var sessionData = await _sessionsCollection.Find(x => x.AccountId == request.AccountId && x.SessionId == request.SessionId).FirstOrDefaultAsync();
 
     if (sessionData is null) {

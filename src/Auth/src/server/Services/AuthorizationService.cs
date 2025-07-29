@@ -20,7 +20,7 @@ public partial class V0AuthServiceImpl {
 
     var newToken = _jwtTokenHandler.RegenerateToken(request.Token, DateTime.UtcNow.AddHours(1));
 
-    var sessionData = new V0SessionData {
+    var sessionData = new V0SessionDataWrapper {
       SessionId = request.SessionId,
       AccountId = request.AccountId,
       Token = newToken,
@@ -42,6 +42,6 @@ public partial class V0AuthServiceImpl {
       _logger.LogInformation("Session data updated successfully for SessionId: {SessionId}", request.SessionId);
     }
 
-    return sessionData;
+    return sessionData.ToV0SessionData();
   }
 }
