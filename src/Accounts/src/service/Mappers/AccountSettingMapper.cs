@@ -2,14 +2,13 @@
 using MongoDB.Driver;
 
 using Pocco.Svc.Accounts.Protos.Ui;
-
 using Pocco.Svc.Accounts.Models;
 
 namespace Pocco.Svc.Accounts.Mappers;
 
 public static class AccountSettingMapper {
-    public static Setting ToModel(UiSetting proto, string userId) {
-        return new Setting {
+    public static Settings ToModel(UiSetting proto, string userId) {
+        return new Settings {
             UserId = userId,
 
             Layout = ToLayout(proto.Layout ?? new Protos.Ui.LayoutSetting()),
@@ -23,14 +22,6 @@ public static class AccountSettingMapper {
     public static Models.LayoutSetting ToLayout(Protos.Ui.LayoutSetting proto) => new Models.LayoutSetting {
         NavigationMode = proto.NavigationMode,                  //tabやsidebarなど
         ThemeMode = proto.ThemeMode,                            //テーマ
-        Responsive = new Models.ResponsiveSetting {
-            Enable = proto.Responsive.Enable,  //レスポンシブ対応するか
-            PreferredDevices = proto.Responsive.PreferredDevices.ToList() //優先デバイス
-        },
-        CustomTheme = new Models.CustomThemeSetting {
-            PrimaryColor = proto.CustomTheme.PrimaryColor,    //主に使用される色
-            FontFamily = proto.CustomTheme.FontFamily         //UI全体で使われるフォント
-        }
     };
 
     public static Models.AccessibilitySetting ToAccessibility(Protos.Ui.AccessibilitySetting proto) => new Models.AccessibilitySetting {

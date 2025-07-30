@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+message V0UpdateRequest {
+    string id = 1;
+    string userId = 2;
+    string name = 3;
+    string iconData = 4;
+    string statusMessage = 5;
+    string password = 6;
+    string email = 7;
+    bool notice = 8;
+    string role = 9;
+    bool isActive = 10;
+
+    bool updateAt = 11;
+    bool passwordUpdateAt = 12;
+    bool emailUpdateAt = 13;
+    bool lastLoginAt = 14;
+
+}

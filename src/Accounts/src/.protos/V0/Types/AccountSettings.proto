@@ -1,37 +1,36 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Accounts.Protos.Ui";
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 
-package ui.alpha.v1_0;
+package pocco.libs.protobufs.types;
 
-message UiSetting {
+message V0Setting {
   string id = 1;
-  LayoutSetting layout = 2;
-  AccessibilitySetting accessibility = 3;
-  NotificationSetting notifications = 4;
-  InteractionSetting interaction = 5;
-  ExtensionAppSetting extensionApps = 6;
+  V0LayoutSetting layout = 2;
+  V0AccessibilitySetting accessibility = 3;
+  V0NotificationSetting notifications = 4;
+  V0InteractionSetting interaction = 5;
+  V0ExtensionAppSetting extensionApps = 6;
 }
 
-message LayoutSetting {
-  ResponsiveSetting responsive = 1;
+message V0LayoutSetting {
 
   //tab or sidebar
-  string navigationMode = 2;
+  string navigationMode = 1;
 
   //light or dark
-  string themeMode = 3;
-  CustomThemeSetting customTheme = 4;
+  string themeMode = 2;
+
 }
 
-message ResponsiveSetting {
+message V0ResponsiveSetting {
   bool enable = 1;
 
   //pc or mobile or tablet
   repeated string preferredDevices = 2;
 }
 
-message CustomThemeSetting {
+message V0CustomThemeSetting {
   //color
   string primaryColor = 1;
 
@@ -39,7 +38,7 @@ message CustomThemeSetting {
   string fontFamily = 2;
 }
 
-message AccessibilitySetting {
+message V0AccessibilitySetting {
   bool highContrast = 1;
   bool keyboardNavigation = 2;
 
@@ -47,20 +46,20 @@ message AccessibilitySetting {
   string contrastLevel = 3;
 }
 
-message NotificationSetting {
+message V0NotificationSetting {
   bool email = 1;
   bool push = 2;
   bool showBadge = 3;
   int32 unreadCount = 4;
 }
 
-message InteractionSetting {
+message V0InteractionSetting {
   bool enableVoting = 1;
   bool enableReactions = 2;
   repeated string reactionTypes = 3;
 }
 
-message ExtensionAppSetting {
+message V0ExtensionAppSetting {
   bool chatbotEnabled = 1;
   repeated string miniGames = 2;
   map<string, string> externalAppUrls = 3;

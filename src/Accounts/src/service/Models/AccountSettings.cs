@@ -1,9 +1,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
+using Pocco.Svc.Accounts.Protos.Ui;
 namespace Pocco.Svc.Accounts.Models;
 
-public class Setting {
+public class Settings {
     public ObjectId id { get; set; }
     public required string UserId { get; set; }
 
@@ -21,11 +22,13 @@ public class Setting {
 
     [BsonElement("extensionApps")]
     public required ExtensionAppSetting ExtensionApps { get; set; }
+
+    public UiSetting ToUiSetting() {
+        return new();
+    }
 }
 
 public class LayoutSetting {
-    [BsonElement("responsive")]
-    public required ResponsiveSetting Responsive { get; set; }
 
     [BsonElement("navigationMode")]
     public required string NavigationMode { get; set; } // "tab" or "sidebar"
@@ -33,9 +36,9 @@ public class LayoutSetting {
     [BsonElement("themeMode")]
     public required string ThemeMode { get; set; } // "light" or "dark"
 
-    [BsonElement("customTheme")]
-    public required CustomThemeSetting CustomTheme { get; set; }
+
 }
+
 
 public class ResponsiveSetting {
     [BsonElement("enable")]

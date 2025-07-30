@@ -3,7 +3,6 @@ using Grpc.Core;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Svc.Accounts.Helpers;
 using Pocco.Svc.Accounts.Protos.Account;
 using Pocco.Svc.Accounts.Mappers;
 using Pocco.Svc.Accounts.Models;
@@ -14,19 +13,20 @@ namespace Pocco.Svc.Accounts.Services;
 
 public class UserAccountsService : UserAccounts.UserAccountsBase {
   private readonly IMongoCollection<Account> _accounts;
-  private readonly IMongoCollection<Setting> _accountsettings;
+  private readonly IMongoCollection<Settings> _accountsettings;
 
   public UserAccountsService(IMongoClient mongoClient) {
     var database = mongoClient.GetDatabase("Entities");
     _accounts = database.GetCollection<Account>("Accounts");
-    _accountsettings = database.GetCollection<Setting>("AccountSettings");
+    _accountsettings = database.GetCollection<Settings>("AccountSettings");
   }
 
   public override async Task<RegisterAccountReply> RegisterAccount(RegisterAccountRequest request, ServerCallContext context) {
-    var hashed = PasswordHelper.Hash(request.Password);
     var model = new Account {
       Email = request.Email,
-      PasswordHash = hashed,
+      Username = string.Empty,
+      AvatarUrl = string.Empty,
+      StatusMessage = string.Empty,
       CreateAt = DateTime.UtcNow,
       IsEmailVerified = false
     };
@@ -40,46 +40,38 @@ public class UserAccountsService : UserAccounts.UserAccountsBase {
 
   public override async Task<UpdateAccountReply> UpdateAccount(UpdateAccountRequest request, ServerCallContext context) {
 
-    var userId = request.UserId;
     var filter = Builders<Account>.Filter.Eq(a => a.id, ObjectId.Parse(request.Id));
     var updateBuilder = Builders<Account>.Update;
     var updates = new List<UpdateDefinition<Account>>();
 
     updates.Add(updateBuilder.Set(a => a.Username, request.Name)
     .Set(a => a.Email, request.Email)
-    .Set(a => a.Avatarurl, request.IconData)
-    .Set(a => a.Statusmessage, request.StatusMessage)
+    .Set(a => a.AvatarUrl, request.IconData)
+    .Set(a => a.StatusMessage, request.StatusMessage)
     .Set(a => a.Role, request.Role)
-    .Set(a => a.IsActive, request.IsActive)
     .Set(a => a.PasswordHash, request.Password));
-
     if (request.UpdateAt) {
       updates.Add(updateBuilder.Set(a => a.UpdateAt, DateTime.UtcNow));
     }
-
 
     if (request.PasswordUpdateAt) {
       updates.Add(updateBuilder.Set(a => a.PasswordUpdateAt, DateTime.UtcNow));
     }
 
-
     if (request.EmailUpdateAt) {
       updates.Add(updateBuilder.Set(a => a.EmailUpdateAt, DateTime.UtcNow));
     }
 
-
     if (request.LastLoginAt) {
       updates.Add(updateBuilder.Set(a => a.LastLoginAt, DateTime.UtcNow));
     }
-
-
     var update = updateBuilder.Combine(updates);
     var result = await _accounts.UpdateOneAsync(filter, update);
 
-    var uiSetting = AccountSettingMapper.ToModel(request.AccountUisettings, userId);
-    uiSetting.UserId = userId;
+    var uiSetting = AccountSettingMapper.ToModel(request.AccountUisettings, request.Id);
+    uiSetting.UserId = request.Id;
 
-    var uiFilter = Builders<Setting>.Filter.Eq(u => u.UserId, userId);
+    var uiFilter = Builders<Settings>.Filter.Eq(u => u.UserId, request.Id);
     await _accountsettings.ReplaceOneAsync(uiFilter, uiSetting, new ReplaceOptions { IsUpsert = true });
 
     if (result.ModifiedCount > 0) {
