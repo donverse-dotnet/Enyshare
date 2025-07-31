@@ -7,17 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <Protobuf Include="../.protos/V0/Enums/AccountStatus.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+
+    <Protobuf Include="../.protos/V0/Types/AccountDeleteReply.proto" ProtoRoot="../.protos/" GrpcServices="None" />
     <Protobuf Include="../.protos/V0/Types/AccountDeleteRequest.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/AccountRegisterReply.proto" ProtoRoot="../.protos/" GrpcServices="None" />
     <Protobuf Include="../.protos/V0/Types/AccountRegisterRequest.proto" ProtoRoot="../.protos/" GrpcServices="None" />
-    <Protobuf Include="../.protos/V0/Types/AccountSettings.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/AccountStatusMessage.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/AccountNotificationSettings.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/AccountUpdateReply.proto" ProtoRoot="../.protos/" GrpcServices="None" />
     <Protobuf Include="../.protos/V0/Types/AccountUpdateRequest.proto" ProtoRoot="../.protos/" GrpcServices="None" />
     
+
     <Protobuf Include="../.protos/V0/Services/AccountService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
     
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
   </ItemGroup>
 
