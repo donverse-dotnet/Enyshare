@@ -4,7 +4,9 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Libs.Protobufs.Services";
 package pocco.libs.protobufs.services;
 
-import "V0/Types/AccountSettings.proto";
+import "V0/Types/AccountRegisterReply.proto";
+import "V0/Types/AccountUpdateReply.proto";
+import "V0/Types/AccountDeleteReply.proto";
 import "V0/Types/AccountRegisterRequest.proto";
 import "V0/Types/AccountUpdateRequest.proto";
 import "V0/Types/AccountDeleteRequest.proto";
@@ -13,28 +15,9 @@ import "V0/Types/AccountDeleteRequest.proto";
 
 service V0AccountService {
   // アカウントを登録するRPCメソッド
-  rpc Register(pocco.libs.protobufs.types.V0RegisterRequest) returns (V0RegisterReply);
+  rpc Register(pocco.libs.protobufs.types.V0RegisterRequest) returns (pocco.libs.protobufs.types.V0RegisterReply);
   //アカウントを更新するRPCメソッド
-  rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (V0UpdateReply);
+  rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (pocco.libs.protobufs.types.V0UpdateReply);
   //アカウントを削除するRPCメソッド
-  rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (V0DeleteReply);
-}
-
-
-// The response message.
-
-message V0RegisterReply {
-  string message = 1;
-  bool Succes = 2;
-}
-
-
-message V0UpdateReply {
-    string message = 1;
-    bool Succes = 2;
-}
-
-message V0DeleteReply {
-    string message = 1;
-    bool Succes = 2;
+  rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0DeleteReply);
 }
