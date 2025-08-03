@@ -39,6 +39,7 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.6+MySQL9.4.0" />
   </ItemGroup>
 
 </Project>

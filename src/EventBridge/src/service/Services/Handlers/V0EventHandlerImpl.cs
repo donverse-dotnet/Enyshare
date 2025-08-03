@@ -5,7 +5,7 @@ using Pocco.Svc.EventBridge.Protobufs.Services;
 
 namespace Pocco.Svc.EventBridge.Services.Handlers;
 
-public class EventSubscriber(
+public class V0EventHandlerImpl(
   [FromServices] EventDispatcher eventDispatcher,
   [FromServices] ILogger<EventHandler> logger
 ) : V0EventHandler.V0EventHandlerBase {

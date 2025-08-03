@@ -15,17 +15,15 @@ public class EventDispatcher : IDisposable {
   public readonly Dictionary<string, IServerStreamWriter<V0EventData>> ClientList = [];
 
   private static readonly Channel<KeyValuePair<string, V0EventData>> _eventChannel = Channel.CreateUnbounded<KeyValuePair<string, V0EventData>>();
-  private readonly MongoClient _mongoClient;
   private readonly ILogger<EventDispatcher> _logger;
   private readonly CancellationTokenSource _cancellationTokenSource = new();
   private readonly CancellationToken _cancellationToken;
 
   public EventDispatcher(
-    [FromServices] MongoClient mongoClient,
     [FromServices] ILogger<EventDispatcher> logger
   ) {
     // Initialize the event queue channel
-    _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
+    // _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
     _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     _cancellationToken = _cancellationTokenSource.Token;
 
@@ -58,13 +56,6 @@ public class EventDispatcher : IDisposable {
       });
     }
   }
-
-
-  // public class EventData(string eventId, EventData.PayloadOneofCase eventType, DeployEventRequest data) {
-  //   public readonly string EventId = eventId;
-  //   public readonly DeployEventRequest.EventDataOneofCase EventType = eventType;
-  //   public readonly DeployEventRequest Data = data;
-  // }
 
   public async Task AddClientAsync(
     string accountId,
@@ -111,24 +102,26 @@ public class EventDispatcher : IDisposable {
   public List<IServerStreamWriter<V0EventData>> SelectTargetClients(V0EventData.PayloadOneofCase eventType, string id) {
     var eventCategory = GrpcServiceHelper.GetEventCategory(eventType);
 
-    var targetClientIds = eventCategory switch {
-      GrpcServiceHelper.EventCategory.Account => _mongoClient.GetDatabase("pocco")
-                                                             .GetCollection<FakeAccount>("accounts")
-                                                             .Find(account => account.ListenUserEvents.Contains(id))
-                                                             .Project(account => account.Id)
-                                                             .ToList(),
-      GrpcServiceHelper.EventCategory.Organization => _mongoClient.GetDatabase("pocco")
-                                                                  .GetCollection<FakeAccount>("accounts")
-                                                                  .Find(account => account.ListenOrganizationEvents.Contains(id))
-                                                                  .Project(account => account.Id)
-                                                                  .ToList(),
-      GrpcServiceHelper.EventCategory.Message => _mongoClient.GetDatabase("pocco")
-                                                             .GetCollection<FakeAccount>("accounts")
-                                                             .Find(account => account.ListenMessageEvents.Contains(id))
-                                                             .Project(account => account.Id)
-                                                             .ToList(),
-      _ => throw new ArgumentException("Unsupported event type", nameof(eventType))
-    };
+    // TODO: Convert to In service store
+    // var targetClientIds = eventCategory switch {
+    //   GrpcServiceHelper.EventCategory.Account => _mongoClient.GetDatabase("pocco")
+    //                                                          .GetCollection<FakeAccount>("accounts")
+    //                                                          .Find(account => account.ListenUserEvents.Contains(id))
+    //                                                          .Project(account => account.Id)
+    //                                                          .ToList(),
+    //   GrpcServiceHelper.EventCategory.Organization => _mongoClient.GetDatabase("pocco")
+    //                                                               .GetCollection<FakeAccount>("accounts")
+    //                                                               .Find(account => account.ListenOrganizationEvents.Contains(id))
+    //                                                               .Project(account => account.Id)
+    //                                                               .ToList(),
+    //   GrpcServiceHelper.EventCategory.Message => _mongoClient.GetDatabase("pocco")
+    //                                                          .GetCollection<FakeAccount>("accounts")
+    //                                                          .Find(account => account.ListenMessageEvents.Contains(id))
+    //                                                          .Project(account => account.Id)
+    //                                                          .ToList(),
+    //   _ => throw new ArgumentException("Unsupported event type", nameof(eventType))
+    // };
+    var targetClientIds = new List<string> { id }; // For testing, use the provided ID directly
 
     return ClientList
       .Where(client => targetClientIds.Contains(client.Key))

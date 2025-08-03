@@ -1,4 +1,5 @@
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
+using Pocco.Svc.EventBridge.Contexts;
 using Pocco.Svc.EventBridge.Services;
 using Pocco.Svc.EventBridge.Services.Handlers;
 using Pocco.Svc.EventBridge.Services.Listeners;
@@ -7,11 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton(sp => {
-  var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("MongoDb");
-  if (string.IsNullOrEmpty(connectionString)) {
-    throw new InvalidOperationException("MongoDB connection string is not configured.");
-  }
-  return new MongoClient(connectionString);
+  var optionsBuilder = new DbContextOptionsBuilder<EventLogContext>();
+  var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
+                         throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
+  optionsBuilder.UseMySQL(connectionString);
+  return new EventLogContext(optionsBuilder.Options);
 });
 
 builder.Services.AddSingleton<EventDispatcher>();
@@ -24,7 +25,7 @@ builder.Services.AddGrpcReflection();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<EventSubscriber>();
+app.MapGrpcService<V0EventHandlerImpl>();
 app.MapGrpcService<AccountEventListener>();
 app.MapGrpcService<OrganizationEventListener>();
 app.MapGrpcReflectionService();
