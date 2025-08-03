@@ -1,0 +1,5 @@
+# Ignore completed docker-compose file
+docker-compose.yml
+
+# Ignore environment variables file
+.env
