@@ -8,35 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <Protobuf Include="..\.protos\V0\Services\event_service.proto" ProtoRoot="..\protos" GrpcServices="Server" /> -->
-
-    <!-- Enums -->
-    <Protobuf Include="..\src\.protos\V0\Enums\MessageAttachmentType.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Enums\MessageReactionType.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-
-    <!-- Types -->
-    <Protobuf Include="..\src\.protos\V0\Types\BaseEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-
-    <Protobuf Include="..\src\.protos\V0\Types\Account\AccountModel.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Account\CreatedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Account\DisabledEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Account\ModeratedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Account\UpdatedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageModel.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageCreatedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageUpdatedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageDeletedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageReactionAddedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-    <Protobuf Include="..\src\.protos\V0\Types\Organization\MessageReactionRemovedEvent.proto" ProtoRoot="..\src\.protos" GrpcServices="None" />
-
-    <!-- Services -->
-    <Protobuf Include="..\src\.protos\V0\Services\EventHandler.proto" ProtoRoot="..\src\.protos" GrpcServices="Client" />
-    <Protobuf Include="..\src\.protos\V0\Services\AccountEvents.proto" ProtoRoot="..\src\.protos" GrpcServices="Client" />
-    <Protobuf Include="..\src\.protos\V0\Services\OrganizationEvents.proto" ProtoRoot="..\src\.protos" GrpcServices="Client" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Grpc.Reflection" Version="2.71.0" />
@@ -44,10 +15,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\service\Pocco.Svc.EventBridge.csproj" />
   </ItemGroup>
 
   <ItemGroup>
