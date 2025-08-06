@@ -20,9 +20,7 @@ builder.Services.AddGrpcReflection();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<V0EventHandlerImpl>();
-app.MapGrpcService<AccountEventListener>();
-app.MapGrpcService<OrganizationEventListener>();
+app.MapGrpcService<V0AccountEventsImpl>();
 app.MapGrpcReflectionService();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
