@@ -12,7 +12,7 @@ public class Logger : ILogger {
     _categoryName = categoryName.Split('.').Last();
   }
 
-  public IDisposable? BeginScope<TState>(TState state) {
+  public IDisposable? BeginScope<TState>(TState state) where TState : notnull {
     return NoopDisposable.Instance;
   }
 
@@ -20,9 +20,18 @@ public class Logger : ILogger {
     return true; // Always enabled for test output
   }
 
-  public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
-    var message = formatter(state, exception);
-    _outputHelper.WriteLine($"[{logLevel}] {_categoryName}: {message}");
+  public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) {
+    if (!IsEnabled(logLevel)) {
+      return;
+    }
+
+    if (exception is not null) {
+      _outputHelper.WriteLine($"[{logLevel}] {_categoryName}: {formatter(state, exception)}");
+      _outputHelper.WriteLine(exception.ToString());
+      return;
+    } else {
+      _outputHelper.WriteLine($"[{logLevel}] {_categoryName}: {formatter(state, null)}");
+    }
   }
 
   private class NoopDisposable : IDisposable {
