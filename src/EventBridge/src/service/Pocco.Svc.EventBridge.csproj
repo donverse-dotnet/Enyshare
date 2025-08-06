@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,9 +31,9 @@
     <Protobuf Include="..\.protos\V0\Types\Organization\MessageReactionRemovedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
 
     <!-- Services -->
-    <Protobuf Include="..\.protos\V0\Services\EventHandler.proto" ProtoRoot="..\.protos" GrpcServices="Server" />
-    <Protobuf Include="..\.protos\V0\Services\AccountEvents.proto" ProtoRoot="..\.protos" GrpcServices="Server" />
-    <Protobuf Include="..\.protos\V0\Services\OrganizationEvents.proto" ProtoRoot="..\.protos" GrpcServices="Server" />
+    <Protobuf Include="..\.protos\V0\Services\EventHandler.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
+    <Protobuf Include="..\.protos\V0\Services\AccountEvents.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
+    <Protobuf Include="..\.protos\V0\Services\OrganizationEvents.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
   </ItemGroup>
 
   <ItemGroup>
