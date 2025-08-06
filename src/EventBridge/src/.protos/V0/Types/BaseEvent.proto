@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
+package pocco.svc.eventbridge.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+/*
+  ベースイベント
+
+  - イベントのID：e_{unix-nano}_{uuidv4}
+  - イベントを起こしたユーザーのID
+  - イベントが発生した日時
+*/
+message V0BaseEvent {
+    // イベントのID
+    string event_id = 1;
+    // イベントが発生した日時
+    google.protobuf.Timestamp fired_at = 2;
+}
+
+/*
+    PublishResponse
+
+    - 成功フラグ： trueなら成功、falseなら失敗
+    - イベントID：イベントが正常に発行された場合のID
+    - エラーメッセージ：
+      - 成功時は空文字列
+      - 失敗時はエラーの詳細メッセージ
+*/
+message V0PublishResponse {
+    // 成功フラグ
+    bool success = 1;
+    // イベントID
+    string event_id = 2;
+    // エラーメッセージ
+    string error_message = 3;
+}

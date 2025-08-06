@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Enums";
+package pocco.svc.eventbridge.protobufs.enums;
+
+
+enum V0MessageAttachmentType {
+    IMAGE = 0;
+    VIDEO = 1;
+    AUDIO = 2;
+    DOCUMENT = 3;
+}

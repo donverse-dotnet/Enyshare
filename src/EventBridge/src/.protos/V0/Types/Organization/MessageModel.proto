@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
+package pocco.svc.eventbridge.protobufs.types;
+
+import "V0/Enums/MessageAttachmentType.proto";
+import "V0/Enums/MessageReactionType.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message V0MessageModel {
+    string message_id = 1;
+    string organization_id = 2;
+    string chat_id = 3;
+    string sender_id = 4;
+
+    string content = 5;
+    repeated V0MessageAttachmentModel attachments = 6;
+    repeated V0MessageMentionModel mentions = 7;
+    repeated V0MessageReactionModel reactions = 8;
+
+    bool is_deleted = 9;
+
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp edited_at = 11;
+}
+
+
+
+message V0MessageAttachmentModel {
+    string attachment_id = 1;
+    pocco.svc.eventbridge.protobufs.enums.V0MessageAttachmentType type = 2;
+}
+
+message V0MessageMentionModel {
+    string account_id = 1;
+}
+
+message V0MessageReactionModel {
+    string account_id = 1;
+    string reaction_id = 2;
+    pocco.svc.eventbridge.protobufs.enums.V0MessageReactionType reaction_type = 3;
+}
