@@ -3,18 +3,17 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
 package pocco.svc.eventbridge.protobufs.types;
 
-import "V0/Types/BaseEvent.proto";
-import "V0/Types/Account/AccountModel.proto";
 import "google/protobuf/timestamp.proto";
 
 
 message V0AccountModeratedEvent {
-    // ベースイベント
-    pocco.svc.eventbridge.protobufs.types.V0BaseEvent base_event = 1;
-
-    // アカウントデータ
-    pocco.svc.eventbridge.protobufs.types.V0AccountModel account_model = 2;
+    // アカウントID
+    string account_id = 1;
+    // アクション
+    string action = 2;
+    // 理由
+    string reason = 3;
 
     // イベントの発生日時
-    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp created_at = 4;
 }

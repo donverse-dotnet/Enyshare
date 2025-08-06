@@ -3,16 +3,14 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
 package pocco.svc.eventbridge.protobufs.types;
 
-import "V0/Types/BaseEvent.proto";
 import "google/protobuf/timestamp.proto";
 
 
 message V0AccountDisabledEvent {
-    // ベースイベント
-    pocco.svc.eventbridge.protobufs.types.V0BaseEvent base_event = 1;
-
     // 成功フラグ
-    bool success = 2;
+    bool success = 1;
+    // アカウントID
+    string account_id = 2;
 
     // イベントの発生日時
     google.protobuf.Timestamp created_at = 3;

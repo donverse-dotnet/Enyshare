@@ -3,6 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Services";
 package pocco.svc.eventbridge.protobufs.services;
 
+import "V0/Types/BaseEvent.proto";
 import "V0/Types/Account/CreatedEvent.proto";
 import "V0/Types/Account/UpdatedEvent.proto";
 import "V0/Types/Account/ModeratedEvent.proto";
@@ -39,25 +40,27 @@ message V0UnsubscribeRequest {
 }
 
 message V0EventData {
+    pocco.svc.eventbridge.protobufs.types.V0BaseEvent base_event = 1;
+
     oneof payload {
         // アカウント作成完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0AccountCreatedEvent account_created_event = 1;
+        pocco.svc.eventbridge.protobufs.types.V0AccountCreatedEvent account_created_event = 2;
         // アカウント更新完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0AccountUpdatedEvent account_updated_event = 2;
+        pocco.svc.eventbridge.protobufs.types.V0AccountUpdatedEvent account_updated_event = 3;
         // アカウントモデレーション完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0AccountModeratedEvent account_moderated_event = 3;
+        pocco.svc.eventbridge.protobufs.types.V0AccountModeratedEvent account_moderated_event = 4;
         // アカウント無効化完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0AccountDisabledEvent account_disabled_event = 4;
+        pocco.svc.eventbridge.protobufs.types.V0AccountDisabledEvent account_disabled_event = 5;
 
         // 組織内メッセージ作成完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageCreatedEvent message_created_event = 5;
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageCreatedEvent message_created_event = 6;
         // 組織内メッセージ更新完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageUpdatedEvent message_updated_event = 6;
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageUpdatedEvent message_updated_event = 7;
         // 組織内メッセージ削除完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageDeletedEvent message_deleted_event = 7;
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageDeletedEvent message_deleted_event = 8;
         // 組織内メッセージリアクション追加完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionAddedEvent message_reaction_added_event = 8;
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionAddedEvent message_reaction_added_event = 9;
         // 組織内メッセージリアクション削除完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionRemovedEvent message_reaction_removed_event = 9;
+        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionRemovedEvent message_reaction_removed_event = 10;
     }
 }
