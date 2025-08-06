@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Pocco.Svc.EventBridge.Contexts;
 using Pocco.Svc.EventBridge.Services;
 using Pocco.Svc.EventBridge.Services.Handlers;
 using Pocco.Svc.EventBridge.Services.Listeners;
@@ -8,11 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton(sp => {
-  var optionsBuilder = new DbContextOptionsBuilder<EventLogContext>();
+  var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
   var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
                          throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
   optionsBuilder.UseMySQL(connectionString);
-  return new EventLogContext(optionsBuilder.Options);
+  return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
 });
 
 builder.Services.AddSingleton<EventDispatcher>();
