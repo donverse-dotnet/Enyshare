@@ -7,17 +7,22 @@ using Xunit.Abstractions;
 
 namespace Pocco.Svc.EventBridgeTest;
 
-public class V0AccountEventTest {
+public class V0AccountEventTest : IClassFixture<GrpcTestFactory> {
   private readonly ILogger<V0AccountEventTest> _logger;
+  private readonly GrpcChannel _channel;
 
-  public V0AccountEventTest(ITestOutputHelper outputHelper) {
-    var factory = LoggerFactory.Create(builder => {
-      builder.AddProvider(new LoggerProvider(outputHelper));
-      builder.SetMinimumLevel(LogLevel.Information);
+  private readonly int _waitTime = 2000; // Default wait time for service to process events
+
+  public V0AccountEventTest(GrpcTestFactory factory, ITestOutputHelper outputHelper) {
+    var client = factory.CreateClient();
+    _channel = GrpcChannel.ForAddress("http://localhost:5218", new GrpcChannelOptions {
+      HttpClient = client
     });
 
-    _logger = factory.CreateLogger<V0AccountEventTest>();
-    _logger.LogInformation("V0AccountEventTest initialized.");
+    _logger = LoggerFactory.Create(builder => {
+      builder.AddProvider(new LoggerProvider(outputHelper));
+      builder.SetMinimumLevel(LogLevel.Information);
+    }).CreateLogger<V0AccountEventTest>();
   }
 
   [Fact]
@@ -25,8 +30,7 @@ public class V0AccountEventTest {
     _logger.LogInformation("Starting AccountCreatedEvent test...");
 
     // Arrange
-    using var channel = GrpcChannel.ForAddress("http://localhost:5218");
-    var client = new V0AccountEvents.V0AccountEventsClient(channel);
+    var client = new V0AccountEvents.V0AccountEventsClient(_channel);
     var request = new V0AccountCreatedEvent {
       Id = "test-account-id",
       Email = "test@y.com",
@@ -52,6 +56,9 @@ public class V0AccountEventTest {
     Assert.Empty(response.ErrorMessage);
     _logger.LogInformation("AccountCreatedEvent test completed successfully.");
     _logger.LogInformation("Test completed.");
+
+    // Wait service to process the event
+    await Task.Delay(_waitTime);
   }
 
   [Fact]
@@ -59,8 +66,7 @@ public class V0AccountEventTest {
     _logger.LogInformation("Starting AccountUpdatedEvent test...");
 
     // Arrange
-    using var channel = GrpcChannel.ForAddress("http://localhost:5218");
-    var client = new V0AccountEvents.V0AccountEventsClient(channel);
+    var client = new V0AccountEvents.V0AccountEventsClient(_channel);
     var request = new V0AccountUpdatedEvent {
       AccountModel = new V0AccountModel {
         AccountId = "test-account-id",
@@ -91,6 +97,9 @@ public class V0AccountEventTest {
     Assert.Empty(response.ErrorMessage);
     _logger.LogInformation("AccountUpdatedEvent test completed successfully.");
     _logger.LogInformation("Test completed.");
+
+    // Wait service to process the event
+    await Task.Delay(_waitTime);
   }
 
   [Fact]
@@ -98,8 +107,7 @@ public class V0AccountEventTest {
     _logger.LogInformation("Starting AccountModerationEvent test...");
 
     // Arrange
-    using var channel = GrpcChannel.ForAddress("http://localhost:5218");
-    var client = new V0AccountEvents.V0AccountEventsClient(channel);
+    var client = new V0AccountEvents.V0AccountEventsClient(_channel);
     var request = new V0AccountModeratedEvent {
       AccountId = "test-account-id",
       Action = "moderate",
@@ -124,6 +132,9 @@ public class V0AccountEventTest {
     Assert.Empty(response.ErrorMessage);
     _logger.LogInformation("AccountModerationEvent test completed successfully.");
     _logger.LogInformation("Test completed.");
+
+    // Wait service to process the event
+    await Task.Delay(_waitTime);
   }
 
   [Fact]
@@ -131,8 +142,7 @@ public class V0AccountEventTest {
     _logger.LogInformation("Starting AccountDeletedEvent test...");
 
     // Arrange
-    using var channel = GrpcChannel.ForAddress("http://localhost:5218");
-    var client = new V0AccountEvents.V0AccountEventsClient(channel);
+    var client = new V0AccountEvents.V0AccountEventsClient(_channel);
     var request = new V0AccountDisabledEvent {
       Success = true,
       AccountId = "test-account-id",
@@ -156,5 +166,8 @@ public class V0AccountEventTest {
     Assert.Empty(response.ErrorMessage);
     _logger.LogInformation("AccountDisabledEvent test completed successfully.");
     _logger.LogInformation("Test completed.");
+
+    // Wait service to process the event
+    await Task.Delay(_waitTime);
   }
 }
