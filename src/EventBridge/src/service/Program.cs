@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Pocco.Svc.EventBridge.Services;
-using Pocco.Svc.EventBridge.Services.Handlers;
-using Pocco.Svc.EventBridge.Services.Listeners;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +12,7 @@ builder.Services.AddSingleton(sp => {
   return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
 });
 
-builder.Services.AddSingleton<EventDispatcher>();
-builder.Services.AddSingleton<EventDeployInvoker>();
-builder.Services.AddSingleton<EventStoreTasksDeployer>();
+builder.Services.AddSingleton<V0EventInvoker>();
 
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
