@@ -1,27 +1,33 @@
 using Microsoft.EntityFrameworkCore;
 using Pocco.Svc.EventBridge.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Pocco.Svc.EventBridge;
 
-// Add services to the container.
-builder.Services.AddSingleton(sp => {
-  var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
-  var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
-                         throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
-  optionsBuilder.UseMySQL(connectionString);
-  return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
-});
+public class Program {
+  public static void Main(string[] args) {
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<V0EventInvoker>();
+    // Add services to the container.
+    builder.Services.AddSingleton(sp => {
+      var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
+      var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
+                             throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
+      optionsBuilder.UseMySQL(connectionString);
+      return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
+    });
 
-builder.Services.AddGrpc();
-builder.Services.AddGrpcReflection();
+    builder.Services.AddSingleton<V0EventInvoker>();
 
-var app = builder.Build();
+    builder.Services.AddGrpc();
+    builder.Services.AddGrpcReflection();
 
-// Configure the HTTP request pipeline.
-app.MapGrpcService<V0AccountEventsImpl>();
-app.MapGrpcReflectionService();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+    var app = builder.Build();
 
-app.Run();
+    // Configure the HTTP request pipeline.
+    app.MapGrpcService<V0AccountEventsImpl>();
+    app.MapGrpcReflectionService();
+    app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
+    app.Run();
+  }
+}
