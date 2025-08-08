@@ -1,7 +1,7 @@
 using Grpc.Core;
-using Pocco.Svc.Organizations;
+using ChatService;
 
-namespace Pocco.Svc.Organizations.Services;
+namespace ChatService.Services;
 
 public class GreeterService : Greeter.GreeterBase
 {
