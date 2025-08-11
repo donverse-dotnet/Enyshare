@@ -1,8 +1,6 @@
 using System.Threading.Channels;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
 
 namespace Pocco.Svc.EventBridge.Services;
 
@@ -86,12 +84,36 @@ public class V0EventInvoker {
     switch (payload.PayloadCase) {
       case V0EventData.PayloadOneofCase.AccountCreatedEvent:
         // セッションIDを取得
-        var sessionIds = ClientList
+        var ace = ClientList
           .Where(c => c.AccountId == payload.AccountCreatedEvent.Id)
           .Select(c => c.AccountId)
           .ToList();
-        _logger.LogInformation("Found {Count} clients for AccountCreatedEvent with ID: {payload.AccountCreatedEvent.Id}", sessionIds.Count, payload.BaseEvent.EventId);
-        return sessionIds;
+        _logger.LogInformation("Found {Count} clients for AccountCreatedEvent with ID: {payload.AccountCreatedEvent.Id}", ace.Count, payload.BaseEvent.EventId);
+        return ace;
+      case V0EventData.PayloadOneofCase.AccountUpdatedEvent:
+        // セッションIDを取得
+        var aue = ClientList
+          .Where(c => c.AccountId == payload.AccountUpdatedEvent.AccountModel.AccountId)
+          .Select(c => c.AccountId)
+          .ToList();
+        _logger.LogInformation("Found {Count} clients for AccountCreatedEvent with ID: {payload.AccountCreatedEvent.Id}", aue.Count, payload.BaseEvent.EventId);
+        return aue;
+      case V0EventData.PayloadOneofCase.AccountModeratedEvent:
+        // セッションIDを取得
+        var ame = ClientList
+          .Where(c => c.AccountId == payload.AccountModeratedEvent.AccountId)
+          .Select(c => c.AccountId)
+          .ToList();
+        _logger.LogInformation("Found {Count} clients for AccountCreatedEvent with ID: {payload.AccountCreatedEvent.Id}", ame.Count, payload.BaseEvent.EventId);
+        return ame;
+      case V0EventData.PayloadOneofCase.AccountDisabledEvent:
+        // セッションIDを取得
+        var ade = ClientList
+          .Where(c => c.AccountId == payload.AccountDisabledEvent.AccountId)
+          .Select(c => c.AccountId)
+          .ToList();
+        _logger.LogInformation("Found {Count} clients for AccountCreatedEvent with ID: {payload.AccountCreatedEvent.Id}", ade.Count, payload.BaseEvent.EventId);
+        return ade;
       default:
         _logger.LogWarning("Unknown event type: {PayloadCase}", payload.PayloadCase);
         return [];
