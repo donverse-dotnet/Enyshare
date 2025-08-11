@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Types";
+package pocco.svc.messages.protobufs.types;
+
+import "V0/Types/Messages.proto";
+
+
+message V0TryMessageActionResponse {
+    string message_sent_event_id = 1;
+}
+
+message V0TrySendMessageToOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string content = 4;
+    pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 5;
+    pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 6;
+    pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 7;
+}
+message V0TryUpdateMessageInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    oneof update {
+        string content = 3;
+        pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 4;
+        pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 5;
+        pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 6;
+    }
+    string message_id = 7; // メッセージID
+}
+message V0TryDeleteMessageFromOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3; // メッセージID
+}
+message V0TryAddReactionToMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3; // メッセージID
+    pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 4;
+}
+message V0TryRemoveReactionFromMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3; // メッセージID
+    pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 4;
+}
+message V0TryBulkRemoveReactionsFromMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3; // メッセージID
+    repeated pocco.svc.messages.protobufs.types.V0MessageReaction reactions = 4;
+}

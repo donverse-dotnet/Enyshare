@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Enums";
+package pocco.svc.messages.protobufs.enums;
+
+
+enum MessageAttachmentType {
+    // 実行ファイルなどの添付ファイルは許可しない
+    MESSAGE_ATTACHMENT_TYPE_UNSPECIFIED = 0;
+    // 画像（png/jpeg/gif）
+    MESSAGE_ATTACHMENT_TYPE_IMAGE = 1;
+    // 動画（mp4/mov）
+    MESSAGE_ATTACHMENT_TYPE_VIDEO = 2;
+    // 音声（mp3/wav/ogg）
+    MESSAGE_ATTACHMENT_TYPE_AUDIO = 3;
+    // ドキュメント（txt/md）
+    MESSAGE_ATTACHMENT_TYPE_DOCUMENT = 4;
+}

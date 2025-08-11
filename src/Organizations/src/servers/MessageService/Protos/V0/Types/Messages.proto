@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Types";
+package pocco.svc.messages.protobufs.types;
+
+import "V0/Enums/MessageAttachmentType.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message V0MessageAttachment {
+    // 添付ファイルのID（通常、IDは{userid}/pocco/{file_id}.{ext}となっている）
+    string id = 1;
+    // 添付ファイルのタイプ
+    pocco.svc.messages.protobufs.enums.MessageAttachmentType type = 2;
+}
+message V0MessageAttachments {
+    // 添付ファイルのリスト
+    repeated pocco.svc.messages.protobufs.types.V0MessageAttachment attachments = 1;
+}
+
+message V0MessageMention {
+    // メンションされたユーザーのID
+    string mentioned_user_id = 1;
+}
+message V0MessageMentions {
+    // メンションされたユーザーのリスト
+    repeated pocco.svc.messages.protobufs.types.V0MessageMention mentions = 1;
+}
+
+message V0MessageReaction {
+    // リアクションしたユーザーのID
+    string reaction_user_id = 1;
+    // リアクションの絵文字ID
+    string reaction_emoji_id = 2;
+}
+message V0MessageReactions {
+    // リアクションのリスト
+    repeated pocco.svc.messages.protobufs.types.V0MessageReaction reactions = 1;
+}
+
+message V0Messages {
+    // メッセージのID
+    string id = 1;
+    // 送信先の組織ID
+    string organization_id = 2;
+    // 送信先のチャットID
+    string chat_id = 3;
+
+    // 送信者のユーザーID
+    string sender_id = 4;
+
+    // メッセージの内容
+    string content = 5;
+    // 添付ファイルのリスト
+    V0MessageAttachments attachments = 6;
+    // メンションされたユーザーのリスト
+    V0MessageMentions mentions = 7;
+    // リアクションのリスト
+    V0MessageReactions reactions = 8;
+
+    // 削除されたかどうか
+    bool is_deleted = 9;
+
+    // メッセージの送信日時
+    google.protobuf.Timestamp created_at = 10;
+    // メッセージの更新日時
+    google.protobuf.Timestamp updated_at = 11;
+}
