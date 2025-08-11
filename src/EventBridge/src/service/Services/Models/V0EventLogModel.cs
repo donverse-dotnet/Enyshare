@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Pocco.Svc.EventBridge.Protobufs.Types;
 
 namespace Pocco.Svc.EventBridge.Services.Models;

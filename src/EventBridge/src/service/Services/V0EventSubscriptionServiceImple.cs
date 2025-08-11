@@ -1,4 +1,3 @@
-using System.Threading.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
