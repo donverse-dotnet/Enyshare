@@ -30,7 +30,11 @@ public class V0AccountEventsImpl(
         },
         AccountCreatedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -74,7 +78,11 @@ public class V0AccountEventsImpl(
         },
         AccountUpdatedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -118,7 +126,11 @@ public class V0AccountEventsImpl(
         },
         AccountModeratedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -162,7 +174,11 @@ public class V0AccountEventsImpl(
         },
         AccountDisabledEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
