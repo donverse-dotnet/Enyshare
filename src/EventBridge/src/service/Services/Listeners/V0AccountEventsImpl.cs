@@ -1,3 +1,5 @@
+#pragma warning disable CS1998 // Disable "Async method lacks 'await'" warning
+
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +32,11 @@ public class V0AccountEventsImpl(
         },
         AccountCreatedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -39,7 +45,11 @@ public class V0AccountEventsImpl(
         FiredAt = DateTime.UtcNow,
         EventData = request.ToString() // Serialize the request to a string
       };
-      await V0EventLogStoreService.EventQueueChannel.Writer.WriteAsync(eventLogModel);
+      var eventLogQueued = _v0EventLogStoreService.TryEnqueueEventLog(eventLogModel);
+
+      if (!eventLogQueued) {
+        throw new InvalidOperationException("Failed to queue event log.");
+      }
 
       // ログにイベントの発行を記録
       _logger.LogInformation("Published V0AccountCreatedEvent: {EventId}", eId);
@@ -74,7 +84,11 @@ public class V0AccountEventsImpl(
         },
         AccountUpdatedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -83,7 +97,11 @@ public class V0AccountEventsImpl(
         FiredAt = DateTime.UtcNow,
         EventData = request.ToString() // Serialize the request to a string
       };
-      await V0EventLogStoreService.EventQueueChannel.Writer.WriteAsync(eventLogModel);
+      var eventLogQueued = _v0EventLogStoreService.TryEnqueueEventLog(eventLogModel);
+
+      if (!eventLogQueued) {
+        throw new InvalidOperationException("Failed to queue event log.");
+      }
 
       // ログにイベントの発行を記録
       _logger.LogInformation("Published V0AccountUpdatedEvent: {EventId}", eId);
@@ -118,7 +136,11 @@ public class V0AccountEventsImpl(
         },
         AccountModeratedEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -127,7 +149,11 @@ public class V0AccountEventsImpl(
         FiredAt = DateTime.UtcNow,
         EventData = request.ToString() // Serialize the request to a string
       };
-      await V0EventLogStoreService.EventQueueChannel.Writer.WriteAsync(eventLogModel);
+      var eventLogQueued = _v0EventLogStoreService.TryEnqueueEventLog(eventLogModel);
+
+      if (!eventLogQueued) {
+        throw new InvalidOperationException("Failed to queue event log.");
+      }
 
       // ログにイベントの発行を記録
       _logger.LogInformation("Published V0AccountModeratedEvent: {EventId}", eId);
@@ -162,7 +188,11 @@ public class V0AccountEventsImpl(
         },
         AccountDisabledEvent = request
       };
-      await V0EventInvoker.EventChannel.Writer.WriteAsync(eventData);
+      var eventQueued = _v0EventInvoker.AddToEventQueue(eventData);
+
+      if (!eventQueued) {
+        throw new InvalidOperationException("Failed to queue event data.");
+      }
 
       // ログストアにイベントを保存
       var eventLogModel = new V0EventLogModel {
@@ -171,7 +201,11 @@ public class V0AccountEventsImpl(
         FiredAt = DateTime.UtcNow,
         EventData = request.ToString() // Serialize the request to a string
       };
-      await V0EventLogStoreService.EventQueueChannel.Writer.WriteAsync(eventLogModel);
+      var eventLogQueued = _v0EventLogStoreService.TryEnqueueEventLog(eventLogModel);
+
+      if (!eventLogQueued) {
+        throw new InvalidOperationException("Failed to queue event log.");
+      }
 
       // ログにイベントの発行を記録
       _logger.LogInformation("Published V0AccountDisabledEvent: {EventId}", eId);

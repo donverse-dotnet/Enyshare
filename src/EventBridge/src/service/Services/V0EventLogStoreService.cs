@@ -6,16 +6,14 @@ namespace Pocco.Svc.EventBridge.Services;
 
 public class V0EventLogStoreService : DbContext {
   private readonly ILogger<V0EventLogStoreService> _logger;
+  private const int _maxConcurrentTask = 1000;
+  private readonly SemaphoreSlim _storeExecutionLimiter = new(_maxConcurrentTask);
+  private readonly List<Task> _storeExecutionTasks = [];
 
   /// <summary>
   /// イベントログをキャッシュするためのチャネル。
   /// </summary>
-  public static readonly Channel<V0EventLogModel> EventQueueChannel = Channel.CreateUnbounded<V0EventLogModel>();
-  /// <summary>
-  /// イベントログの非同期イテレータ。
-  /// イベントログのリストを非同期に読み取ることができます。
-  /// </summary>
-  public readonly IAsyncEnumerable<V0EventLogModel> EventQueue = EventQueueChannel.Reader.ReadAllAsync();
+  private static readonly Channel<V0EventLogModel> _queueAdapter = Channel.CreateUnbounded<V0EventLogModel>();
 
   /// <summary>
   /// イベントログのデータベースセット。
@@ -38,7 +36,7 @@ public class V0EventLogStoreService : DbContext {
   }
 
   public override void Dispose() {
-    EventQueueChannel.Writer.TryComplete();
+    _queueAdapter.Writer.TryComplete();
     _cancellationTokenSource.Cancel();
     _cancellationTokenSource.Dispose();
     base.Dispose();
@@ -48,17 +46,37 @@ public class V0EventLogStoreService : DbContext {
   }
 
   private async Task InvokeEventSaveQueue() {
-    await foreach (var eventLog in EventQueue) {
-      try {
-        // イベントログをデータベースに追加
-        EventLogs.Add(eventLog);
-        // 変更を保存
-        await SaveChangesAsync();
+    await foreach (var eventLog in _queueAdapter.Reader.ReadAllAsync(_cancellationToken)) {
+      await _storeExecutionLimiter.WaitAsync(_cancellationToken);
 
-        _logger.LogInformation("Event log saved: {EventId}", eventLog.EventId);
-      } catch (Exception ex) {
-        _logger.LogError(ex, "Failed to save event log: {EventId}", eventLog.EventId);
-      }
+      var task = Task.Run(async () => {
+        try {
+          await EventLogs.AddAsync(eventLog);
+          await SaveChangesAsync();
+        } catch (Exception ex) {
+          _logger.LogError(ex, "Failed to save event log: {EventId}", eventLog.EventId);
+        } finally {
+          _storeExecutionLimiter.Release();
+        }
+      }, _cancellationToken);
+
+      _storeExecutionTasks.Add(task);
+      _storeExecutionTasks.RemoveAll(t => t.IsCompleted);
+    }
+  }
+
+  public bool TryEnqueueEventLog(V0EventLogModel eventLog) {
+    if (eventLog == null) {
+      _logger.LogWarning("Attempted to enqueue a null event log.");
+      return false;
+    }
+
+    if (_queueAdapter.Writer.TryWrite(eventLog)) {
+      _logger.LogInformation("Event log enqueued successfully: {EventId}", eventLog.EventId);
+      return true;
+    } else {
+      _logger.LogWarning("Failed to enqueue event log: {EventId}. Queue may be full.", eventLog.EventId);
+      return false;
     }
   }
 }
