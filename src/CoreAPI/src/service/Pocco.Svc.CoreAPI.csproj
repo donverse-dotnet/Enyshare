@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\.protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="../.protos/greet.proto" GrpcServices="Server" />
 
     <!-- VENDORS -->
 
@@ -22,6 +22,11 @@
     <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountUpdateReply.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
     <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountUpdateRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
     <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Services/AccountService.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="Client" />
+    <!-- Pocco.Srv.Auth V0 -->
+    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SessionData.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Services/AuthService.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="Client" />
   </ItemGroup>
 
   <ItemGroup>
