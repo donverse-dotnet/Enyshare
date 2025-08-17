@@ -11,17 +11,6 @@
 
     <!-- VENDORS -->
 
-    <!-- Pocco.Svc.Accounts V0 -->
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Enums/AccountStatus.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountDeleteReply.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountDeleteRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountRegisterReply.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountRegisterRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountStatusMessage.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountNotificationSettings.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountUpdateReply.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Types/AccountUpdateRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Svc.Accounts/V0/Services/AccountService.proto" ProtoRoot="../.protos/vendor/Pocco.Svc.Accounts/" GrpcServices="Client" />
     <!-- Pocco.Srv.Auth V0 -->
     <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
     <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
