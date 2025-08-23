@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+message V0CreateRequest {
+    string name = 1
+}

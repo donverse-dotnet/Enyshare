@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "V0/Types/CreateRequestData.proto";
+import "V0/Types/DeleteRequestData.proto";
+import "V0/Types/RoleModel.proto";
+import "V0/Types/CreateReplyData.proto";
+import "V0/Types/DeleteReplyData.proto";
+import "google/protobuf/empty.proto";
+
+//組織のロールを管理するRPCサービスの定義
+
+services V0OrganizationRoleService {
+    //組織のロールを作成するRPCメソッド
+    rpc Create(pocco.libs.protobufs.V0CreateRequest) return (pocco.libs.protobufs.V0CreateReply);
+    //組織のロールを更新するRPCメソッド
+    rpc Updata(pocco.libs.protobufs.V0RoleModel) return (google.protobuf.Empty);
+    //組織のロールを削除するRPCメソッド
+    rpc Delete(pocco.libs.protobufs.V0DeleteRequest) return (pocco.libs.protobufs.V0DeleteReply);
+}
