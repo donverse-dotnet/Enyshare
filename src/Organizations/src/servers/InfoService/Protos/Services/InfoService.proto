@@ -1,3 +1,5 @@
 syntax = "proto3";
 
-option csharp_namespace = "ChatService";
+option csharp_namespace = "InfoService";
+
+package info;
