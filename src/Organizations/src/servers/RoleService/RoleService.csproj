@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Types/CreateReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/CreateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/DeleteReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/DeleteRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/RoleModel.proto" ProtoRoot="Protos" GrpcServices="None" />
+
+    <Protobuf Include="Protos/V0/Services/OrganizationRoleService.proto" ProtoRoot="Protos" GrpcServices="None" />
   </ItemGroup>
 
   <ItemGroup>
