@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+import "VO/Types/CreateRequestData.proto";
+import "VO/Types/DeleteRequestData.proto";
+import "VO/Types/CreateReplyData.proto";
+import "VO/Types/DeleteReplyData.proto";
+import "VO/Types/InfoModel.proto";
+import "google/protobuf/empty.proto";
+
+service VOOrganizationInfoService{
+    rpc Create(pocco.libs.protobufs.VOCreateRequest) return (pocco.libs.protobufs.VOCreateReply);
+    rpc Update(pocco.libs.protobufs.VODeleteRequest) return (pocco.libs.protobufs.VODeleteReply);
+    rpc Create(pocco.libs.protobufs.VOInfoModel) return (google.protobufs.Empty);
+}
