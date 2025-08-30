@@ -4,6 +4,8 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 
 package pocco.libs.protobufs.types;
 
-message VODeleteRequest{
-    string id = 1;
+message V0CreateOrganizationRequest{
+    string name = 1;
+    string description = 2;
+    string created_by = 3;
 }

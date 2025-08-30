@@ -7,11 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <Protobuf Include="./Protos/V0/Services/OrganizationsInfoService.proto" GrpcRoot="./Protos" GrpcServices="Server" />
+    <Protobuf Include="./Protos/V0/Types/CreateRequestData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/CreateReplyData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteRequestData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteReplyData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos"  GrpcServices="None" />
   </ItemGroup>
 
 </Project>
