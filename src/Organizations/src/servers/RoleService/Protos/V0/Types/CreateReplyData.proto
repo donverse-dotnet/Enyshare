@@ -3,7 +3,11 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
+import "V0/Types/RoleModel.proto";
+
 message V0CreateReply {
     string message = 1;
     bool success = 2;
+
+    pocco.libs.protobufs.types.V0RoleModel rolemodel = 3;
 }
