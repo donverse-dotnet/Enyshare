@@ -8,15 +8,16 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Protobuf Include="./Protos/V0/Services/OrganizationsInfoService.proto" GrpcRoot="./Protos" GrpcServices="Server" />
-    <Protobuf Include="./Protos/V0/Types/CreateRequestData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/CreateReplyData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/DeleteRequestData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/DeleteReplyData.proto" GrpcRoot="./Protos"  GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos"  GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/CreateRequestData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/CreateReplyData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteRequestData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteReplyData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos" GrpcServices="None" />
   </ItemGroup>
 
 </Project>

@@ -14,10 +14,6 @@ import "google/protobuf/empty.proto";
 service V0OrganizationInfoService{
     rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0CreateOrganizationReply);
     rpc Update(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
-    rpc CreateFromModel(pocco.libs.protobufs.types.V0InfoModel) returns (google.protobuf.Empty);
+    rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
     // rpc GetInfo(pocco.libs.protobufs.types.V0GetOrganizationInfoRequest) returns (pocco.libs.protobufs.types.V0InfoModel);
-}
-
-message GetOrganizationInfoRequest{
-    string id = 1;
 }
