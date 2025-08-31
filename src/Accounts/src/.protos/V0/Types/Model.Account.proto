@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+import "V0/Enums/AccountRoles.proto";
+import "V0/Types/Model.AccountStatus.proto";
+import "V0/Types/Model.AccountNotificationSettings.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// アカウント情報
+message V0AccountModel {
+    string id = 1;
+    string username = 2;
+    string avatarUrl = 3;
+
+    string email = 4;
+    bool emailVerified = 5;
+
+    pocco.libs.protobufs.enums.V0AccountRoles role = 6;
+
+    pocco.libs.protobufs.types.V0AccountStatusModel status = 7;
+
+    google.protobuf.Timestamp createdAt = 8;
+    google.protobuf.Timestamp updatedAt = 9;
+    google.protobuf.Timestamp lastLoginAt = 10;
+
+    pocco.libs.protobufs.types.V0AccountNotificationSettings notifications = 11;
+}

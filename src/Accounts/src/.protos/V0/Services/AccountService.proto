@@ -3,14 +3,14 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Libs.Protobufs.Services";
 package pocco.libs.protobufs.services;
 
-import "V0/Types/AccountGetRequest.proto";
-import "V0/Types/AccountGetReply.proto";
-import "V0/Types/AccountRegisterRequest.proto";
-import "V0/Types/AccountRegisterReply.proto";
-import "V0/Types/AccountUpdateRequest.proto";
-import "V0/Types/AccountUpdateReply.proto";
-import "V0/Types/AccountDeleteRequest.proto";
-import "V0/Types/AccountDeleteReply.proto";
+import "V0/Types/Request.AccountGet.proto";
+import "V0/Types/Request.AccountRegister.proto";
+import "V0/Types/Request.AccountUpdate.proto";
+import "V0/Types/Request.AccountDelete.proto";
+import "V0/Types/Response.AccountGet.proto";
+import "V0/Types/Response.AccountRegister.proto";
+import "V0/Types/Response.AccountUpdate.proto";
+import "V0/Types/Response.AccountDelete.proto";
 
 
 //アカウントを登録するRPCサービスの定義
