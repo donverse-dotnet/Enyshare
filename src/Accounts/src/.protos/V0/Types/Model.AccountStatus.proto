@@ -1,12 +1,13 @@
 syntax = "proto3";
 
 option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-
 package pocco.libs.protobufs.types;
 
 import "V0/Enums/AccountStatus.proto";
 
-message V0AccountStatusMessage {
+
+// アカウントステータスメッセージ
+message V0AccountStatusModel {
     pocco.libs.protobufs.enums.V0AccountStatus status = 1;
     string message = 2;
 }

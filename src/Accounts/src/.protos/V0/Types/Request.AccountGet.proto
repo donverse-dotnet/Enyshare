@@ -1,11 +1,9 @@
 syntax = "proto3";
 
 option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-
 package pocco.libs.protobufs.types;
 
-message V0AccountNotificationSettings {
-  bool email = 1;
-  bool push = 2;
-  bool showBadge = 3;
+// アカウント取得リクエスト
+message V0GetAccountRequest {
+    string id = 1;
 }
