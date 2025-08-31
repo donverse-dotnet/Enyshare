@@ -7,9 +7,7 @@ using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Accounts.Models;
 
-
 namespace Pocco.Svc.Accounts.Services;
-
 
 public class UserAccountsService : V0AccountService.V0AccountServiceBase {
   private readonly IMongoCollection<Account> _accounts;
@@ -17,6 +15,18 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
   public UserAccountsService(IMongoClient mongoClient) {
     var database = mongoClient.GetDatabase("Entities");
     _accounts = database.GetCollection<Account>("Accounts");
+  }
+
+  public override async Task<V0GetAccountReply> Get(V0GetAccountRequest request, ServerCallContext context) {
+    var account = await _accounts.FindAsync(acc => acc.Id == ObjectId.Parse(request.Id)).Result.FirstOrDefaultAsync()
+                ?? throw new RpcException(new Status(StatusCode.NotFound, "Account not found"));
+
+    return new V0GetAccountReply {
+      Id = account.Id.ToString(),
+      Username = account.Username,
+      IconId = account.AvatarUrl,
+      CreatedAt = account.CreatedAt.ToString("o") // ISO 8601 format
+    };
   }
 
   public override async Task<V0RegisterReply> Register(V0RegisterRequest request, ServerCallContext context) {

@@ -1,19 +1,22 @@
 syntax = "proto3";
 
-
 option csharp_namespace = "Pocco.Libs.Protobufs.Services";
 package pocco.libs.protobufs.services;
 
-import "V0/Types/AccountRegisterReply.proto";
-import "V0/Types/AccountUpdateReply.proto";
-import "V0/Types/AccountDeleteReply.proto";
+import "V0/Types/AccountGetRequest.proto";
+import "V0/Types/AccountGetReply.proto";
 import "V0/Types/AccountRegisterRequest.proto";
+import "V0/Types/AccountRegisterReply.proto";
 import "V0/Types/AccountUpdateRequest.proto";
+import "V0/Types/AccountUpdateReply.proto";
 import "V0/Types/AccountDeleteRequest.proto";
+import "V0/Types/AccountDeleteReply.proto";
+
 
 //アカウントを登録するRPCサービスの定義
-
 service V0AccountService {
+  // アカウントを取得するRPCメソッド
+  rpc Get(pocco.libs.protobufs.types.V0GetAccountRequest) returns (pocco.libs.protobufs.types.V0GetAccountReply);
   // アカウントを登録するRPCメソッド
   rpc Register(pocco.libs.protobufs.types.V0RegisterRequest) returns (pocco.libs.protobufs.types.V0RegisterReply);
   //アカウントを更新するRPCメソッド
