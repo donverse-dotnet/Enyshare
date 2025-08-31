@@ -22,10 +22,13 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
                 ?? throw new RpcException(new Status(StatusCode.NotFound, "Account not found"));
 
     return new V0GetAccountReply {
-      Id = account.Id.ToString(),
-      Username = account.Username,
-      IconId = account.AvatarUrl,
-      CreatedAt = account.CreatedAt.ToString("o") // ISO 8601 format
+      Account = new V0AccountBaseModel {
+        Id = account.Id.ToString(),
+        Username = account.Username,
+        AvatarUrl = account.AvatarUrl,
+        Status = account.Status.ToV0AccountStatusMessage(),
+        CreatedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(account.CreatedAt.ToUniversalTime())
+      }
     };
   }
 
@@ -51,50 +54,51 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
 
   public override async Task<V0UpdateReply> Update(V0UpdateRequest request, ServerCallContext context) {
 
-    var filter = Builders<Account>.Filter.Eq(a => a.Id, ObjectId.Parse(request.Id));
+    var filter = Builders<Account>.Filter.Eq(a => a.Id, ObjectId.Parse(request.NewAccount.Id));
     var updateDataBuilder = Builders<Account>.Update;
-    var updates = new List<UpdateDefinition<Account>>();
+    var updates = new List<UpdateDefinition<Account>> {
+      // 1.パスワード以外を更新
+      updateDataBuilder
+        .Set(acc => acc.Username, request.NewAccount.Username)
+        .Set(acc => acc.Email, request.NewAccount.Email)
+        .Set(acc => acc.AvatarUrl, request.NewAccount.AvatarUrl)
+        .Set(acc => acc.Status, new V0AccountStatusMessageWrapper(request.NewAccount.Status.Status, request.NewAccount.Status.Message))
+        .Set(acc => acc.Notifications, new V0AccountNotificationSettingWrapper(
+          request.NewAccount.Notifications.Email,
+          request.NewAccount.Notifications.Push,
+          request.NewAccount.Notifications.ShowBadge
+        ))
+    };
 
-    // 1.パスワード以外を更新
-    updates.Add(updateDataBuilder
-    .Set(acc => acc.Username, request.Name)
-    .Set(acc => acc.Email, request.Email)
-    .Set(acc => acc.AvatarUrl, request.AvatarUrl)
-    .Set(acc => acc.Status, new V0AccountStatusMessageWrapper(request.Status.Status, request.Status.Message))
-    .Set(acc => acc.Notifications, new V0AccountNotificationSettingWrapper(
-      request.Notifications.Email,
-      request.Notifications.Push,
-      request.Notifications.ShowBadge
-    ))
-    );
     // 2.パスワードを更新
-    if (!string.IsNullOrEmpty(request.Password) || !string.IsNullOrEmpty(request.OnetimeCode)) {
-      //  2.1　ワンタイムコードを比較
-      var account = _accounts
-      .Find(acc => acc.Id == ObjectId.Parse(request.Id) && acc.Onetimecode == request.OnetimeCode)
-      .FirstOrDefault();
+    // if (!string.IsNullOrEmpty(request.Password) || !string.IsNullOrEmpty(request.OnetimeCode)) {
+    //   //  2.1　ワンタイムコードを比較
+    //   var account = _accounts
+    //   .Find(acc => acc.Id == ObjectId.Parse(request.Id) && acc.OnetimeCode == request.OnetimeCode)
+    //   .FirstOrDefault();
 
-      if (account is null) {
-        return new V0UpdateReply {
-          Success = false,
-          Message = "Invalid one-time code or accound not found."
-        };
-      }
-      //  2.2　パスワードを更新
-      updates.Add(updateDataBuilder.Set(acc => acc.PasswordHash, request.Password));
-    }
+    //   if (account is null) {
+    //     return new V0UpdateReply {
+    //       Success = false,
+    //       Message = "Invalid one-time code or account not found."
+    //     };
+    //   }
+    //   //  2.2　パスワードを更新
+    //   updates.Add(updateDataBuilder.Set(acc => acc.PasswordHash, request.Password));
+    // }
+
     // 3.データベースを更新
     var result = await _accounts.UpdateOneAsync(filter, updateDataBuilder.Combine(updates));
     // 4.リプライ
     if (result.ModifiedCount > 0) {
       return new V0UpdateReply {
+        Account = request.NewAccount,
         Success = true,
-        Message = "Account updated successfully."
       };
     } else {
       return new V0UpdateReply {
+        Account = null,
         Success = false,
-        Message = "No account was updated. Check if the ID is correct."
       };
     }
   }
