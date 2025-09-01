@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos/V0/Types/GetRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/CreateReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/CreateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/UpdateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
