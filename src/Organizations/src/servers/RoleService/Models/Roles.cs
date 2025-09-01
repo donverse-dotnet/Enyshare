@@ -1,4 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -6,14 +5,28 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Pocco.Svc.Roles.Models;
 
 public class Role {
-    public ObjectId Id { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required List<string> Permissions { get; set; }
+  [BsonId]
+  [BsonRepresentation(BsonType.ObjectId)]
+  public string Id { get; set; }
 
-    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-    public DateTime CreatedAt { get; set; }
-    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-    public DateTime UpdatedAt { get; set; }
+  [BsonElement("name")]
+  [BsonRequired]
+  public required string Name { get; set; }
 
-  }
+  [BsonElement("discription")]
+  [BsonRequired]
+  public required string Description { get; set; } = string.Empty;
+
+  [BsonElement("permissions")]
+  [BsonRequired]
+  public required List<string> Permissions { get; set; } = new();
+
+  [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+  [BsonElement("CreatedAt")]
+  public DateTime Created_At { get; set; }
+
+  [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+  [BsonElement("UpdatedAt")]
+  public DateTime Updated_At { get; set; }
+
+}

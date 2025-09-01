@@ -4,45 +4,53 @@ using Grpc.Core;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Roles.Models;
+using Pocco.Svc.Roles.Repositories;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RoleService.Services;
 
 public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
-    private readonly IMongoCollection<Role> _roles;
+    private readonly IMongoClient _mongoClient;
     public OrganizationRoleService(IMongoClient mongoClient) {
-        var database = mongoClient.GetDatabase("Entities");
-        _roles = database.GetCollection<Role>("Organizations");
+        _mongoClient = mongoClient;
+    }
+    private RoleRepository GetRepository(string org_Id) => new RoleRepository(_mongoClient, org_Id);
+    public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext callContext) {
+        var role = GetByIdAsync(request.Id);
+        if (role == null) {
+            throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
+        }
+        return ToV0GetReply(role);
     }
 
     public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext callContext) {
-#pragma warning disable CS8601 // Null 参照代入の可能性があります。
         var model = new Role {
             Name = request.Name,
-            Description = Console.ReadLine()?.Trim(),
-            Permissions = Console.ReadLine()?.Trim()?
-                .Split(',')                             //カンマで分割
-                .Select(p => p.Trim())                  //各要素の前後の空白を削除
-                .Where(p => !string.IsNullOrEmpty(p))   //空要素を除外
-                .ToList() ?? new List<string>(),         //null対策
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            Description = Console.ReadLine()?.Trim() ?? string.Empty,
+            Permissions = (Console.ReadLine()?.Trim() ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList(),
+            Created_At = DateTime.UtcNow,
+            Updated_At = DateTime.UtcNow
         };
+        var repo = GetRepository(request.OrgId);
+        await repo.CreateAsync(model);
 
-        await _roles.InsertOneAsync(model);
         return new V0CreateReply {
 
         };
     }
 
-    /*public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
-        var filter = Builders<Role>.Filter.Eq(a => a.Id, ObjectId.Parse(request.Id));
-        var updateDataBuilder = Builders<Role>.Update;
-        var updates = new List<UpdateDefinition<Role>>();
-
+    public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
+        var repo = GetRepository(request.OrgId);
+        var role = await repo.GetByIdAsync(request.OrgId, request.Id)
         updates.Add(updateDataBuilder
         .Set(ro => ro.Name, request.Name)
         .Set(ro => ro.Description, request.Descriptions)
@@ -51,6 +59,6 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
         await _roles.UpdateOneAsync(filter, updateDataBuilder.Combine(updates));
         return new Empty();
-    }*/
+    }
 }
 
