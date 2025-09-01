@@ -1,9 +1,10 @@
 using Pocco.Svc.Roles.Models;
 
+using System.Threading.Tasks;
+
 public interface IRoleRepository {
-    Task<List<Role>> GetAllAsync();
-    Task<Role> GetByIdAsync(string id);
-    Task CreateAsync(Role role);
-    Task UpdateAsync(string id, Role role);
-    Task DeleteAsync(string id);
+    Task<Role?> GetByIdAsync(string org_Id, string id);
+    Task<Role> CreateAsync(string org_Id, Role role);
+    Task<Role> UpdateAsync(string org_Id, Role updaterole);
+    Task<bool> DeleteAsync(string org_Id, string id);
 }
