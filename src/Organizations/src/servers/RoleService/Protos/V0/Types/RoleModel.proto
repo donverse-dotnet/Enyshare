@@ -9,7 +9,7 @@ message V0RoleModel {
     string id = 1;
     string name = 2;
     string descriptions = 3;
-    string permissions = 4;
+    repeated string permissions = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
 }
