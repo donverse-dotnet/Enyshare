@@ -23,11 +23,11 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     }
 
     public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext callContext) {
-        var role = GetByIdAsync(request.Id);
+        var role = await _repo.GetByIdAsync(request.Id, request.Id);
         if (role == null) {
             throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
         }
-        return ToV0GetReply(role);
+        return new V0GetReply { Rolemodel = MapToGrpc(role) };
     }
 
     public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext callContext) {
@@ -46,21 +46,19 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     }
 
     public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
-        var updates = new List<UpdateDefinition<Role>>();
-        var updateDataBuilder = Builders<Role>.Update;
+        var updateRole = new Role {
+            Name = request.Rolemodel.Name,
+            Description = request.Rolemodel.Descriptions,
+            Permissions = request.Rolemodel.Permissions.ToList(),
+            Updated_At = DateTime.UtcNow
+        };
 
-        if (!string.IsNullOrWhiteSpace(request.Rolemodel.Name))
-            updates.Add(updateDataBuilder.Set(r => r.Name, request.Rolemodel.Name));
-        if (!string.IsNullOrWhiteSpace(request.Rolemodel.Descriptions))
-            updates.Add(updateDataBuilder.Set(r => r.Description, request.Rolemodel.Descriptions));
-        if (request.Rolemodel.Permissions != null && request.Rolemodel.Permissions.Count > 0)
-            updates.Add(updateDataBuilder.Set(r => r.Permissions, request.Rolemodel.Permissions.ToList()));
-        if (updates.Count == 0) {
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "No fields to update"));
+        var updated = await _repo.UpdateAsync(request.OrgId, updateRole);
+        if (updated == null) {
+            throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
         }
-        var updateDefinition = updateDataBuilder.Combine(updates);
-        var collection = GetCollection(request.OrgId);
-        var updated = await _repo.UpdateAsync(request.OrgId, updateDefinition);
+
+        return new Empty();
         /*updates.Add(updateDataBuilder
         .Set(ro => ro.Name, request.Name)
         .Set(ro => ro.Description, request.Descriptions)

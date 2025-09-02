@@ -7,7 +7,7 @@ namespace Pocco.Svc.Roles.Models;
 public class Role {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
-  public string Id { get; set; }
+  public string Id { get; set; } = default!;
 
   [BsonElement("name")]
   [BsonRequired]
@@ -28,5 +28,4 @@ public class Role {
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("UpdatedAt")]
   public DateTime Updated_At { get; set; }
-
 }

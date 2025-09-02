@@ -31,11 +31,28 @@ public class RoleRepository : IRoleRepository {
         return role;
     }
 
-    public async Task<Role> UpdateAsync(string org_Id, Role role) {
+    public async Task<Role?> UpdateAsync(string org_Id, Role updaterole) {
         var collection = GetCollection(org_Id);
-        var filter = Builders<Role>.Filter.Eq("_id", role.Id);
-        await collection.ReplaceOneAsync(filter, role);
-        return role;
+        var filter = Builders<Role>.Filter.Eq("_id", updaterole.Id);
+
+        var updateDataBuilder = Builders<Role>.Update;
+        var updates = new List<UpdateDefinition<Role>>();
+        if (!string.IsNullOrWhiteSpace(updaterole.Name))
+            updates.Add(updateDataBuilder.Set(r => r.Name, updaterole.Name));
+        if (!string.IsNullOrWhiteSpace(updaterole.Description))
+            updates.Add(updateDataBuilder.Set(r => r.Description, updaterole.Description));
+        if (updaterole.Permissions != null && updaterole.Permissions.Count > 0)
+            updates.Add(updateDataBuilder.Set(r => r.Permissions, updaterole.Permissions.ToList()));
+        if (updates.Count == 0) {
+            return null;
+        }
+        var update = updateDataBuilder.Combine(updates);
+        var result = await collection.UpdateOneAsync(filter, update);
+
+        if (result.MatchedCount == 0) {
+            return null;
+        }
+        return await collection.Find(filter).FirstOrDefaultAsync();
     }
 
     public async Task<bool> DeleteAsync(string org_Id, string id) {
