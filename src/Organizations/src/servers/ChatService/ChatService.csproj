@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Types/ChatCreateDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatCreateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatDeleteDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatDeleteDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatsModel.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatUpdateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+
+    <Protobuf Include="Protos/V0/Services/OrganizationChats.proto" ProtoRoot="Protos/" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

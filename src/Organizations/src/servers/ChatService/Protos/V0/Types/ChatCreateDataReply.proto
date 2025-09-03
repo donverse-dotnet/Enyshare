@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+import "V0/Types/ChatsModel.proto";
+
+message V0CreateReply{
+    string org_id = 1;
+    bool is_private = 2;
+    string member_ids = 3;
+    
+    pocco.libs.protobufs.types.V0ChatsModel chatsmodel = 4;
+}
