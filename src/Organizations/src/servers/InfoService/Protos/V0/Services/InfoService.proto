@@ -10,10 +10,15 @@ import "Protos/V0/Types/CreateReplyData.proto";
 import "Protos/V0/Types/DeleteReplyData.proto";
 import "Protos/V0/Types/InfoModel.proto";
 import "google/protobuf/empty.proto";
+import "Protos/V0/Types/CreateInfoData.proto";
+import "Protos/V0/Types/DeleteInfoData.proto";
+import "Protos/V0/Types/Info.proto";
+import "Protos/V0/Types/OrganizationData.proto";
 
 service V0OrganizationInfoService{
     rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0CreateOrganizationReply);
     rpc Update(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
     rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
+    rpc GetInfo(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
     // rpc GetInfo(pocco.libs.protobufs.types.V0GetOrganizationInfoRequest) returns (pocco.libs.protobufs.types.V0InfoModel);
 }
