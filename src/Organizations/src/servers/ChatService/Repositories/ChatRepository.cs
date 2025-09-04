@@ -22,14 +22,21 @@ public class ChatRepository : IChatRepository {
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
 
-    public async Task<bool> UpdateAsync(string org_id, string id, Chat chat) {
+    public async Task<Chat?> UpdateAsync(string org_id, string id, Chat chat) {
         var filter = Builders<Chat>.Filter.And(
             Builders<Chat>.Filter.Eq("_id", id),
             Builders<Chat>.Filter.Eq("org_id", org_id)
         );
 
-        var result = await _collection.ReplaceOneAsync(filter, chat);
-        return result.IsAcknowledged && result.ModifiedCount > 0;
+        var update = Builders<Chat>.Update
+        .Set(c => c.Name, chat.Name)
+        .Set(c => c.Description, chat.Description);
+
+        var result = await _collection.UpdateOneAsync(filter, update);
+        if (result.ModifiedCount > 0) {
+            return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+        return null;
     }
 
     public async Task<bool> DeleteAsync(string org_id, string id) {
