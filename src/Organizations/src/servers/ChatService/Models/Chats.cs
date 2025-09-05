@@ -18,14 +18,11 @@ public class Chat {
     [BsonElement("description")]
     public required string Description { get; set; }
 
-    [BsonElement("created_By")]
-    public required string Created_By { get; set; }
+    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+    public string Created_By { get; set; } = default!;
 
     [BsonElement("created_At")]
     public DateTime Created_At { get; set; }
-
-    [BsonElement("roles")]
-    public required List<string> Roles { get; set; }
 
     [BsonElement("member_ids")]
     public List<string> Member_Ids { get; set; } = new();
