@@ -18,8 +18,11 @@ public class Chat {
     [BsonElement("description")]
     public required string Description { get; set; }
 
-    [BsonElement("createdBy")]
+    [BsonElement("created_By")]
     public required string Created_By { get; set; }
+
+    [BsonElement("created_At")]
+    public DateTime Created_At { get; set; }
 
     [BsonElement("roles")]
     public required List<string> Roles { get; set; }

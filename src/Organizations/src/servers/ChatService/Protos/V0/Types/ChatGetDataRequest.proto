@@ -5,4 +5,5 @@ package pocco.libs.protobufs.types;
 
 message V0GetRequest{
     string id = 1;
+    string org_id = 2;
 }
