@@ -30,7 +30,8 @@ public class ChatRepository : IChatRepository {
 
         var update = Builders<Chat>.Update
         .Set(c => c.Name, chat.Name)
-        .Set(c => c.Description, chat.Description);
+        .Set(c => c.Description, chat.Description)
+        .Set(c => c.Is_Private, chat.Is_Private);
 
         var result = await _collection.UpdateOneAsync(filter, update);
         if (result.ModifiedCount > 0) {
