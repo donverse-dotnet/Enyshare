@@ -2,9 +2,13 @@ using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Chats.Models;
+
+using SharpCompress.Common;
 
 namespace Pocco.Svc.Chats.Services;
 
@@ -15,23 +19,24 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
         _repository = repository;
     }
 
+
     public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
 
         var chat = new Chat {
             Name = request.Name,
-            Description = Console.ReadLine()?.Trim(),
-            Created_By = ,
+            Description = "",
+            Is_Private = false,
             Created_At = DateTime.UtcNow
         };
-        var result = await _repository.CreateAsync(chat);
-        return
+        var created = await _repository.CreateAsync(chat);
+        return ToReply(created);
     }
 
     public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
         var updated = await _repository.UpdateAsync(
             request.Chatsmodel.Name,
-            Description
-            Is_private
+            request.Chatsmodel.Description,
+            request.Chatsmodel.IsPrivate
         );
 
         if (updated == null) {
@@ -52,14 +57,16 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
         return new V0DeleteReply { Success = success };
     }
 
-    private static Chat ToReply(Chat chat) => new Chat {
-        Id = chat.Id,
-        Org_Id = chat.Org_Id,
-        Name = chat.Name,
-        Description = chat.Description,
-        Created_By = chat.Created_By,
-        Created_At = Timestamp.FromDateTime(chat.Created_At.ToUniversalTime()),
-        Is_Private = false,
-        Member_Ids = { }
-    };
+    private Chat ToReply(Chat chat) {
+        return new Chat {
+            Id = chat.Id,
+            Org_Id = chat.Org_Id,
+            Name = chat.Name,
+            Description = chat.Description,
+            Created_By = chat.Created_By,
+            Created_At = chat.Created_At,
+            Is_Private = false,
+            Member_Ids = { }
+        };
+    }
 }
