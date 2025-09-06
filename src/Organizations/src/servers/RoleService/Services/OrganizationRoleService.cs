@@ -17,7 +17,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     _repo = repo;
   }
 
-  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext callContext) {
+  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
     var role = await _repo.GetByIdAsync(request.Id, request.Id);
     if (role == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
@@ -25,11 +25,15 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     return new V0GetReply { Rolemodel = MapToGrpc(role) };
   }
 
-  public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext callContext) {
+  public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
+
     var model = new Role {
       Name = request.Name,
-      Description = ,
-      Permissions = ,
+      Description = context.RequestHeaders.GetValue("discription") ?? "",
+      Permissions = context.RequestHeaders
+      .Where(h => h.Key.StartsWith("permission-"))
+      .Select(h => h.Key.Replace("permisson-",""))
+      .ToList(),
       Created_At = DateTime.UtcNow,
       Updated_At = DateTime.UtcNow
     };
