@@ -7,11 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="./Protos/V0/Types/Members.proto" ProtoRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/CreateMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Services/MemberService.proto" ProtoRoot="./Protos" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.32.0" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="All" >
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
 </Project>
