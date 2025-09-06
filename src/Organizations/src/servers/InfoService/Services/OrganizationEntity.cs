@@ -15,7 +15,7 @@ public class OrganizationEntity
   public string Description { get; set; }
 
   [Bsonelement("createdBy")]
-  public string CreateBy { get; set; }
+  public string CreatedBy { get; set; }
 
   [BsonElement("createdAt")]
   public DataTime CreatedAt { get; set; }
