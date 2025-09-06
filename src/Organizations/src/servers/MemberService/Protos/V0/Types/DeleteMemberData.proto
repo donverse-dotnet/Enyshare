@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+message V0DeleteMemberRequest{
+    string id = 1;
+}
+
+message V0DeleteMemberReply{
+    bool success = 1;
+    string message = 2;
+    string deleted_at = 3;
+}

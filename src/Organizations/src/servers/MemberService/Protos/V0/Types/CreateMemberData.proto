@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+message V0CreateMemberRequest{
+    string id = 1;
+    string nickname = 2;
+    string invite_code = 3;
+    string org_id = 4;
+}
+
+message V0CreateMemberReply{
+    bool success = 1;
+}

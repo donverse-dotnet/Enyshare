@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+message Member{
+    string id = 1;
+    repeated string roles = 2;
+    string join_at = 3;
+    string nickname = 4;
+    string org_id = 5;
+    bool is_active = 6;
+}
+
+message MemberResponse {
+    string id = 1;
+    repeated string relos = 2;
+    string join_at = 3;
+    string nickname = 4;
+}
+
+message V0UpdateMemberRequest{
+    string id = 1;
+    repeated string roles = 2;
+    string nickname = 3;
+    string join_at = 4;
+}
+
+message V0UpdateMemberReply{
+    string id = 1;
+    repeated string roles = 2;
+    string nickname = 3;
+    string join_at = 4;
+}
+
+message V0GetMemberRequest{
+    string id = 1;
+}
+
+message V0GetMemberReply{
+    string id = 1;
+}
+
+message V0MemberModel{
+    string id = 1;
+    string org_id = 2;
+    string user_id = 3;
+    string roles = 4; 
+    google.protobuf.Timestamp joined_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
