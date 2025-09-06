@@ -2,71 +2,80 @@ using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
-using Microsoft.AspNetCore.Http.HttpResults;
-
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Chats.Models;
 
-using SharpCompress.Common;
-
-namespace Pocco.Svc.Chats.Services;
+namespace Pocco.Svc.ChatService.Services;
 
 public class OrganizationChatService : V0OrganizationChatService.V0OrganizationChatServiceBase {
-    private readonly IChatRepository _repository;
+  private readonly IChatRepository _repository;
 
-    public OrganizationChatService(IChatRepository repository) {
-        _repository = repository;
+  public OrganizationChatService(IChatRepository repository) {
+    _repository = repository;
+  }
+
+
+  public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
+
+    var chat = new Chat {
+      Name = request.Name,
+      Description = context.RequestHeaders.GetValue("discription") ?? "",
+      Is_Private = false,
+      Created_At = DateTime.UtcNow
+    };
+    var created = await _repository.CreateAsync(request.OrgId, chat);
+    return new V0CreateReply { Chatsmodel = ToReply(created) };
+  }
+
+  public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
+    var updateChat = new Chat {
+      Name = request.Chatsmodel.Name,
+      Description = request.Chatsmodel.Description,
+      Is_Private = request.Chatsmodel.IsPrivate
+    };
+
+    var updated = await _repository.UpdateAsync(request.Chatsmodel.OrgId, updateChat);
+    if (updated == null) {
+      throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
 
+    return new Empty();
+  }
 
-    public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
-
-        var chat = new Chat {
-            Name = request.Name,
-            Description = "",
-            Is_Private = false,
-            Created_At = DateTime.UtcNow
-        };
-        var created = await _repository.CreateAsync(chat);
-        return ToReply(created);
+  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
+    var chat = await _repository.GetByIdAsync(request.OrgId, request.Id);
+    if (chat == null) {
+      throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
+    return new V0GetReply {Chatsmodel = ToReply(chat)};
+  }
 
-    public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
-        var updated = await _repository.UpdateAsync(
-            request.Chatsmodel.Name,
-            request.Chatsmodel.Description,
-            request.Chatsmodel.IsPrivate
-        );
-
-        if (updated == null) {
-            throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
-        }
-
-        return ToReply(updated);
+  public override async Task<V0DeleteReply> Delete(V0DeleteRequest request, ServerCallContext context) {
+    var success = await _repository.DeleteAsync(request.OrgId, request.Id);
+    if (!success) {
+      return new V0DeleteReply {
+        Success = false
+      };
     }
+    return new V0DeleteReply {
+      Success = true
+    };
+  }
 
-    public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
-        var chat = await _repository.GetByIdAsync(request.OrgId, request.Id);
+  private V0ChatsModel ToReply(Chat chat) {
+    var chatModel = new V0ChatsModel {
+      Id = chat.Id,
+      OrgId = chat.Org_Id,
+      Name = chat.Name,
+      Description = chat.Description,
+      CreatedBy = chat.Created_By,
+      CreatedAt = Timestamp.FromDateTime(chat.Created_At.ToUniversalTime()),
+      IsPrivate = false
+    };
 
-        return ToReply(chat);
-    }
+    chatModel.MemberIds.AddRange(chat.Member_Ids);
 
-    public override async Task<V0DeleteReply> Delete(V0DeleteRequest request, ServerCallContext context) {
-        var success = await _repository.DeleteAsync(request.OrgId, request.Id);
-        return new V0DeleteReply { Success = success };
-    }
-
-    private Chat ToReply(Chat chat) {
-        return new Chat {
-            Id = chat.Id,
-            Org_Id = chat.Org_Id,
-            Name = chat.Name,
-            Description = chat.Description,
-            Created_By = chat.Created_By,
-            Created_At = chat.Created_At,
-            Is_Private = false,
-            Member_Ids = { }
-        };
-    }
+    return chatModel;
+  }
 }
