@@ -1,6 +1,7 @@
 # Text editor files
 .vscode/
 .vs/
+.idea/
 
 # Git functional files
 !.gitkeep
