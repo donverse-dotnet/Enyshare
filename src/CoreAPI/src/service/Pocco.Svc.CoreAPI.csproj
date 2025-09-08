@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="../.protos/greet.proto" GrpcServices="Server" />
-
     <!-- VENDORS -->
 
     <!-- Pocco.Srv.Auth V0 -->
