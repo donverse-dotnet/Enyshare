@@ -4,6 +4,8 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
 import "google/protobuf/timestamp.proto";
+import "pocco/libs/protobufs/types/CreateMemberData.proto";
+
 
 message Member{
     string id = 1;
@@ -47,7 +49,8 @@ message V0MemberModel{
     string id = 1;
     string org_id = 2;
     string user_id = 3;
-    string roles = 4; 
+    string roles = 4;
     google.protobuf.Timestamp joined_at = 5;
     google.protobuf.Timestamp deleted_at = 6;
 }
+
