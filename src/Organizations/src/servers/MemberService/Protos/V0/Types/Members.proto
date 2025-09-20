@@ -4,37 +4,36 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
 import "google/protobuf/timestamp.proto";
-import "pocco/libs/protobufs/types/CreateMemberData.proto";
-
 
 message Member{
     string id = 1;
-    repeated string roles = 2;
+    repeated string role = 2;
     string join_at = 3;
     string nickname = 4;
-    string org_id = 5;
+    string organization_id = 5;
     bool is_active = 6;
 }
 
 message MemberResponse {
     string id = 1;
-    repeated string relos = 2;
+    repeated string relo = 2;
     string join_at = 3;
     string nickname = 4;
 }
 
 message V0UpdateMemberRequest{
     string id = 1;
-    repeated string roles = 2;
+    repeated string role = 2;
     string nickname = 3;
     string join_at = 4;
 }
 
 message V0UpdateMemberReply{
     string id = 1;
-    repeated string roles = 2;
+    repeated string role = 2;
     string nickname = 3;
     string join_at = 4;
+    V0MemberModel member = 5;
 }
 
 message V0GetMemberRequest{
@@ -43,13 +42,14 @@ message V0GetMemberRequest{
 
 message V0GetMemberReply{
     string id = 1;
+    V0MemberModel member = 2;
 }
 
 message V0MemberModel{
     string id = 1;
-    string org_id = 2;
+    string organization_id = 2;
     string user_id = 3;
-    string roles = 4;
+    repeated string role = 4;
     google.protobuf.Timestamp joined_at = 5;
     google.protobuf.Timestamp deleted_at = 6;
 }

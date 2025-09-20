@@ -28,8 +28,8 @@ public class MemberEntity {
   public string UserId { get; set; }
 
   [BsonElement("deleteAt")]
-  public string DeletedAt { get; set; }
+  public DateTime? DeletedAt { get; set; }
 
-  [BsonElement("updateteAt")]
-  public string UpdateAt { get; set; }
+  [BsonElement("updateAt")]
+  public DateTime UpdateAt { get; set; }
 }

@@ -9,12 +9,12 @@ message V0CreateMemberRequest{
     string id = 1;
     string nickname = 2;
     string invite_code = 3;
-    string OrganizationId = 4;
-    string userId = 5;
-    string Role = 6;
-    string role = 7;
+    string organization_id = 4;
+    string user_id = 5;
+    repeated string role = 6;
 }
 
 message V0CreateMemberReply{
     V0MemberModel member = 1;
+    string organization_id = 2;
 }
