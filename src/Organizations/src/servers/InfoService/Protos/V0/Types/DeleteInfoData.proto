@@ -7,3 +7,9 @@ package pocco.libs.protobufs.types;
 message V0DeleteOrganizationRequest{
     string id = 1;
 }
+
+message V0DeleteOrganizationReply{
+    string id = 1;
+    bool success = 2;
+    string message = 3;
+}
