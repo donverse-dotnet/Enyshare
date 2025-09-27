@@ -2,6 +2,8 @@ using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
+using Microsoft.AspNetCore.Mvc;
+
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
@@ -13,7 +15,7 @@ namespace RoleService.Services;
 
 public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   private readonly IRoleRepository _repo;
-  public OrganizationRoleService(IRoleRepository repo) {
+  public OrganizationRoleService([FromServices] IRoleRepository repo) {
     _repo = repo;
   }
 
@@ -74,6 +76,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   }
   private V0RoleModel MapToGrpc(Role role) => new V0RoleModel {
     Id = role.Id,
+    OrgId = role.Org_Id,
     Name = role.Name,
     Descriptions = role.Description,
     Permissions = { role.Description },
