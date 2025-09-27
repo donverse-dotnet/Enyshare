@@ -9,6 +9,10 @@ public class Role {
   [BsonRepresentation(BsonType.ObjectId)]
   public string Id { get; set; } = default!;
 
+  [BsonElement("org_id")]
+  [BsonRepresentation(BsonType.ObjectId)]
+  public string Org_Id { get; set; } = string.Empty;
+
   [BsonElement("name")]
   [BsonRequired]
   public required string Name { get; set; }

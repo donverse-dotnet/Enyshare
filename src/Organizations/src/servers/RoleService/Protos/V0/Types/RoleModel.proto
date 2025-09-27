@@ -7,9 +7,10 @@ import "google/protobuf/timestamp.proto";
 
 message V0RoleModel {
     string id = 1;
-    string name = 2;
-    string descriptions = 3;
-    repeated string permissions = 4;
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
+    string org_id = 2;
+    string name = 3;
+    string descriptions = 4;
+    repeated string permissions = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
 }
