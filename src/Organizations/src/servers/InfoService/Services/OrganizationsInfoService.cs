@@ -5,33 +5,23 @@ using Grpc.Core;
 using Google.Protobuf.WellKnownTypes;
 
 // MongoDBの操作に必要な名前空間
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 // サービス定義とプロトコルバッファの型定義
-using NameCheckService;
 using Pocco.Libs.Protobufs.Services;
-
-// 非同期処理に必要な名前空間
-using System.Threading.Tasks;
+using Pocco.Libs.Protobufs.Types;
 
 namespace InfoService.Services;
 
 // gRPCサービスの実装クラス：組織情報のCRUD操作を提供
-public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0OrganizationInfoServiceBase
-{
+public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0OrganizationInfoServiceBase {
   // MongoDBの各コレクションを保持（DIで注入）
   private readonly IMongoCollection<OrganizationEntity> _orgs;
-  private readonly IMongoCollection<MemberEntity> _members;
-  private readonly IMongoCollection<RoleEntity> _roles;
-  private readonly IMongoCollection<ChatEntity> _chats;
 
   // コンストラクタ：MongoDBインスタンスから必要なコレクションを取得
-  public OrganizationsInfoServiceImpl(IMongoDatabase mongo)
-  {
+  public OrganizationsInfoServiceImpl(IMongoDatabase mongo) {
     _orgs = mongo.GetCollection<OrganizationEntity>("organizations");
-    _members = mongo.GetCollection<MemberEntity>("members");
-    _roles = mongo.GetCollection<RoleEntity>("roles");
-    _chats = mongo.GetCollection<ChatEntity>("chats");
   }
 
   // 組織の新規作成処理
@@ -39,19 +29,16 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 組織エンティティの作成と保存
   // - 作成者を初期メンバーとして登録
   // - デフォルトロールとチャットの初期化
-  public override async Task<CreateOrganizationReply> Create(CreateOrganizationRequest request, ServerCallContext context)
-  {
+  public override async Task<V0CreateOrganizationReply> Create(V0CreateOrganizationRequest request, ServerCallContext context) {
     // 組織名の重複チェック（DeletedAtがnullのもののみ対象）
     var exists = await _orgs.Find(x => x.Name == request.Name && x.DeletedAt == null).AnyAsync();
-    if (exists)
-    {
+    if (exists) {
       // 重複がある場合は gRPC の AlreadyExists ステータスを返す
       throw new RpcException(new Status(StatusCode.AlreadyExists, "Organization name already exists"));
     }
 
     // 組織エンティティの作成
-    var org = new OrganizationEntity
-    {
+    var org = new OrganizationEntity {
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       Description = request.Description,
@@ -64,42 +51,9 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     // MongoDBに保存
     await _orgs.InsertOneAsync(org);
 
-    // 作成者を初期メンバーとして登録（ownerロール）
-    var member = new MemberEntity
-    {
-      Id = ObjectId.GenerateNewId().ToString(),
-      OrganizationId = org.Id,
-      UserId = request.CreatedBy,
-      Role = "owner",
-      JoinedAt = DateTime.UtcNow
-    };
-    await _members.InsertOneAsync(member);
-
-    // デフォルトロールの作成（read/write権限）
-    var role = new RoleEntity
-    {
-      Id = ObjectId.GenerateNewId().ToString(),
-      OrganizationId = org.Id,
-      Name = "default",
-      Permissions = new[] { "read", "write" }
-    };
-    await _roles.InsertOneAsync(role);
-
-    // デフォルトチャットの作成（general）
-    var chat = new ChatEntity
-    {
-      Id = ObjectId.GenerateNewId().ToString(),
-      OrganizationId = org.Id,
-      Name = "general",
-      CreatedAt = DateTime.UtcNow
-    };
-    await _chats.InsertOneAsync(chat);
-
     // 作成された組織情報を gRPCレスポンスとして返却
-    return new CreateOrganizationReply
-    {
-      Organization = new V0InfoModel
-      {
+    return new V0CreateOrganizationReply {
+      Organization = new V0InfoModel {
         Id = org.Id,
         Name = org.Name,
         Description = org.Description,
@@ -115,12 +69,10 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 他組織との名前重複チェック（自身以外）
   // - 更新対象の存在確認とフィールド更新
   // - 更新後の最新データを返却
-  public override async Task<CreateOrganizationReply> Update(UpdateOrganizationRequest request, ServerCallContext context)
-  {
+  public override async Task<V0UpdateOrganizationReply> Update(V0UpdateOrganizationRequest request, ServerCallContext context) {
     // 名前重複チェック（自身以外のIDと重複していないか）
     var conflict = await _orgs.Find(x => x.Name == request.Name && x.Id != request.Id && x.DeletedAt == null).AnyAsync();
-    if (conflict)
-    {
+    if (conflict) {
       throw new RpcException(new Status(StatusCode.AlreadyExists, "Organization name already exists"));
     }
 
@@ -132,8 +84,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
 
     // 更新実行（DeletedAtがnullのもののみ対象）
     var result = await _orgs.UpdateOneAsync(x => x.Id == request.Id && x.DeletedAt == null, update);
-    if (result.MatchedCount == 0)
-    {
+    if (result.MatchedCount == 0) {
       throw new RpcException(new Status(StatusCode.NotFound, "Organization not found"));
     }
 
@@ -141,20 +92,10 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     var updated = await _orgs.Find(x => x.Id == request.Id).FirstOrDefaultAsync();
 
     // 更新結果をレスポンスとして返却
-    return new CreateOrganizationReply
-    {
-      Organization = new V0InfoModel
-      {
-        Id = updated.Id,
-        Name = updated.Name,
-        Description = updated.Description,
-        CreatedBy = updated.CreatedBy,
-        CreatedAt = Timestamp.FromDateTime(updated.CreatedAt.ToUniversalTime()),
-        UpdatedAt = Timestamp.FromDateTime(updated.UpdatedAt.ToUniversalTime()),
-        DeletedAt = updated.DeletedAt.HasValue
-          ? Timestamp.FromDateTime(updated.DeletedAt.Value.ToUniversalTime())
-          : null
-      }
+    return new V0UpdateOrganizationReply {
+      Id = updated.Id,
+      Name = updated.Name,
+      UpdatedAt = Timestamp.FromDateTime(updated.UpdatedAt)
     };
   }
 
@@ -162,12 +103,10 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 組織の存在確認
   // - DeletedAt フィールドの更新による論理削除
   // - 関連データ（メンバー・ロール・チャット）の物理削除
-  public override async Task<DeleteOrganizationReply> Delete(DeleteOrganizationRequest request, ServerCallContext context)
-  {
+  public override async Task<V0DeleteOrganizationReply> Delete(V0DeleteOrganizationRequest request, ServerCallContext context) {
     // 対象組織の存在確認
     var org = await _orgs.Find(x => x.Id == request.Id).FirstOrDefaultAsync();
-    if (org == null)
-    {
+    if (org == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Organization not found"));
     }
 
@@ -175,14 +114,8 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     var update = Builders<OrganizationEntity>.Update.Set(x => x.DeletedAt, DateTime.UtcNow);
     await _orgs.UpdateOneAsync(x => x.Id == request.Id, update);
 
-    // 関連データの物理削除（必要に応じて論理削除に変更可能）
-    await _members.DeleteManyAsync(x => x.OrganizationId == request.Id);
-    await _roles.DeleteManyAsync(x => x.OrganizationId == request.Id);
-    await _chats.DeleteManyAsync(x => x.OrganizationId == request.Id);
-
     // 削除結果を返却
-    return new DeleteOrganizationReply
-    {
+    return new V0DeleteOrganizationReply {
       Success = true,
       Message = "Organization and related data deleted successfully."
     };
@@ -191,23 +124,20 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // 組織情報の取得処理
   // - 論理削除されていない組織を検索
   // - 該当組織が存在しない場合は NotFound を返却
-  public override async Task<V0InfoModel> GetInfo(GetOrganizationInfoRequest request, ServerCallContext context)
-  {
+  public override async Task<V0GetInfoOrganizationReply> GetInfo(V0GetInfoOrganizationRequest request, ServerCallContext context) {
     var org = await _orgs.Find(x => x.Id == request.Id && x.DeletedAt == null).FirstOrDefaultAsync();
-    if (org == null)
-    {
+    if (org == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Organization not found"));
     }
 
     // 組織情報をレスポンスとして返却
-    return new V0InfoModel
-    {
+    return new V0GetInfoOrganizationReply {
       Id = org.Id,
       Name = org.Name,
       Description = org.Description,
       CreatedBy = org.CreatedBy,
-      CreatedAt = Timestamp.FromDate,
-      UpdatedAt = Timestamp.FromDateTime(org.UpdatedAt.ToUniversalTime()),
+      CreatedAt = Timestamp.FromDateTime(org.CreatedAt),
+      UpdatedAt = Timestamp.FromDateTime(org.UpdatedAt),
       DeletedAt = null // 論理削除されていないため null を明示
     };
   }
