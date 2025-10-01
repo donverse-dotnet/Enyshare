@@ -27,8 +27,6 @@
     <Protobuf Include="..\.protos\V0\Types\Organization\MessageCreatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
     <Protobuf Include="..\.protos\V0\Types\Organization\MessageUpdatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
     <Protobuf Include="..\.protos\V0\Types\Organization\MessageDeletedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageReactionAddedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageReactionRemovedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
 
     <!-- Services -->
     <Protobuf Include="..\.protos\V0\Services\EventHandler.proto" ProtoRoot="..\.protos" GrpcServices="Both" />

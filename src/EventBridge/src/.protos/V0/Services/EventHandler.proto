@@ -11,8 +11,8 @@ import "V0/Types/Account/DisabledEvent.proto";
 import "V0/Types/Organization/MessageCreatedEvent.proto";
 import "V0/Types/Organization/MessageUpdatedEvent.proto";
 import "V0/Types/Organization/MessageDeletedEvent.proto";
-import "V0/Types/Organization/MessageReactionAddedEvent.proto";
-import "V0/Types/Organization/MessageReactionRemovedEvent.proto";
+//import "V0/Types/Organization/MessageReactionAddedEvent.proto";
+//import "V0/Types/Organization/MessageReactionRemovedEvent.proto";
 import "google/protobuf/empty.proto";
 
 
@@ -58,9 +58,25 @@ message V0EventData {
         pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageUpdatedEvent message_updated_event = 7;
         // 組織内メッセージ削除完了イベント
         pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageDeletedEvent message_deleted_event = 8;
-        // 組織内メッセージリアクション追加完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionAddedEvent message_reaction_added_event = 9;
-        // 組織内メッセージリアクション削除完了イベント
-        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionRemovedEvent message_reaction_removed_event = 10;
+        // 組織内メッセージリアクション追加完了イベント (アルファ版対応なし)
+//        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionAddedEvent message_reaction_added_event = 9;
+        // 組織内メッセージリアクション削除完了イベント (アルファ版対応なし)
+//        pocco.svc.eventbridge.protobufs.types.V0OrganizationMessageReactionRemovedEvent message_reaction_removed_event = 10;
+
+        // Org.Events.OrgCreated // 組織作成完了イベント
+        // Org.Events.OrgUpdated // 組織更新完了イベント
+        // Org.Events.OrgDestroyed // 組織削除完了イベント
+
+        // Org.Events.Members.Joined // メンバー参加完了イベント
+        // Org.Events.Members.Updated // メンバープロファイル更新完了イベント
+        // Org.Events.Members.Left // メンバー脱退完了イベント
+
+        // Org.Events.Roles.Created // 組織内役割作成完了イベント
+        // Org.Events.Roles.Updated // 組織内役割更新完了イベント
+        // Org.Events.Roles.Deleted // 組織内役割削除完了イベント
+
+        // Org.Events.Chats.Created // 組織内チャット作成完了イベント
+        // Org.Events.Chats.Updated // 組織内チャット更新完了イベント
+        // Org.Events.Chats.Deleted // 組織内チャット削除完了イベント
     }
 }
