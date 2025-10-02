@@ -20,7 +20,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   }
 
   public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
-    var role = await _repo.GetByIdAsync(request.Id, request.Id);
+    var role = await _repo.GetByIdAsync(request.OrgId, request.Id);
     if (role == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
     }
@@ -31,6 +31,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var model = new Role {
       Name = request.Name,
+      Org_Id = request.OrgId,
       Description = context.RequestHeaders.GetValue("discription") ?? "",
       Permissions = context.RequestHeaders
       .Where(h => h.Key.StartsWith("permission-"))
@@ -51,7 +52,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Updated_At = DateTime.UtcNow
     };
 
-    var updated = await _repo.UpdateAsync(request.OrgId, updateRole);
+    var updated = await _repo.UpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
     if (updated == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }

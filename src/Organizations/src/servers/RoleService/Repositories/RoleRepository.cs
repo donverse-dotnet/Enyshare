@@ -1,4 +1,5 @@
 
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 using Pocco.Svc.Roles.Models;
@@ -17,8 +18,15 @@ public class RoleRepository : IRoleRepository {
     return db.GetCollection<Role>("Roles");
   }
   public async Task<Role?> GetByIdAsync(string org_Id, string id) {
+    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
+
     var collection = GetCollection(org_Id);
-    var filter = Builders<Role>.Filter.Eq("_id", id);
+    var filter = Builders<Role>.Filter.And(
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
+      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+    );
     return await collection.Find(filter).FirstOrDefaultAsync();
   }
 
@@ -28,10 +36,16 @@ public class RoleRepository : IRoleRepository {
     return role;
   }
 
-  public async Task<Role?> UpdateAsync(string org_Id, Role updaterole) {
+  public async Task<Role?> UpdateAsync(string org_Id, string id, Role updaterole) {
+     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
     var collection = GetCollection(org_Id);
-    var filter = Builders<Role>.Filter.Eq("_id", updaterole.Id);
-
+    
+    var filter = Builders<Role>.Filter.And(
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
+      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+      );
     var updateDataBuilder = Builders<Role>.Update;
     var updates = new List<UpdateDefinition<Role>>();
 
@@ -57,8 +71,15 @@ public class RoleRepository : IRoleRepository {
   }
 
   public async Task<bool> DeleteAsync(string org_Id, string id) {
+    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
+
     var collection = GetCollection(org_Id);
-    var filter = Builders<Role>.Filter.Eq("_id", id);
+    var filter = Builders<Role>.Filter.And(
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
+      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+    );
     var result = await collection.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
