@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Pocco.Svc.CoreAPI.Auth;
 
-public class GeneralAuthorizationHandler : AuthorizationHandler<AuthorizationRequirement>, IAuthorizationRequirement {
+public class GeneralAuthorizationHandler : AuthorizationHandler<AuthorizationRequirement> {
   private readonly ILogger<GeneralAuthorizationHandler> _logger;
 
   public GeneralAuthorizationHandler(
