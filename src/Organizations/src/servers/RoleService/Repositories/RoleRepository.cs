@@ -1,4 +1,6 @@
 
+using Grpc.Core;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -33,7 +35,14 @@ public class RoleRepository : IRoleRepository {
   public async Task<Role> CreateAsync(string org_Id, Role role) {
     var roles = GetRoleCollection(org_Id);
     await roles.InsertOneAsync(role);
-    return role;
+
+    var isCreated = await GetByIdAsync(org_Id, role.Id);
+
+    if (isCreated is null) {
+      throw new RpcException(new Status(StatusCode.Internal, $"Role creation failed for {org_Id}"));
+    }
+
+    return isCreated;
   }
 
   public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role updateRole) {

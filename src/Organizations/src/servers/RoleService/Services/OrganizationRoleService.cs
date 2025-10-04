@@ -16,8 +16,12 @@ namespace RoleService.Services;
 
 public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   private readonly IRoleRepository _repo;
-  public OrganizationRoleService([FromServices] IRoleRepository repo) {
+  private readonly ILogger<OrganizationRoleService> _logger;
+  public OrganizationRoleService([FromServices] IRoleRepository repo, [FromServices] ILogger<OrganizationRoleService> logger) {
     _repo = repo;
+    _logger = logger;
+
+    _logger.LogInformation("OrganiationRoleService is initialized!");
   }
 
   public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
@@ -39,7 +43,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Created_At = DateTime.UtcNow,
       Updated_At = DateTime.UtcNow
     };
-    var created = await _repo.CreateAsync(request.OrgId, model);
+    Role createdRole = await _repo.CreateAsync(request.OrgId, model);
+    _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
     return new Empty();
   }
 
