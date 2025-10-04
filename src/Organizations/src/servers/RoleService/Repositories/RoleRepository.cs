@@ -72,14 +72,19 @@ public class RoleRepository : IRoleRepository {
 
   public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role updateRole) {
     // 1. RoleModel に名前等の null チェック用のプロパティを追加
-    
+
     // 2. MongoDB から変更しようとしている最新の組織のロールを取得する
     var latestRoll = await GetByIdAsync(orgId, roleId);
     // 3. 2 と編集されたロールの差分があるかチェック
-    
+    var isNameChanged = updateRole.IsNameChanged(latestRoll.Name);
+    var isDescriptionChanged = updateRole.IsDescriptionChanged(latestRoll.Description);
+    var isParmissionChanged = updateRole.IsParmissionChanged(latestRoll.Permissions);
     // 4. 差分がなければ何もしない
+    if (isNameChanged == false && isDescriptionChanged == false && isParmissionChanged == false) {
+      return false;
+    }
     // 5. 差分があれば、Builders を更新する
-
+    
     if (!ObjectId.TryParse(roleId, out var objectId) || !ObjectId.TryParse(orgId, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
@@ -93,18 +98,15 @@ public class RoleRepository : IRoleRepository {
     var updateDataBuilder = Builders<Role>.Update;
     var updates = new List<UpdateDefinition<Role>>();
 
-    if (!string.IsNullOrWhiteSpace(updateRole.Name))
+    if (isNameChanged)
       updates.Add(updateDataBuilder.Set(r => r.Name, updateRole.Name));
 
-    if (!string.IsNullOrWhiteSpace(updateRole.Description))
+    if (isDescriptionChanged)
       updates.Add(updateDataBuilder.Set(r => r.Description, updateRole.Description));
 
-    if (updateRole.Permissions != null && updateRole.Permissions.Count > 0)
+    if (isParmissionChanged)
       updates.Add(updateDataBuilder.Set(r => r.Permissions, updateRole.Permissions.ToList()));
 
-    if (updates.Count == 0) {
-      return false;
-    }
     var update = updateDataBuilder.Combine(updates);
     var result = await collection.UpdateOneAsync(filter, update);
 

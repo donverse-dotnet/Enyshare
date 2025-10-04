@@ -38,4 +38,14 @@ public class Role {
   public bool HasDiscription => !string.IsNullOrWhiteSpace(Description);
 
   public bool HasParmissions => Permissions.Count > 0;
+
+  public bool IsNameChanged(string name) {
+    return this.Name != name;
+  }
+  public bool IsDescriptionChanged(string discription) {
+    return this.Description != discription;
+  }
+  public bool IsParmissionChanged(List<string> parmissions) {
+    return Permissions != parmissions;
+  }
 }
