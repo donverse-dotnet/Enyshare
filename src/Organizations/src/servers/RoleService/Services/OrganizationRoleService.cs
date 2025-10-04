@@ -68,6 +68,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     return new Empty();
   }
+  private V0RoleModel MapToGrpc(Role role) => new V0RoleModel {
     Id = role.Id,
     OrgId = role.Org_Id,
     Name = role.Name,
