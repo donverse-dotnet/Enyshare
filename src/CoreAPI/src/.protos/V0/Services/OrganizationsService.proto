@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "google/protobuf/empty.proto";
+
+service V0OrganizationsService {
+
+    // Basics
+    // Get: Authorized
+    rpc Get (GetOrganizationRequest) returns (GetOrganizationResponse);
+    // List: Authorized
+    rpc List (google.protobuf.Empty) returns (ListOrganizationsResponse);
+    // Create: Authorized
+    rpc Create (CreateOrganizationRequest) returns (google.protobuf.Empty); // Responseはイベントにて結果を受け取る
+    // Update: Authorized
+    rpc UpdateOrganizationName (UpdateOrganizationNameRequest) returns (google.protobuf.Empty); // Responseはイベントにて結果を受け取る
+    // Delete: Authorized
+    rpc Delete (DeleteOrganizationRequest) returns (google.protobuf.Empty); // Responseはイベントにて結果を受け取る
+
+    // Members
+    // ListMembers: Authorized
+    // GetMember: Authorized
+    // JoinMember: Authorized
+    // LeaveMember: Authorized
+    // ModerateMember: Authorized
+    // UpdateMemberInfo: Authorized
+
+    // Roles
+    // ListRoles: Authorized
+    // GetRole: Authorized
+    // CreateRole: Authorized
+    // UpdateRole: Authorized
+    // DeleteRole: Authorized
+
+    // Chats
+    // ListChats: Authorized
+    // GetChat: Authorized
+    // CreateChat: Authorized
+    // UpdateChat: Authorized
+    // DeleteChat: Authorized
+
+    // Messages
+    // ListMessages: Authorized
+    // GetMessage: Authorized
+    // CreateMessage: Authorized
+    // UpdateMessage: Authorized
+    // DeleteMessage: Authorized
+}
+
+message GetOrganizationRequest {
+    // 取得したい組織のID
+    string organization_id = 1;
+}
+
+message GetOrganizationResponse {
+    // 取得した組織の情報
+    Organization organization = 1;
+}
+
+message ListOrganizationsResponse {
+    // 組織のリスト
+    repeated Organization organizations = 1;
+}
+
+message CreateOrganizationRequest {
+    // 組織名
+    string name = 1;
+}
+
+message UpdateOrganizationNameRequest {
+    // 組織ID
+    string organization_id = 1;
+    // 新しい組織名
+    string name = 2;
+}
+
+message DeleteOrganizationRequest {
+    // 組織ID
+    string organization_id = 1;
+}
+
+message Organization {
+    string organization_id = 1;
+    string name = 2;
+    string created_at = 3; // ISO 8601形式の日時文字列
+    string updated_at = 4; // ISO 8601形式の日時文字列
+}
