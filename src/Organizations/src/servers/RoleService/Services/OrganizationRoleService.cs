@@ -52,9 +52,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Updated_At = DateTime.UtcNow
     };
 
-    // TODO. 最新のロールは都度取得
-    var updated = await _repo.UpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
-    if (updated == null) {
+    var updated = await _repo.TryUpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
+    if (updated == false) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }
 
