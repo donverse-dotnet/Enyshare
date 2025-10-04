@@ -19,15 +19,15 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     _repo = repo;
   }
 
-  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
+  public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
     var role = await _repo.GetByIdAsync(request.OrgId, request.Id);
     if (role == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
     }
-    return new V0GetReply { Rolemodel = MapToGrpc(role) };
+    return new Empty();
   }
 
-  public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
+  public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
 
     var model = new Role {
       Name = request.Name,
@@ -41,7 +41,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Updated_At = DateTime.UtcNow
     };
     var created = await _repo.CreateAsync(request.OrgId, model);
-    return new V0CreateReply { Rolemodel = MapToGrpc(created) };
+    return new Empty();
   }
 
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
@@ -60,20 +60,13 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     return new Empty();
   }
 
-  public override async Task<V0DeleteReply> Delete(V0DeleteRequest request, ServerCallContext context) {
+  public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {
     var success = await _repo.DeleteAsync(request.OrgId, request.Id);
     if (!success) {
-      return new V0DeleteReply {
-        StatusCode = 404,
-        Message = "Role not found",
-        Success = false
-      };
+      throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to delete"));
     }
-    return new V0DeleteReply {
-      StatusCode = 200,
-      Message = "Role deleted successfully",
-      Success = true
-    };
+
+    return new Empty();
   }
   private V0RoleModel MapToGrpc(Role role) => new V0RoleModel {
     Id = role.Id,
