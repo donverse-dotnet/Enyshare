@@ -17,7 +17,7 @@ public class RoleRepository : IRoleRepository {
     var db = _client.GetDatabase(org_Id);
     return db.GetCollection<Role>("Roles");
   }
-  public async Task<Role?> GetByIdAsync(string org_Id, string id) {
+  public async Task<Role> GetByIdAsync(string org_Id, string id) {
     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
@@ -36,12 +36,12 @@ public class RoleRepository : IRoleRepository {
     return role;
   }
 
-  public async Task<Role?> UpdateAsync(string org_Id, string id, Role updaterole) {
-     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
+  public async Task<Role> UpdateAsync(string org_Id, string id, Role updaterole) {
+    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
     var collection = GetCollection(org_Id);
-    
+
     var filter = Builders<Role>.Filter.And(
       Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
       Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
