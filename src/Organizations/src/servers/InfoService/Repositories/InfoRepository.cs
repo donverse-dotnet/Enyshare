@@ -6,25 +6,25 @@ namespace InfoService.Repositories
 {
   public class InfoRepository : IInfoRepository
   {
-    private readonly IMongoCollection<InfoEntity> _collection;
+    private readonly IMongoCollection<OrganizationEntity> _collection;
     public InfoRepository(IMongoDatabase database)
     {
-      _collection = database.GetCollection<InfoEntity>("infos");
+      _collection = database.GetCollection<OrganizationEntity>("infos");
     }
 
-    public async Task<InfoEntity> FindByIdAsync(string id)
+    public async Task<OrganizationEntity> FindByIdAsync(string id)
     {
       return await _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task InsertAsync(InfoEntity entity)
+    public async Task InsertAsync(OrganizationEntity entity)
     {
       await _collection.InsertOneAsync(entity);
     }
 
-    public async Task UpdateAsync(InfoEntity entity)
+    public async Task UpdateAsync(OrganizationEntity entity)
     {
-      var filter = Builders<InfoEntity>.Filter.Eq(x => x.Id, entity.Id);
+      var filter = Builders<OrganizationEntity>.Filter.Eq(x => x.Id, entity.Id);
       await _collection.ReplaceOneAsync(filter, entity);
     }
 
