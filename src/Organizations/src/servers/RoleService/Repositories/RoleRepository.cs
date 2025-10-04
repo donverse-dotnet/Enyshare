@@ -36,40 +36,6 @@ public class RoleRepository : IRoleRepository {
     return role;
   }
 
-  public async Task<Role> UpdateAsync(string org_Id, string id, Role updaterole) {
-    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
-    var collection = GetCollection(org_Id);
-
-    var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
-      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
-      );
-    var updateDataBuilder = Builders<Role>.Update;
-    var updates = new List<UpdateDefinition<Role>>();
-
-    if (!string.IsNullOrWhiteSpace(updaterole.Name))
-      updates.Add(updateDataBuilder.Set(r => r.Name, updaterole.Name));
-
-    if (!string.IsNullOrWhiteSpace(updaterole.Description))
-      updates.Add(updateDataBuilder.Set(r => r.Description, updaterole.Description));
-
-    if (updaterole.Permissions != null && updaterole.Permissions.Count > 0)
-      updates.Add(updateDataBuilder.Set(r => r.Permissions, updaterole.Permissions.ToList()));
-
-    if (updates.Count == 0) {
-      return null;
-    }
-    var update = updateDataBuilder.Combine(updates);
-    var result = await collection.UpdateOneAsync(filter, update);
-
-    if (result.MatchedCount == 0) {
-      return null;
-    }
-    return await collection.Find(filter).FirstOrDefaultAsync();
-  }
-
   public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role updateRole) {
     // 1. RoleModel に名前等の null チェック用のプロパティを追加
 
@@ -107,6 +73,7 @@ public class RoleRepository : IRoleRepository {
     if (isParmissionChanged)
       updates.Add(updateDataBuilder.Set(r => r.Permissions, updateRole.Permissions.ToList()));
 
+ 
     var update = updateDataBuilder.Combine(updates);
     var result = await collection.UpdateOneAsync(filter, update);
 
