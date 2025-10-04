@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -7,11 +9,11 @@ namespace Pocco.Svc.Roles.Models;
 public class Role {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
-  public string Id { get; set; } = default!;
+  public required string Id { get; set; }
 
-  [BsonElement("org_id")]
-  [BsonRepresentation(BsonType.ObjectId)]
-  public string Org_Id { get; set; } = string.Empty;
+  // [BsonElement("org_id")]
+  // [BsonRepresentation(BsonType.ObjectId)]
+  // public string Org_Id { get; set; } = string.Empty;
 
   [BsonElement("name")]
   [BsonRequired]

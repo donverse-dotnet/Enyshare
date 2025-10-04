@@ -4,6 +4,7 @@ using Grpc.Core;
 
 using Microsoft.AspNetCore.Mvc;
 
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
@@ -29,9 +30,10 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
   public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
 
-    var model = new Role {
+    var model = new Role() {
+      Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
-      Org_Id = request.OrgId,
+      // Org_Id = request.OrgId,
       Description = context.RequestHeaders.GetValue("discription") ?? "",
       Permissions = context.RequestHeaders
       .Where(h => h.Key.StartsWith("permission-"))
@@ -46,6 +48,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateRole = new Role {
+      Id = request.Rolemodel.Id,
       Name = request.Rolemodel.Name,
       Description = request.Rolemodel.Descriptions,
       Permissions = request.Rolemodel.Permissions.ToList(),

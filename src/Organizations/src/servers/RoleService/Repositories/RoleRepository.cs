@@ -13,7 +13,7 @@ public class RoleRepository : IRoleRepository {
     _client = client;
   }
 
-  private IMongoCollection<Role> GetCollection(string org_Id) {
+  private IMongoCollection<Role> GetRoleCollection(string org_Id) {
     var db = _client.GetDatabase(org_Id);
     return db.GetCollection<Role>("Roles");
   }
@@ -22,17 +22,17 @@ public class RoleRepository : IRoleRepository {
       throw new ArgumentException("Invalid id or orgId format");
     }
 
-    var collection = GetCollection(org_Id);
+    var roles = GetRoleCollection(org_Id);
     var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
-      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
+      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
     );
-    return await collection.Find(filter).FirstOrDefaultAsync();
+    return await roles.Find(filter).FirstOrDefaultAsync();
   }
 
   public async Task<Role> CreateAsync(string org_Id, Role role) {
-    var collection = GetCollection(org_Id);
-    await collection.InsertOneAsync(role);
+    var roles = GetRoleCollection(org_Id);
+    await roles.InsertOneAsync(role);
     return role;
   }
 
@@ -55,11 +55,11 @@ public class RoleRepository : IRoleRepository {
       throw new ArgumentException("Invalid id or orgId format");
     }
 
-    var collection = GetCollection(orgId);
+    var roles = GetRoleCollection(orgId);
 
     var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
-      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
+      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
       );
     var updateDataBuilder = Builders<Role>.Update;
     var updates = new List<UpdateDefinition<Role>>();
@@ -75,7 +75,7 @@ public class RoleRepository : IRoleRepository {
 
  
     var update = updateDataBuilder.Combine(updates);
-    var result = await collection.UpdateOneAsync(filter, update);
+    var result = await roles.UpdateOneAsync(filter, update);
 
     if (result.ModifiedCount == 0) {
       return false;
@@ -89,12 +89,12 @@ public class RoleRepository : IRoleRepository {
       throw new ArgumentException("Invalid id or orgId format");
     }
 
-    var collection = GetCollection(org_Id);
+    var roles = GetRoleCollection(org_Id);
     var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString()),
-      Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
+      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
+      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
     );
-    var result = await collection.DeleteOneAsync(filter);
+    var result = await roles.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
 }
