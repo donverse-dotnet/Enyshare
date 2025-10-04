@@ -17,6 +17,8 @@
     <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/OrganizationData.proto" GrpcRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Services/InfoService.proto" GrpcRoot="./Protos" GrpcServices="Server" />
+    <Protobuf Include="./Protos/V0/Types/UpdateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/GetInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
   </ItemGroup>
 
 </Project>
