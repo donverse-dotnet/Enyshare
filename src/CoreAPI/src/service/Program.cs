@@ -13,6 +13,9 @@ builder.Services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>(
 builder.Services.AddSingleton<IAuthorizationHandler, GeneralAuthorizationHandler>();
 // gRPC services
 builder.Services.AddGrpc();
+if (builder.Environment.IsDevelopment()) {
+  builder.Services.AddGrpcReflection();
+}
 
 builder.Services.AddTransient(sp => {
   var serverAddress = Environment.GetEnvironmentVariable("AUTH_SERVICE_ADDRESS") ?? throw new InvalidOperationException("AUTH_SERVICE_ADDRESS environment variable is not set.");
@@ -40,6 +43,10 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 // Add GrpcServices to here.
+if (app.Environment.IsDevelopment()) {
+  app.MapGrpcReflectionService();
+}
+app.MapGrpcService<AccountsServiceImpl>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();

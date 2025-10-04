@@ -1,23 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <!-- VENDORS -->
+    <ItemGroup>
+        <!-- Services -->
+        <Protobuf Include="../.protos/V0/Services/AccountsService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+        <Protobuf Include="../.protos/V0/Services/OrganizationsService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
 
-    <!-- Pocco.Srv.Auth V0 -->
-    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SessionData.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-    <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Services/AuthService.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="Client" />
-  </ItemGroup>
+        <!-- VENDORS -->
+        <!-- Pocco.Srv.Auth V0 -->
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SessionData.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Services/AuthService.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="Client" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    </ItemGroup>
 
 </Project>
