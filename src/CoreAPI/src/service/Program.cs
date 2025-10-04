@@ -1,12 +1,17 @@
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Services;
-using Pocco.Svc.CoreAPI.Handlers;
-// using Pocco.Svc.CoreAPI.Services;
+using Pocco.Svc.CoreAPI.Auth;
+using Pocco.Svc.CoreAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Auth handlers
+builder.Services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, GeneralAuthorizationHandler>();
+// gRPC services
 builder.Services.AddGrpc();
 
 builder.Services.AddTransient(sp => {
@@ -16,10 +21,18 @@ builder.Services.AddTransient(sp => {
   return new V0AuthService.V0AuthServiceClient(channel);
 });
 
-builder.Services.AddAuthentication("AuthService")
-    .AddScheme<AuthenticationSchemeOptions, AuthHandler>("AuthService", options => { });
+builder.Services.AddAuthentication()
+  .AddScheme<AuthenticationSchemeOptions, AuthenticateHandler>("BaseAuth", options => { });
+
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
+    .AddPolicy("RequireAdmin", policy => {
+      policy.Requirements.Add(new AuthorizationRequirement());
+      policy.RequireRole("Admin");
+    })
+    .AddPolicy("RequireGeneral", policy => {
+      policy.Requirements.Add(new AuthorizationRequirement());
+      policy.RequireRole("General", "Admin");
+    });
 
 var app = builder.Build();
 

@@ -3,13 +3,15 @@ using System.Text.Encodings.Web;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 
-namespace Pocco.Svc.CoreAPI.Handlers;
+namespace Pocco.Svc.CoreAPI.Auth;
 
-public class AuthHandler(
+public class AuthenticateHandler(
   IOptionsMonitor<AuthenticationSchemeOptions> options,
   ILoggerFactory logger,
   UrlEncoder encoder,
@@ -24,7 +26,7 @@ public class AuthHandler(
   protected override async Task<AuthenticateResult> HandleAuthenticateAsync() {
     Logger.LogInformation("Handling authentication for request: {RequestPath} (from {ip})", Request.Path, Request.HttpContext.Connection.RemoteIpAddress);
 
-    // Get data
+    // Get data from headers(metadata)
     var tokenFound = Request.Headers.TryGetValue("Authorization", out var token);
     var sessionIdFound = Request.Headers.TryGetValue("x-session-id", out var sessionId);
     var accountIdFound = Request.Headers.TryGetValue("x-account-id", out var accountId);
@@ -79,7 +81,7 @@ public class AuthHandler(
       var claims = new List<Claim> {
         new(ClaimTypes.Actor, res.SessionId),
         new(ClaimTypes.NameIdentifier, res.AccountId),
-        new(ClaimTypes.Role, "Authenticated"),
+        new(ClaimTypes.Role, "General"),
         // IDEA: Role base restrictions is goes to each service
       };
       var identity = new ClaimsIdentity(claims, Scheme.Name);
