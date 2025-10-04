@@ -32,4 +32,10 @@ public class Role {
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("UpdatedAt")]
   public DateTime Updated_At { get; set; }
+
+  public bool HasName => !string.IsNullOrWhiteSpace(Name);
+
+  public bool HasDiscription => !string.IsNullOrWhiteSpace(Description);
+
+  public bool HasParmissions => Permissions.Count > 0;
 }
