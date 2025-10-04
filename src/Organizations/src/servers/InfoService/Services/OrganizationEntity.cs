@@ -8,9 +8,6 @@ public class OrganizationEntity
   [BsonId]
   public string Id { get; set; } = string.Empty;
 
-  [BsonId]
-  public string ObjectId { get; set; } = string.Empty;
-
   [BsonElement("name")]
   public string Name { get; set; } = string.Empty;
 
