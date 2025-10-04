@@ -21,11 +21,11 @@ public class Role {
 
   [BsonElement("discription")]
   [BsonRequired]
-  public required string Description { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
 
   [BsonElement("permissions")]
   [BsonRequired]
-  public required List<string> Permissions { get; set; } = new();
+  public List<string> Permissions { get; set; } = new();
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("CreatedAt")]

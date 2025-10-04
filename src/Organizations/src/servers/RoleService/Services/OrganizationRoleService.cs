@@ -34,11 +34,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       // Org_Id = request.OrgId,
-      Description = context.RequestHeaders.GetValue("discription") ?? "",
-      Permissions = context.RequestHeaders
-      .Where(h => h.Key.StartsWith("permission-"))
-      .Select(h => h.Key.Replace("permisson-",""))
-      .ToList(),
+      Description = "", // 作成するときは空のまま
+      // Permissions    // 作成するときは空のまま
       Created_At = DateTime.UtcNow,
       Updated_At = DateTime.UtcNow
     };
