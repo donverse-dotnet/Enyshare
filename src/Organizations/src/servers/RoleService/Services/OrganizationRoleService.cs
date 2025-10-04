@@ -68,14 +68,4 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     return new Empty();
   }
-  private V0RoleModel MapToGrpc(Role role) => new V0RoleModel {
-    Id = role.Id,
-    OrgId = role.Org_Id,
-    Name = role.Name,
-    Descriptions = role.Description,
-    Permissions = { role.Description },
-    CreatedAt = Timestamp.FromDateTime(role.Created_At.ToUniversalTime()),
-    UpdatedAt = Timestamp.FromDateTime(role.Updated_At.ToUniversalTime())
-  };
 }
-
