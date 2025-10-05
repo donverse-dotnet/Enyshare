@@ -20,7 +20,7 @@ public class GeneralAuthorizationHandler : AuthorizationHandler<AuthorizationReq
       context.Succeed(requirement);
     } else {
       _logger.LogWarning("Authorization failed: User does not have the required role.");
-      context.Fail();
+      // context.Fail(); // いずれかのハンドラが失敗を発行した場合、認可が失敗するため、明示的に失敗を設定する必要はありません
     }
     return Task.CompletedTask;
   }
