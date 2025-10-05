@@ -15,7 +15,7 @@ public class GeneralAuthorizationHandler : AuthorizationHandler<AuthorizationReq
   }
 
   protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationRequirement requirement) {
-    if (context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "General" || c.Value == "Admin"))) {
+    if (context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "User" || c.Value == "Admin"))) {
       _logger.LogInformation("Authorization succeeded: {UserId} has the required role.", context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
       context.Succeed(requirement);
     } else {

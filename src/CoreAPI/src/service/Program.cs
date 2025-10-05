@@ -34,7 +34,7 @@ builder.Services.AddAuthorizationBuilder()
     })
     .AddPolicy("RequireGeneral", policy => {
       policy.Requirements.Add(new AuthorizationRequirement());
-      policy.RequireRole("General", "Admin");
+      policy.RequireRole("User", "Admin");
     });
 
 var app = builder.Build();
