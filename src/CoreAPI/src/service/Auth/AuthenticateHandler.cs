@@ -1,10 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
@@ -77,12 +76,21 @@ public class AuthenticateHandler(
         return AuthenticateResult.Fail("Token verification failed.");
       }
 
+      // Read res.Token and get role
+      var handler = new JwtSecurityTokenHandler();
+      var tokenObj = handler.ReadJwtToken(res.Token);
+      var roleClaim = tokenObj.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role) ?? tokenObj.Claims.FirstOrDefault(c => c.Type == "role");
+      Logger.LogInformation("Extracted role claim: {RoleClaim} from token for session ID: {SessionId}", roleClaim?.Value, sessionId.ToString());
+      if (roleClaim is null) {
+        Logger.LogWarning("Role claim not found in token for session ID: {SessionId}", sessionId.ToString());
+        return AuthenticateResult.Fail("Role claim not found in token.");
+      }
+
       // Create claims from the session data
       var claims = new List<Claim> {
         new(ClaimTypes.Actor, res.SessionId),
         new(ClaimTypes.NameIdentifier, res.AccountId),
-        new(ClaimTypes.Role, "General"),
-        // IDEA: Role base restrictions is goes to each service
+        new(ClaimTypes.Role, roleClaim.Value)
       };
       var identity = new ClaimsIdentity(claims, Scheme.Name);
       var principal = new ClaimsPrincipal(identity);
