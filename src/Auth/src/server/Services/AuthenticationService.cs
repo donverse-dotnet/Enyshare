@@ -7,11 +7,11 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
+using Pocco.Srv.Auth.Models;
 
 
 namespace Pocco.Srv.Auth.Services;
@@ -20,56 +20,6 @@ public partial class V0AuthServiceImpl(
   [FromServices] JwtTokenHandler jwtTokenHandler,
   ILogger<V0AuthServiceImpl> logger
 ) : V0AuthService.V0AuthServiceBase {
-
-  public class AccountsModel {
-    [BsonId]
-    public ObjectId Id { get; set; }
-
-    [BsonElement("Email")]
-    public string? Email { get; set; }
-
-    [BsonElement("PasswordHash")]
-    public string? PasswordHash { get; set; }
-
-    [BsonElement("CreatedAt")]
-    public DateTime CreatedAt { get; set; }
-
-    [BsonExtraElements]
-    public BsonDocument? ExtraElements { get; set; } // 他のフィールド
-  }
-  public class V0SessionDataWrapper {
-    // セッションID
-    [BsonId]
-    [BsonElement("SessionId")]
-    public string SessionId { get; set; } = string.Empty;
-    // アカウントID
-    [BsonElement("AccountId")]
-    public string AccountId { get; set; } = string.Empty;
-    // トークン
-    [BsonElement("Token")]
-    public string Token { get; set; } = string.Empty;
-    // 有効期限（UNIXタイムスタンプ）
-    [BsonElement("ExpiresAt")]
-    public Timestamp? ExpiresAt { get; set; }
-    // 作成日時（UNIXタイムスタンプ）
-    [BsonElement("CreatedAt")]
-    public Timestamp? CreatedAt { get; set; }
-    // 更新日時（UNIXタイムスタンプ）
-    [BsonElement("UpdatedAt")]
-    public Timestamp? UpdatedAt { get; set; }
-
-    public V0SessionData ToV0SessionData() {
-      return new V0SessionData {
-        SessionId = SessionId,
-        AccountId = AccountId,
-        Token = Token,
-        ExpiresAt = ExpiresAt,
-        CreatedAt = CreatedAt,
-        UpdatedAt = UpdatedAt
-      };
-    }
-  }
-
   private readonly ILogger<V0AuthServiceImpl> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
   private readonly JwtTokenHandler _jwtTokenHandler = jwtTokenHandler ?? throw new ArgumentNullException(nameof(jwtTokenHandler));
 
@@ -92,7 +42,8 @@ public partial class V0AuthServiceImpl(
     // ユーザーが見つかった場合、トークンを作成
     var claims = new List<Claim> {
       new(ClaimTypes.Name, request.Email),
-      new("UserId", user.Id.ToString())
+      new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+      new(ClaimTypes.Role, user.Role),
     };
     string token = _jwtTokenHandler.GenerateToken(new ClaimsPrincipal(new ClaimsIdentity(claims)), DateTime.UtcNow.AddHours(1));
     var sessionId = ObjectId.GenerateNewId().ToString();

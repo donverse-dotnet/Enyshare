@@ -40,7 +40,10 @@ public class JwtTokenHandler(ILogger<JwtTokenHandler> logger) : IJwtTokenHandler
     var principal = VerifyToken(token) ?? throw new InvalidOperationException("Invalid token.");
     var identity = principal.Identity as ClaimsIdentity;
 
-    var exp = (identity?.FindFirst(ClaimTypes.Expiration)?.Value) ?? throw new InvalidOperationException("Token does not contain an expiration claim.");
+    var exp = identity?.FindFirst(JwtRegisteredClaimNames.Exp)?.Value;
+    if (exp is null) {
+      throw new InvalidOperationException("Token does not contain an expiration claim.");
+    }
     var expTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp)).UtcDateTime;
 
     // 新しい有効期限が現在の有効期限よりも後であることを確認
