@@ -42,7 +42,8 @@ public partial class V0AuthServiceImpl(
     // ユーザーが見つかった場合、トークンを作成
     var claims = new List<Claim> {
       new(ClaimTypes.Name, request.Email),
-      new("UserId", user.Id.ToString())
+      new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+      new(ClaimTypes.Role, user.Role),
     };
     string token = _jwtTokenHandler.GenerateToken(new ClaimsPrincipal(new ClaimsIdentity(claims)), DateTime.UtcNow.AddHours(1));
     var sessionId = ObjectId.GenerateNewId().ToString();
