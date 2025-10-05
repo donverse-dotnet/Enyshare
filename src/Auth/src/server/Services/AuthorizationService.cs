@@ -5,6 +5,7 @@ using Grpc.Core;
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Types;
+using Pocco.Srv.Auth.Models;
 
 
 namespace Pocco.Srv.Auth.Services;
@@ -22,15 +23,7 @@ public partial class V0AuthServiceImpl {
 
     if (string.Equals(newToken, request.Token) is true) {
       _logger.LogInformation("Token has not changed, skipping database update. SessionId: {SessionId}", request.SessionId);
-      var noChangeSession = new V0SessionDataWrapper {
-        SessionId = request.SessionId,
-        AccountId = request.AccountId,
-        Token = newToken,
-        CreatedAt = request.CreatedAt,
-        ExpiresAt = request.ExpiresAt,
-        UpdatedAt = request.UpdatedAt
-      };
-      return noChangeSession.ToV0SessionData();
+      return request;
     }
 
     // セッション情報をMongoDBに保存
