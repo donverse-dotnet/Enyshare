@@ -17,7 +17,7 @@ public class AccountsServiceImpl : V0AccountsService.V0AccountsServiceBase {
     _logger.LogInformation("AccountsServiceImpl initialized.");
   }
 
-  [Authorize(Policy = "RequireGeneral")] // TODO: Add role-based authorization.
+  [Authorize(Policy = "RequireGeneral")]
   public override async Task<GetAccountResponse> Get(GetAccountRequest request, ServerCallContext context) {
     _logger.LogInformation("GetAccount called with AccountId: {AccountId}", request.AccountId);
 
