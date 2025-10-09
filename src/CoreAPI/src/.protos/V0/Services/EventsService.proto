@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+service V0EventsService {
+    // イベントを購読する
+    rpc Listen (ListenRequest) returns (stream V0EventData);
+    // 購読を更新する
+    rpc UpdateListen (ListenRequest) returns (google.protobuf.Empty);
+    // 購読を停止する
+    rpc Unlisten (UnlistenRequest) returns (google.protobuf.Empty);
+}
+
+enum V0EventTopics {
+    // 未設定
+    EVENT_TOPIC_UNSPECIFIED = 0;
+    // ユーザイベント
+    EVENT_TOPIC_USER = 1;
+    // システムイベント
+    EVENT_TOPIC_SYSTEM = 2;
+    // 組織イベント
+    EVENT_TOPIC_ORGANIZATION = 3;
+}
+
+message ListenRequest {
+    // 購読するユーザーID
+    string user_id = 1;
+    // ユーザーが利用しているセッションID
+    string session_id = 2;
+
+    // 購読するイベントトピック
+    repeated V0EventTopics topics = 3;
+    // 組織のIDリスト（グローバル）
+    repeated string organization_ids = 4;
+    // 組織のID（アクティブ）
+    string active_organization_id = 5;
+    // ダイレクトメッセージのIDリスト
+    repeated string direct_message_ids = 6;
+}
+
+message UnlistenRequest {
+    // 購読を停止するユーザーID
+    string user_id = 1;
+    // ユーザーが利用しているセッションID
+    string session_id = 2;
+}
+
+message V0EventData {
+    // イベントトピック
+    V0EventTopics topic = 1;
+    // イベントタイプ
+    string event_type = 2;
+    // イベント発行APIバージョン
+    string api_version = 3;
+    // イベントID
+    string event_id = 4;
+    // イベント発行日時
+    google.protobuf.Timestamp invoked_at = 5;
+    // イベント発行者ID
+    string invoked_by = 6;
+    // イベントペイロード
+    google.protobuf.Struct payload = 7;
+}
