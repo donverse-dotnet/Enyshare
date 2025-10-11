@@ -39,7 +39,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Is_Private = request.Chatsmodel.IsPrivate
     };
 
-    var updated = await _repository.UpdateAsync(request.Chatsmodel.OrgId, updateChat);
+    var updated = await _repository.TryUpdateAsync(request.Chatsmodel.OrgId, request.Chatsmodel.Id, updateChat);
     if (updated == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }

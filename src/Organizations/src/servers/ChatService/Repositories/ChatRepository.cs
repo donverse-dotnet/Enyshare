@@ -35,9 +35,17 @@ public class ChatRepository : IChatRepository {
 
   }
 
-  public async Task<Chat> UpdateAsync(string org_id, Chat updatechat) {
-    var chats = GetChatCollection(org_id);
-    var filter = Builders<Chat>.Filter.Eq("_id", updatechat);
+  public async Task<bool> TryUpdateAsync(string orgId, string chatId, Chat updatechat) {
+    var latestChat = await GetByIdAsync(orgId, chatId);
+    if (!ObjectId.TryParse(chatId, out var objectId) || !ObjectId.TryParse(orgId, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
+
+    var chats = GetChatCollection(orgId);
+
+    var filter = Builders<Chat>.Filter.And(
+      Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
+      );
 
     var updateDataBuilder = Builders<Chat>.Update;
     var updates = new List<UpdateDefinition<Chat>>();
@@ -51,15 +59,16 @@ public class ChatRepository : IChatRepository {
     updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
 
     if (updates.Count == 0) {
-      return null;
+      return false;
     }
 
     var update = updateDataBuilder.Combine(updates);
     var result = await chats.UpdateOneAsync(filter, update);
-    if (result.ModifiedCount > 0) {
-      return null;
+
+    if (result.ModifiedCount == 0) {
+      return false;
     }
-    return await chats.Find(filter).FirstOrDefaultAsync();
+        return true;
   }
 
   public async Task<bool> DeleteAsync(string org_id, string id) {
