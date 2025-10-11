@@ -40,7 +40,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     };
 
     var updated = await _repository.TryUpdateAsync(request.Chatsmodel.OrgId, request.Chatsmodel.Id, updateChat);
-    if (updated == null) {
+    if (updated == false) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
 
