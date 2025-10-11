@@ -23,7 +23,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     var chat = new Chat {
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
-      Description = context.RequestHeaders.GetValue("discription") ?? "",
+      Description = "",     //作成するときは空のまま
       Is_Private = false,
       Created_At = DateTime.UtcNow
     };
