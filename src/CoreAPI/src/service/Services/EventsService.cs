@@ -75,6 +75,7 @@ public class EventsService : V0EventsService.V0EventsServiceBase {
   private readonly ILogger<EventsService> _logger;
   private readonly EventBridge.Protobufs.Services.V0EventListener.V0EventListenerClient _eventListenerClient;
   private readonly Task _receiveEventsTask;
+  private readonly Task _processEventQueueTask;
 
   public EventsService(ILogger<EventsService> logger) {
     _logger = logger;
@@ -83,12 +84,15 @@ public class EventsService : V0EventsService.V0EventsServiceBase {
     var channel = GrpcChannel.ForAddress(eventBridgeAddress);
     _eventListenerClient = new EventBridge.Protobufs.Services.V0EventListener.V0EventListenerClient(channel);
     _receiveEventsTask = Task.Run(() => ReceiveEventsAsync(_cts.Token));
+    _processEventQueueTask = Task.Run(() => ProcessEventQueueAsync(_cts.Token));
 
     _logger.LogInformation("EventsService initialized");
   }
   ~EventsService() {
     _cts.Cancel();
     _receiveEventsTask.Wait();
+    _processEventQueueTask.Wait();
+    _logger.LogInformation("EventsService terminated");
   }
 
   // list of writers
