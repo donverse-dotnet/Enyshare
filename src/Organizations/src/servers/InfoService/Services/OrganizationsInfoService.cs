@@ -95,6 +95,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     return new V0UpdateOrganizationReply {
       Id = updated.Id,
       Name = updated.Name,
+      Description = updated.Description,
       UpdatedAt = Timestamp.FromDateTime(updated.UpdatedAt)
     };
   }
@@ -116,6 +117,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
 
     // 削除結果を返却
     return new V0DeleteOrganizationReply {
+      Id = request.Id,
       Success = true,
       Message = "Organization and related data deleted successfully."
     };
