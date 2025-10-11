@@ -23,7 +23,7 @@ public class ChatRepository : IChatRepository {
     return chat;
   }
 
-  public async Task<Chat?> GetByIdAsync(string org_id, string id) {
+  public async Task<Chat> GetByIdAsync(string org_id, string id) {
     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
@@ -35,7 +35,7 @@ public class ChatRepository : IChatRepository {
 
   }
 
-  public async Task<Chat?> UpdateAsync(string org_id, Chat updatechat) {
+  public async Task<Chat> UpdateAsync(string org_id, Chat updatechat) {
     var chats = GetChatCollection(org_id);
     var filter = Builders<Chat>.Filter.Eq("_id", updatechat);
 
