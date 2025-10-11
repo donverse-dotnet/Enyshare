@@ -2,6 +2,8 @@ using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
+using MongoDB.Bson;
+
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Chats.Models;
@@ -19,6 +21,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
   public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
 
     var chat = new Chat {
+      Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       Description = context.RequestHeaders.GetValue("discription") ?? "",
       Is_Private = false,
@@ -30,6 +33,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateChat = new Chat {
+      Id = request.Chatsmodel.Id,
       Name = request.Chatsmodel.Name,
       Description = request.Chatsmodel.Description,
       Is_Private = request.Chatsmodel.IsPrivate

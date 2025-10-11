@@ -12,14 +12,14 @@ public class ChatRepository : IChatRepository {
     _client = client;
   }
 
-  private IMongoCollection<Chat> GetCollection(string org_id) {
+  private IMongoCollection<Chat> GetChatCollection(string org_id) {
     var db = _client.GetDatabase(org_id);
     return db.GetCollection<Chat>("Chats");
   }
 
   public async Task<Chat> CreateAsync(string org_id, Chat chat) {
-    var collection = GetCollection(org_id);
-    await collection.InsertOneAsync(chat);
+    var chats = GetChatCollection(org_id);
+    await chats.InsertOneAsync(chat);
     return chat;
   }
 
@@ -27,16 +27,16 @@ public class ChatRepository : IChatRepository {
     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
-    var collection = GetCollection(org_id);
+    var chats = GetChatCollection(org_id);
     var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
     );
 
-    return await collection.Find(filter).FirstOrDefaultAsync();
+    return await chats.Find(filter).FirstOrDefaultAsync();
 
   }
 
   public async Task<Chat?> UpdateAsync(string org_id, Chat updatechat) {
-    var collection = GetCollection(org_id);
+    var chats = GetChatCollection(org_id);
     var filter = Builders<Chat>.Filter.Eq("_id", updatechat);
 
     var updateDataBuilder = Builders<Chat>.Update;
@@ -55,21 +55,21 @@ public class ChatRepository : IChatRepository {
     }
 
     var update = updateDataBuilder.Combine(updates);
-    var result = await collection.UpdateOneAsync(filter, update);
+    var result = await chats.UpdateOneAsync(filter, update);
     if (result.ModifiedCount > 0) {
       return null;
     }
-    return await collection.Find(filter).FirstOrDefaultAsync();
+    return await chats.Find(filter).FirstOrDefaultAsync();
   }
 
   public async Task<bool> DeleteAsync(string org_id, string id) {
     if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
-    var collection = GetCollection(org_id);
+    var chats = GetChatCollection(org_id);
     var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
     );
-    var result = await collection.DeleteOneAsync(filter);
+    var result = await chats.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
 }

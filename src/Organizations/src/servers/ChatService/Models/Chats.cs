@@ -7,11 +7,7 @@ namespace Pocco.Svc.Chats.Models;
 public class Chat {
   [BsonId]
   [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-  public string Id { get; set; } = default!;
-
-  [BsonElement("org_id")]
-
-  public string Org_Id { get; set; } = default!;
+  public required string Id { get; set; }
 
   [BsonElement("name")]
   [BsonRequired]
