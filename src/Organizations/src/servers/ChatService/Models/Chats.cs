@@ -29,4 +29,8 @@ public class Chat {
 
   [BsonElement("is_private")]
   public bool Is_Private { get; set; } = false;
+
+  public bool HasName => !string.IsNullOrWhiteSpace(Name);
+
+  public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
 }
