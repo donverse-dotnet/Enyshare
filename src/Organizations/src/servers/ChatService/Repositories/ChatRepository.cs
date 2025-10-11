@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 
 using Pocco.Svc.Chats.Models;
+using Grpc.Core;
 
 namespace Pocco.Svc.Chats.Ripositories;
 
@@ -20,7 +21,14 @@ public class ChatRepository : IChatRepository {
   public async Task<Chat> CreateAsync(string org_id, Chat chat) {
     var chats = GetChatCollection(org_id);
     await chats.InsertOneAsync(chat);
-    return chat;
+
+    var isCreated = await GetByIdAsync(org_id, chat.Id);
+
+    if (isCreated is null) {
+      throw new RpcException(new Status(StatusCode.Internal, $"Chat creation failed for {org_id}"));
+    }
+        
+    return isCreated;
   }
 
   public async Task<Chat> GetByIdAsync(string org_id, string id) {

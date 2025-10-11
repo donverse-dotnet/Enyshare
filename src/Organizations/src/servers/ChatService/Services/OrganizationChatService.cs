@@ -2,19 +2,27 @@ using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
 
+using Microsoft.AspNetCore.Mvc;
+
 using MongoDB.Bson;
 
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Chats.Models;
 
+using SharpCompress.Common;
+
 namespace Pocco.Svc.ChatService.Services;
 
 public class OrganizationChatService : V0OrganizationChatService.V0OrganizationChatServiceBase {
   private readonly IChatRepository _repository;
+  private readonly ILogger<OrganizationChatService> _logger;
 
-  public OrganizationChatService(IChatRepository repository) {
+  public OrganizationChatService([FromServices] IChatRepository repository, [FromServices] ILogger<OrganizationChatService> logger) {
     _repository = repository;
+    _logger = logger;
+
+    _logger.LogInformation("OrganizationChatService is initialized!");
   }
 
 
@@ -27,7 +35,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Is_Private = false,
       Created_At = DateTime.UtcNow
     };
-    var created = await _repository.CreateAsync(request.OrgId, chat);
+    Chat createdChat = await _repository.CreateAsync(request.OrgId, chat);
+    _logger.LogInformation("{ChatId} is successfully created on {OrgId}", createdChat.Id, request.OrgId);
     return new Empty();
   }
 
