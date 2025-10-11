@@ -4,6 +4,7 @@ using Grpc.Core;
 
 using Microsoft.AspNetCore.Mvc;
 
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
@@ -15,8 +16,12 @@ namespace RoleService.Services;
 
 public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   private readonly IRoleRepository _repo;
-  public OrganizationRoleService([FromServices] IRoleRepository repo) {
+  private readonly ILogger<OrganizationRoleService> _logger;
+  public OrganizationRoleService([FromServices] IRoleRepository repo, [FromServices] ILogger<OrganizationRoleService> logger) {
     _repo = repo;
+    _logger = logger;
+
+    _logger.LogInformation("OrganiationRoleService is initialized!");
   }
 
   public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
@@ -29,31 +34,31 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
   public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
 
-    var model = new Role {
+    var model = new Role() {
+      Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
-      Org_Id = request.OrgId,
-      Description = context.RequestHeaders.GetValue("discription") ?? "",
-      Permissions = context.RequestHeaders
-      .Where(h => h.Key.StartsWith("permission-"))
-      .Select(h => h.Key.Replace("permisson-",""))
-      .ToList(),
+      // Org_Id = request.OrgId,
+      Description = "", // 作成するときは空のまま
+      // Permissions    // 作成するときは空のまま
       Created_At = DateTime.UtcNow,
       Updated_At = DateTime.UtcNow
     };
-    var created = await _repo.CreateAsync(request.OrgId, model);
+    Role createdRole = await _repo.CreateAsync(request.OrgId, model);
+    _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
     return new Empty();
   }
 
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateRole = new Role {
+      Id = request.Rolemodel.Id,
       Name = request.Rolemodel.Name,
       Description = request.Rolemodel.Descriptions,
       Permissions = request.Rolemodel.Permissions.ToList(),
       Updated_At = DateTime.UtcNow
     };
 
-    var updated = await _repo.UpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
-    if (updated == null) {
+    var updated = await _repo.TryUpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
+    if (updated == false) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }
 
