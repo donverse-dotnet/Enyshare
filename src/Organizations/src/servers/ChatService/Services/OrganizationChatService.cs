@@ -58,20 +58,4 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     }
     return new Empty();
   }
-
-  private V0ChatsModel ToReply(Chat chat) {
-    var chatModel = new V0ChatsModel {
-      Id = chat.Id,
-      OrgId = chat.Org_Id,
-      Name = chat.Name,
-      Description = chat.Description,
-      CreatedBy = chat.Created_By,
-      CreatedAt = Timestamp.FromDateTime(chat.Created_At.ToUniversalTime()),
-      IsPrivate = false
-    };
-
-    chatModel.MemberIds.AddRange(chat.Member_Ids);
-
-    return chatModel;
-  }
 }
