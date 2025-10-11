@@ -16,7 +16,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
   }
 
 
-  public override async Task<V0CreateReply> Create(V0CreateRequest request, ServerCallContext context) {
+  public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
 
     var chat = new Chat {
       Name = request.Name,
@@ -25,7 +25,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Created_At = DateTime.UtcNow
     };
     var created = await _repository.CreateAsync(request.OrgId, chat);
-    return new V0CreateReply { Chatsmodel = ToReply(created) };
+    return new Empty();
   }
 
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
@@ -43,24 +43,20 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     return new Empty();
   }
 
-  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
+  public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
     var chat = await _repository.GetByIdAsync(request.OrgId, request.Id);
     if (chat == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
-    return new V0GetReply {Chatsmodel = ToReply(chat)};
+    return new Empty();
   }
 
-  public override async Task<V0DeleteReply> Delete(V0DeleteRequest request, ServerCallContext context) {
+  public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {
     var success = await _repository.DeleteAsync(request.OrgId, request.Id);
     if (!success) {
-      return new V0DeleteReply {
-        Success = false
-      };
+      throw new RpcException(new Status(StatusCode.NotFound, "Chat not found or no fields to delete"));
     }
-    return new V0DeleteReply {
-      Success = true
-    };
+    return new Empty();
   }
 
   private V0ChatsModel ToReply(Chat chat) {
