@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 using Pocco.Svc.Chats.Models;
 
@@ -23,9 +24,14 @@ public class ChatRepository : IChatRepository {
   }
 
   public async Task<Chat?> GetByIdAsync(string org_id, string id) {
+    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
     var collection = GetCollection(org_id);
-    var filter = Builders<Chat>.Filter.Eq("_id", id);
-     return await collection.Find(filter).FirstOrDefaultAsync();
+    var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
+    );
+
+    return await collection.Find(filter).FirstOrDefaultAsync();
 
   }
 
@@ -39,14 +45,14 @@ public class ChatRepository : IChatRepository {
     if (!string.IsNullOrWhiteSpace(updatechat.Name))
       updates.Add(updateDataBuilder.Set(c => c.Name, updatechat.Name));
 
-     if (!string.IsNullOrWhiteSpace(updatechat.Description))
+    if (!string.IsNullOrWhiteSpace(updatechat.Description))
       updates.Add(updateDataBuilder.Set(c => c.Description, updatechat.Description));
 
-      updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
+    updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
 
     if (updates.Count == 0) {
       return null;
-      }
+    }
 
     var update = updateDataBuilder.Combine(updates);
     var result = await collection.UpdateOneAsync(filter, update);
@@ -57,8 +63,12 @@ public class ChatRepository : IChatRepository {
   }
 
   public async Task<bool> DeleteAsync(string org_id, string id) {
+    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
+      throw new ArgumentException("Invalid id or orgId format");
+    }
     var collection = GetCollection(org_id);
-    var filter = Builders<Chat>.Filter.Eq("_id", id);
+    var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
+    );
     var result = await collection.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
