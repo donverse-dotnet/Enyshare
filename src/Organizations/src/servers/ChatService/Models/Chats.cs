@@ -33,4 +33,12 @@ public class Chat {
   public bool HasName => !string.IsNullOrWhiteSpace(Name);
 
   public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
+
+  public bool IsNameChanged(string name) {
+    return this.Name != name;
+  }
+
+  public bool IsDescriptionChanged(string description) {
+    return this.Description != description;
+  }
 }

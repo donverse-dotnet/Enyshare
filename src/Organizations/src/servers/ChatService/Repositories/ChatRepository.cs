@@ -37,6 +37,14 @@ public class ChatRepository : IChatRepository {
 
   public async Task<bool> TryUpdateAsync(string orgId, string chatId, Chat updatechat) {
     var latestChat = await GetByIdAsync(orgId, chatId);
+
+    var isNameChanged = updatechat.IsDescriptionChanged(latestChat.Name);
+    var isDescriptionChanged = updatechat.IsDescriptionChanged(latestChat.Description);
+
+    if (isNameChanged == false && isDescriptionChanged) {
+      return false;
+    }
+        
     if (!ObjectId.TryParse(chatId, out var objectId) || !ObjectId.TryParse(orgId, out var orgObjectId)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
@@ -50,10 +58,10 @@ public class ChatRepository : IChatRepository {
     var updateDataBuilder = Builders<Chat>.Update;
     var updates = new List<UpdateDefinition<Chat>>();
 
-    if (!string.IsNullOrWhiteSpace(updatechat.Name))
+    if (isNameChanged)
       updates.Add(updateDataBuilder.Set(c => c.Name, updatechat.Name));
 
-    if (!string.IsNullOrWhiteSpace(updatechat.Description))
+    if (isDescriptionChanged)
       updates.Add(updateDataBuilder.Set(c => c.Description, updatechat.Description));
 
     updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
