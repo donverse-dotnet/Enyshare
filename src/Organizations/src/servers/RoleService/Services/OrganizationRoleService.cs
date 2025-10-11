@@ -57,7 +57,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Updated_At = DateTime.UtcNow
     };
 
-    var updated = await _repo.TryUpdateAsync(request.OrgId, request.Rolemodel.Id, updateRole);
+    var updated = await _repo.TryUpdateAsync(request.Rolemodel.OrgId, request.Rolemodel.Id, updateRole);
     if (updated == false) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }

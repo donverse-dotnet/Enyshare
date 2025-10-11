@@ -6,7 +6,5 @@ package pocco.libs.protobufs.types;
 import "V0/Types/RoleModel.proto";
 
 message V0UpdateRequest {
-    string org_id = 1;
-
-    pocco.libs.protobufs.types.V0RoleModel rolemodel = 2;
+    pocco.libs.protobufs.types.V0RoleModel rolemodel = 1;
 }
