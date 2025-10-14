@@ -8,26 +8,21 @@
 
     <ItemGroup>
         <!-- Services -->
-        <Protobuf Include="../.protos/V0/Services/AccountsService.proto" ProtoRoot="../.protos/"
-            GrpcServices="Server" />
-        <Protobuf Include="../.protos/V0/Services/EventsService.proto" ProtoRoot="../.protos/"
-            GrpcServices="Server" />
-        <Protobuf Include="../.protos/V0/Services/OrganizationsService.proto"
-            ProtoRoot="../.protos/" GrpcServices="Server" />
+        <Protobuf Include="../.protos/V0/Services/AccountsService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+        <Protobuf Include="../.protos/V0/Services/EventsService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+        <Protobuf Include="../.protos/V0/Services/OrganizationsService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
 
         <!-- VENDORS -->
         <!-- Pocco.Srv.Auth V0 -->
-        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto"
-            ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto"
-            ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SessionData.proto"
-            ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
-        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Services/AuthService.proto"
-            ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="Client" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignInRequest.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SignOutResponse.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Types/SessionData.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.Auth/V0/Services/AuthService.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.Auth/" GrpcServices="Client" />
         <!-- Pocco.Srv.EventBridge V0 -->
-        <Protobuf Include="../.protos/vendor/Pocco.Srv.EventBridge/V0/Services/EventListener.proto"
-            ProtoRoot="../.protos/vendor/Pocco.Srv.EventBridge/" GrpcServices="Client" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.EventBridge/V0/Enums/V0EventTopics.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.EventBridge/" GrpcServices="None" />
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.EventBridge/V0/Types/V0EventData.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.EventBridge/" GrpcServices="None" />
+        <!-- <Protobuf Include="../.protos/vendor/Pocco.Srv.EventBridge/V0/Services/EventReceiver.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.EventBridge/" GrpcServices="Client" /> -->
+        <Protobuf Include="../.protos/vendor/Pocco.Srv.EventBridge/V0/Services/EventDispatcher.proto" ProtoRoot="../.protos/vendor/Pocco.Srv.EventBridge/" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>

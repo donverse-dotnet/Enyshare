@@ -3,7 +3,9 @@
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
+using Pocco.Svc.EventBridge.Protobufs.Enums;
 using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Svc.EventBridge.Protobufs.Types;
 
 namespace Pocco.Svc.CoreAPI.Services;
 
@@ -15,7 +17,7 @@ public class EventListener : IHotStartableService {
 
     var serverAddress = Environment.GetEnvironmentVariable("EVENT_BRIDGE_ADDRESS") ?? throw new InvalidOperationException("EVENT_BRIDGE_ADDRESS environment variable is not set.");
     _channel = GrpcChannel.ForAddress(serverAddress);
-    _client = new V0EventListener.V0EventListenerClient(_channel);
+    _client = new V0EventDispatcher.V0EventDispatcherClient(_channel);
 
     _logger.LogInformation("EventListener initialized.");
   }
@@ -23,7 +25,7 @@ public class EventListener : IHotStartableService {
   private readonly ILogger<EventListener> _logger;
   private EventDistributeService? _eventDistributeService;
   private readonly GrpcChannel _channel;
-  private readonly V0EventListener.V0EventListenerClient _client;
+  private readonly V0EventDispatcher.V0EventDispatcherClient _client;
   private AsyncServerStreamingCall<V0EventData>? _streamingCall;
   private readonly CancellationTokenSource _cancellationTokenSource;
   private Task? _listeningTask;
