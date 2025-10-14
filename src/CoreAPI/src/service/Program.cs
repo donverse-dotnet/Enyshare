@@ -5,8 +5,19 @@ using Pocco.Libs.Protobufs.Services;
 using Pocco.Svc.CoreAPI.Auth;
 using Pocco.Svc.CoreAPI.Services;
 using Pocco.Svc.CoreAPI.Services.Grpc;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog for logging
+builder.Host.UseSerilog((ctx, cfg) => {
+  cfg
+    .Enrich.WithThreadId()
+    // Set log style -> [yyyy-MM-dd HH:mm:ss.fff] [Level] [SourceContext][[ThreadId]] Message NewLine Exception
+    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] {Level:u4}: {SourceContext}[{ThreadId}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day, outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] {Level:u4}: {SourceContext}[{ThreadId}] {Message:lj}{NewLine}{Exception}")
+    .Enrich.FromLogContext();
+});
 
 // Add services to the container.
 // Hosted services
