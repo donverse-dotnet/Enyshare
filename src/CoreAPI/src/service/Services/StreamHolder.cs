@@ -20,8 +20,8 @@ public class StreamHolder : IHotStartableService {
   public void AddStreamWriter(StreamWriterModel model) {
     _streamWriters.Add(model);
 
-    _logger.LogInformation("Added StreamWriter: SessionId={SessionId}, UserId={UserId}, Topics={Topics}, Filters={Filters}",
-      model.SessionId, model.UserId, string.Join(",", model.Topics), string.Join(",", model.Filters));
+    _logger.LogInformation("Added StreamWriter: SessionId={SessionId}, UserId={UserId}, Filters={Filters}",
+      model.SessionId, model.UserId, string.Join(",", model.Filters));
   }
 
   // ユーザーがUnListenを読んだときもしくは切断（例外）した時に呼ぶ

@@ -7,10 +7,9 @@ namespace Pocco.Svc.CoreAPI.Models;
 
 public class StreamWriterModel {
 
-  public StreamWriterModel(string sessionId, string userId, List<string> topics, List<string> filters, IServerStreamWriter<V0EventData> streamWriter, ServerCallContext context) {
+  public StreamWriterModel(string sessionId, string userId, StreamWriterFilterModel filters, IServerStreamWriter<V0EventData> streamWriter, ServerCallContext context) {
     SessionId = sessionId;
     UserId = userId;
-    Topics = topics;
     Filters = filters;
     StreamWriter = streamWriter;
     StreamContext = context;
@@ -37,13 +36,6 @@ public class StreamWriterModel {
   private readonly IAsyncEnumerable<V0EventData> _eventQueue = _channel.Reader.ReadAllAsync();
   private readonly CancellationTokenSource _cancellationTokenSource = new();
   private readonly Task _processingTask;
-
-  public void UpdateTopic(List<string> newTopics) {
-    Topics = newTopics;
-  }
-  public void UpdateFilters(List<string> newFilters) {
-    Filters = newFilters;
-  }
 
   public void EnqueueEvent(V0EventData eventData) {
     _channel.Writer.TryWrite(eventData);

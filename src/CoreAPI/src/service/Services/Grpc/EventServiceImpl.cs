@@ -20,19 +20,16 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
 
   public override async Task Listen(ListenRequest request, IServerStreamWriter<V0EventData> responseStream, ServerCallContext context) {
     // Create a new StreamWriterModel for this connection
-    var topics = new List<string>();
-    foreach (var topic in request.Topics) {
-      topics.Add(topic.ToString());
-    }
-    var filters = new List<string>();
-    filters.AddRange(request.OrganizationIds);
-    filters.AddRange(request.DirectMessageIds);
-    filters.Add(request.ActiveOrganizationId);
+    var filters = new StreamWriterFilterModel(
+      topics: request.Topics.Select(t => t.ToString()).ToList(),
+      organizationIds: request.OrganizationIds.ToList(),
+      activeOrganizationId: request.ActiveOrganizationId,
+      activeOrganizationChatIds: request.DirectMessageIds.ToList()
+    );
 
     var streamWriterModel = new StreamWriterModel(
       sessionId: request.SessionId,
       userId: request.UserId,
-      topics: topics,
       filters: filters, // TODO: 1つのフィルターになるように変更
       streamWriter: responseStream,
       context: context
@@ -73,20 +70,21 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
     var streamWriterModel = streamWriterModels.First();
 
     if (streamWriterModel != null) {
-      var topics = new List<string>();
       foreach (var topic in request.Topics) {
-        topics.Add(topic.ToString());
+        if (!streamWriterModel.Filters.Topics.Contains(topic.ToString())) {
+          streamWriterModel.Filters.Topics.Add(topic.ToString());
+        }
       }
-      var filters = new List<string>();
-      filters.AddRange(request.OrganizationIds);
-      filters.AddRange(request.DirectMessageIds);
-      filters.Add(request.ActiveOrganizationId);
+      foreach (var orgId in request.OrganizationIds) {
+        if (!streamWriterModel.Filters.OrganizationIds.Contains(orgId)) {
+          streamWriterModel.Filters.OrganizationIds.Add(orgId);
+        }
+      }
+      streamWriterModel.Filters.UpdateActiveOrganizationId(request.ActiveOrganizationId);
+      streamWriterModel.Filters.UpdateActiveOrganizationChatIds(request.DirectMessageIds.ToList());
 
-      streamWriterModel.UpdateTopic(topics);
-      streamWriterModel.UpdateFilters(filters); // TODO: 1つのフィルターになるように変更
-
-      _logger.LogInformation("Updated StreamWriterModel: SessionId={SessionId}, UserId={UserId}, Topics={Topics}, Filters={Filters}",
-        request.SessionId, request.UserId, string.Join(",", topics), string.Join(",", filters));
+      _logger.LogInformation("Updated StreamWriterModel: SessionId={SessionId}, UserId={UserId}, Filters={Filters}",
+        request.SessionId, request.UserId, string.Join(",", streamWriterModel.Filters.ToString()));
     } else {
       _logger.LogWarning("StreamWriterModel not found for SessionId={SessionId}", request.SessionId);
     }
