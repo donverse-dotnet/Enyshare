@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Pocco.Svc.EventBridge.Services;
+using Pocco.Svc.EventBridge.Services.Grpc;
 
 namespace Pocco.Svc.EventBridge;
 
@@ -8,15 +9,15 @@ public class Program {
     var builder = WebApplication.CreateBuilder(args);
 
     // Add services to the container.
-    builder.Services.AddSingleton(sp => {
-      var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
-      var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
-                             throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
-      optionsBuilder.UseMySQL(connectionString);
-      return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
-    });
-
-    builder.Services.AddSingleton<V0EventInvoker>();
+    builder.Services.AddSingleton<IHotStartableService, EventSendHelper>();
+    builder.Services.AddHostedService<HotStarterService>();
+    // builder.Services.AddSingleton(sp => {
+    //   var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
+    //   var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
+    //                          throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
+    //   optionsBuilder.UseMySQL(connectionString);
+    //   return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
+    // });
 
     builder.Services.AddGrpc();
     builder.Services.AddGrpcReflection();
