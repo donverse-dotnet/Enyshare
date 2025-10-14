@@ -28,8 +28,7 @@ public class StreamWriterModel {
   public string SessionId { get; init; }
   public string UserId { get; init; }
 
-  public List<string> Topics { get; private set; }
-  public List<string> Filters { get; private set; }
+  public StreamWriterFilterModel Filters { get; private set; }
 
   public IServerStreamWriter<V0EventData> StreamWriter { get; init; }
   public ServerCallContext StreamContext { get; init; }
