@@ -8,6 +8,12 @@ using Pocco.Svc.CoreAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Hosted services
+// builder.Services.AddSingleton<IHotStartableService, SampleHotStartableService>();
+builder.Services.AddSingleton<StreamHolder>();
+builder.Services.AddSingleton<IHotStartableService, EventDistributeService>();
+builder.Services.AddSingleton<IHotStartableService, EventListener>();
+builder.Services.AddHostedService<HotStarterService>();
 // Auth handlers
 builder.Services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, GeneralAuthorizationHandler>();
@@ -46,8 +52,8 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment()) {
   app.MapGrpcReflectionService();
 }
-app.MapGrpcService<AccountsServiceImpl>();
-app.MapGrpcService<EventsService>();
+// app.MapGrpcService<AccountsServiceImpl>();
+// app.MapGrpcService<EventsService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 // Run app
