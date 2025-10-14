@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Services";
+package pocco.svc.eventbridge.protobufs.services;
+
+import "google/protobuf/empty.proto";
+import "V0/Types/V0EventData.proto";
+
+service V0EventReceiver {
+    // イベントを購読する
+    rpc NewEvent (pocco.svc.eventbridge.protobufs.types.V0EventData) returns (google.protobuf.Empty);
+}
