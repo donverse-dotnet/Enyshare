@@ -1,0 +1,69 @@
+// Add event to StreamHolder event queues
+
+using System.Threading.Channels;
+using Microsoft.AspNetCore.Mvc;
+using Pocco.Libs.Protobufs.Services;
+
+namespace Pocco.Svc.CoreAPI.Services;
+
+public class EventDistributeService : IHotStartableService {
+  private readonly ILogger<EventDistributeService> _logger;
+  private readonly StreamHolder _streamHolder;
+  private static readonly Channel<V0EventData> _channel = Channel.CreateUnbounded<V0EventData>();
+  private readonly IAsyncEnumerable<V0EventData> _eventQueue = _channel.Reader.ReadAllAsync();
+  private readonly CancellationTokenSource _cancellationTokenSource = new();
+  private Task? _processingTask;
+
+  public EventDistributeService([FromServices] ILogger<EventDistributeService> logger, [FromServices] StreamHolder streamHolder) {
+    _logger = logger;
+    _streamHolder = streamHolder;
+
+    _logger.LogInformation("EventDistributeService initialized.");
+  }
+
+  public void EnqueueEvent(V0EventData eventData) {
+    _channel.Writer.TryWrite(eventData);
+  }
+
+  private async Task ProcessEventQueueAsync(CancellationToken cancellationToken) {
+    await foreach (var eventData in _eventQueue.WithCancellation(cancellationToken)) {
+      var writers = _streamHolder.GetStreamWriters(item => item.Topics.Contains(eventData.Topic.ToString()));
+      foreach (var writer in writers) {
+        writer.EnqueueEvent(eventData);
+      }
+    }
+  }
+
+  public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
+    _logger.LogInformation("EventHandler service is warming up.");
+
+    // Start processing the event queue
+    _processingTask = Task.Run(async () => await ProcessEventQueueAsync(_cancellationTokenSource.Token), cancellationToken);
+
+    // No initialization needed
+    return Task.CompletedTask;
+  }
+
+  public Task CoolDownAsync(CancellationToken cancellationToken) {
+    _logger.LogInformation("EventHandler service is cooling down.");
+
+    try {
+      _cancellationTokenSource.Cancel();
+      _processingTask?.Wait(cancellationToken);
+      _cancellationTokenSource.Dispose();
+    } catch (OperationCanceledException) {
+      _logger.LogInformation("Event processing task was cancelled.");
+    } catch (AggregateException aggEx) {
+      foreach (var ex in aggEx.InnerExceptions) {
+        if (ex is OperationCanceledException) {
+          _logger.LogInformation("Event processing task was cancelled.");
+        } else {
+          _logger.LogError(ex, "Error occurred while stopping event processing task.");
+        }
+      }
+    }
+
+    _logger.LogInformation("EventHandler service has cooled down.");
+    return Task.CompletedTask;
+  }
+}
