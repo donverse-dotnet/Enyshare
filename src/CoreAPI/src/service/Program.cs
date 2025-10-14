@@ -21,14 +21,18 @@ builder.Host.UseSerilog((ctx, cfg) => {
 
 // Add services to the container.
 // Hosted services
-// builder.Services.AddSingleton<IHotStartableService, SampleHotStartableService>();
 builder.Services.AddSingleton<StreamHolder>();
-builder.Services.AddSingleton<IHotStartableService, EventDistributeService>();
-builder.Services.AddSingleton<IHotStartableService, EventListener>();
+builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<StreamHolder>());
+builder.Services.AddSingleton<EventDistributeService>();
+builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventDistributeService>());
+builder.Services.AddSingleton<EventListener>();
+builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventListener>());
 builder.Services.AddHostedService<HotStarterService>();
 // Auth handlers
-builder.Services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, GeneralAuthorizationHandler>();
+builder.Services.AddSingleton<AdminAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler>(sp => sp.GetRequiredService<AdminAuthorizationHandler>());
+builder.Services.AddSingleton<GeneralAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler>(sp => sp.GetRequiredService<GeneralAuthorizationHandler>());
 // gRPC services
 builder.Services.AddGrpc();
 if (builder.Environment.IsDevelopment()) {
@@ -64,8 +68,6 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment()) {
   app.MapGrpcReflectionService();
 }
-// app.MapGrpcService<AccountsServiceImpl>();
-// app.MapGrpcService<EventsService>();
 app.MapGrpcService<EventServiceImpl>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 

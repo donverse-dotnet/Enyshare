@@ -5,7 +5,7 @@ using Pocco.Svc.CoreAPI.Models;
 
 namespace Pocco.Svc.CoreAPI.Services;
 
-public class StreamHolder /*: IHotStartableService*/ {
+public class StreamHolder : IHotStartableService {
   private readonly List<StreamWriterModel> _streamWriters;
   private readonly ILogger<StreamHolder> _logger;
 
@@ -40,7 +40,7 @@ public class StreamHolder /*: IHotStartableService*/ {
     return _streamWriters.Where(x => predicate == null || predicate(x)).ToList();
   }
 
-  public Task WarmUpAsync(CancellationToken cancellationToken) {
+  public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("StreamHolder service is warming up.");
 
     // No initialization needed
