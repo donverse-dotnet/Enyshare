@@ -1,44 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <!-- <Protobuf Include="..\.protos\V0\Services\event_service.proto" ProtoRoot="..\protos" GrpcServices="Server" /> -->
+    <ItemGroup>
+        <Protobuf Include="../.protos/V0/Enums/V0EventTopics.proto" ProtoRoot="../.protos" GrpcServices="None" />
+        <Protobuf Include="../.protos/V0/Types/V0EventData.proto" ProtoRoot="../.protos" GrpcServices="None" />
+        <Protobuf Include="../.protos/V0/Services/EventReceiver.proto" ProtoRoot="../.protos" GrpcServices="Server" />
+        <Protobuf Include="../.protos/V0/Services/EventDispatcher.proto" ProtoRoot="../.protos" GrpcServices="Server" />
+    </ItemGroup>
 
-    <!-- Enums -->
-    <Protobuf Include="..\.protos\V0\Enums\MessageAttachmentType.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Enums\MessageReactionType.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-
-    <!-- Types -->
-    <Protobuf Include="..\.protos\V0\Types\BaseEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-
-    <Protobuf Include="..\.protos\V0\Types\Account\AccountModel.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Account\CreatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Account\DisabledEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Account\ModeratedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Account\UpdatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageModel.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageCreatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageUpdatedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-    <Protobuf Include="..\.protos\V0\Types\Organization\MessageDeletedEvent.proto" ProtoRoot="..\.protos" GrpcServices="None" />
-
-    <!-- Services -->
-    <Protobuf Include="..\.protos\V0\Services\EventHandler.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
-    <Protobuf Include="..\.protos\V0\Services\AccountEvents.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
-    <Protobuf Include="..\.protos\V0\Services\OrganizationEvents.proto" ProtoRoot="..\.protos" GrpcServices="Both" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
-    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
-    <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.6+MySQL9.4.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+        <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.6+MySQL9.4.0" />
+    </ItemGroup>
 
 </Project>
