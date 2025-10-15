@@ -19,15 +19,9 @@ public class Program {
     });
 
     // Add services to the container.
-    builder.Services.AddSingleton<IHotStartableService, EventSendHelper>();
+    builder.Services.AddSingleton<EventSendHelper>();
+    builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventSendHelper>());
     builder.Services.AddHostedService<HotStarterService>();
-    // builder.Services.AddSingleton(sp => {
-    //   var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
-    //   var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
-    //                          throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
-    //   optionsBuilder.UseMySQL(connectionString);
-    //   return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
-    // });
 
     builder.Services.AddGrpc();
     if (builder.Environment.IsDevelopment()) {
@@ -37,7 +31,6 @@ public class Program {
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    // app.MapGrpcService<V0AccountEventsImpl>();
     app.MapGrpcService<EventReceiverImpl>();
     app.MapGrpcService<EventDispatcherImpl>();
     if (app.Environment.IsDevelopment()) {
