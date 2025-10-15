@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Pocco.Svc.EventBridge.Services;
 using Pocco.Svc.EventBridge.Services.Grpc;
 

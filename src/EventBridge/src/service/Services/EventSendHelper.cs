@@ -2,7 +2,6 @@ using System.Threading.Channels;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Pocco.Svc.EventBridge.Protobufs.Types;
-using Pocco.Svc.EventBridge.Services.Grpc;
 
 namespace Pocco.Svc.EventBridge.Services;
 
