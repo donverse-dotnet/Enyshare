@@ -22,6 +22,8 @@ public class EventDistributeService : IHotStartableService {
   }
 
   public void EnqueueEvent(V0EventData eventData) {
+    _logger.LogInformation("Enqueuing event: Topic={Topic}, Payload={Payload}", eventData.Topic, eventData.Payload);
+
     _channel.Writer.TryWrite(eventData);
   }
 
@@ -34,6 +36,9 @@ public class EventDistributeService : IHotStartableService {
       foreach (var writer in writers) {
         writer.EnqueueEvent(eventData);
       }
+
+      _logger.LogInformation("Dispatched event: Topic={Topic}, Payload={Payload}, DispatchedTo={Count} writers",
+        eventData.Topic, eventData.Payload, writers.Count);
     }
   }
 
