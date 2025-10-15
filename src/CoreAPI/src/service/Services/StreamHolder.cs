@@ -40,18 +40,18 @@ public class StreamHolder : IHotStartableService {
     return _streamWriters.Where(x => predicate == null || predicate(x)).ToList();
   }
 
-  public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
+  public async Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("StreamHolder service is warming up.");
 
     // No initialization needed
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 
-  public Task CoolDownAsync(CancellationToken cancellationToken) {
+  public async Task CoolDownAsync(CancellationToken cancellationToken) {
     _logger.LogInformation("StreamHolder service is cooling down.");
 
     _streamWriters.Clear();
 
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 }

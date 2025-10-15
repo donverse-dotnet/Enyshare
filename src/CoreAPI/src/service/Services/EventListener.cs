@@ -31,16 +31,16 @@ public class EventListener : IHotStartableService {
   private readonly CancellationTokenSource _cancellationTokenSource;
   private Task? _listeningTask;
 
-  public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
+  public async Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("EventListener service is warming up.");
 
     // Start listening to EventBridge
     _listeningTask = Task.Run(async () => await ListenEventBridgeAsync(_cancellationTokenSource.Token), cancellationToken);
 
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 
-  public Task CoolDownAsync(CancellationToken cancellationToken) {
+  public async Task CoolDownAsync(CancellationToken cancellationToken) {
     _logger.LogInformation("EventListener service is cooling down.");
 
     // Cancel the listening task
@@ -63,7 +63,7 @@ public class EventListener : IHotStartableService {
       _cancellationTokenSource.Dispose();
     }
 
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 
   private async Task ListenEventBridgeAsync(CancellationToken cancellationToken) {

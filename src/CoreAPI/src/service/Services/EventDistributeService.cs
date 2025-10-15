@@ -42,17 +42,17 @@ public class EventDistributeService : IHotStartableService {
     }
   }
 
-  public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
+  public async Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("EventHandler service is warming up.");
 
     // Start processing the event queue
     _processingTask = Task.Run(async () => await ProcessEventQueueAsync(_cancellationTokenSource.Token), cancellationToken);
 
     // No initialization needed
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 
-  public Task CoolDownAsync(CancellationToken cancellationToken) {
+  public async Task CoolDownAsync(CancellationToken cancellationToken) {
     _logger.LogInformation("EventHandler service is cooling down.");
 
     try {
@@ -72,6 +72,6 @@ public class EventDistributeService : IHotStartableService {
     }
 
     _logger.LogInformation("EventHandler service has cooled down.");
-    return Task.CompletedTask;
+    await Task.CompletedTask;
   }
 }
