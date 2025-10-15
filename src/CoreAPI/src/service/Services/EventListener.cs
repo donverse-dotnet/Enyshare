@@ -11,8 +11,9 @@ namespace Pocco.Svc.CoreAPI.Services;
 
 public class EventListener : IHotStartableService {
 
-  public EventListener([FromServices] ILogger<EventListener> logger) {
+  public EventListener([FromServices] ILogger<EventListener> logger, [FromServices] EventDistributeService eventDistributeService) {
     _logger = logger;
+    _eventDistributeService = eventDistributeService;
     _cancellationTokenSource = new CancellationTokenSource();
 
     var serverAddress = Environment.GetEnvironmentVariable("EVENT_BRIDGE_ADDRESS") ?? throw new InvalidOperationException("EVENT_BRIDGE_ADDRESS environment variable is not set.");
@@ -23,7 +24,7 @@ public class EventListener : IHotStartableService {
   }
 
   private readonly ILogger<EventListener> _logger;
-  private EventDistributeService? _eventDistributeService;
+  private readonly EventDistributeService _eventDistributeService;
   private readonly GrpcChannel _channel;
   private readonly V0EventDispatcher.V0EventDispatcherClient _client;
   private AsyncServerStreamingCall<V0EventData>? _streamingCall;
@@ -32,15 +33,6 @@ public class EventListener : IHotStartableService {
 
   public Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("EventListener service is warming up.");
-
-    // Get event distributor service from the provided services
-    _eventDistributeService = sp.GetServices<IHotStartableService>()
-      .OfType<EventDistributeService>()
-      .FirstOrDefault();
-    if (_eventDistributeService == null) {
-      _logger.LogError("EventDistributeService is not available. EventListener cannot function properly.");
-      throw new InvalidOperationException("EventDistributeService is not available.");
-    }
 
     // Start listening to EventBridge
     _listeningTask = Task.Run(async () => await ListenEventBridgeAsync(_cancellationTokenSource.Token), cancellationToken);
