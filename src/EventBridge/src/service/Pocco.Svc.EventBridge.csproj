@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <Protobuf Include="../.protos/V0/Enums/V0EventTopics.proto" ProtoRoot="../.protos" GrpcServices="None" />
+        <Protobuf Include="../.protos/V0/Types/EventReceivedData.proto" ProtoRoot="../.protos" GrpcServices="None" />
         <Protobuf Include="../.protos/V0/Types/V0EventData.proto" ProtoRoot="../.protos" GrpcServices="None" />
         <Protobuf Include="../.protos/V0/Services/EventReceiver.proto" ProtoRoot="../.protos" GrpcServices="Server" />
         <Protobuf Include="../.protos/V0/Services/EventDispatcher.proto" ProtoRoot="../.protos" GrpcServices="Server" />
