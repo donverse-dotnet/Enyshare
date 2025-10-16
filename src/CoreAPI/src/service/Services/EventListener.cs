@@ -96,7 +96,7 @@ public class EventListener : IHotStartableService {
             InvokedAt = eventData.InvokedAt,
             InvokedBy = eventData.InvokedBy,
           };
-          convertedEvent.Payload.MergeFrom(eventData.Payload);
+          // convertedEvent.Payload.MergeFrom(eventData.Payload);
 
           _eventDistributeService.EnqueueEvent(convertedEvent);
 
