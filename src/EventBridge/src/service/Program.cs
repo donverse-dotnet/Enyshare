@@ -19,6 +19,8 @@ public class Program {
     });
 
     // Add services to the container.
+    builder.Services.AddSingleton<EventIdProvider>();
+    builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventIdProvider>());
     builder.Services.AddSingleton<EventSendHelper>();
     builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventSendHelper>());
     builder.Services.AddHostedService<HotStarterService>();
