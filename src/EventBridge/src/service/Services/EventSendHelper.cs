@@ -6,24 +6,26 @@ using Pocco.Svc.EventBridge.Protobufs.Types;
 namespace Pocco.Svc.EventBridge.Services;
 
 public class EventSendHelper : IHotStartableService {
-  public EventSendHelper([FromServices] ILogger<EventSendHelper> logger) {
+  public EventSendHelper([FromServices] ILogger<EventSendHelper> logger, [FromServices] EventIdProvider eventIdProvider) {
     _logger = logger;
     _cts = new CancellationTokenSource();
-    _eventQueue = Channel.CreateUnbounded<V0EventData>();
+    _eventIdProvider = eventIdProvider;
+    _eventQueue = Channel.CreateUnbounded<V0DeployedEventData>();
     _eventReader = _eventQueue.Reader.ReadAllAsync(_cts.Token);
     _logger.LogInformation("EventSendHelper initialized");
   }
 
   // Event listeners (key: userId, value: list of sessions)
-  public readonly Dictionary<string, IServerStreamWriter<V0EventData>> Writers = [];
+  public readonly Dictionary<string, IServerStreamWriter<V0DeployedEventData>> Writers = [];
 
   private readonly ILogger<EventSendHelper> _logger;
   private readonly CancellationTokenSource _cts;
+  private readonly EventIdProvider _eventIdProvider;
   // Event activator
   private Task? _queueWorker;
   // Event queue
-  private readonly Channel<V0EventData> _eventQueue;
-  private readonly IAsyncEnumerable<V0EventData> _eventReader;
+  private readonly Channel<V0DeployedEventData> _eventQueue;
+  private readonly IAsyncEnumerable<V0DeployedEventData> _eventReader;
 
   public async Task WarmUpAsync(IServiceProvider sp, CancellationToken cancellationToken) {
     _logger.LogInformation("EventSendHelper warming up...");
@@ -55,7 +57,7 @@ public class EventSendHelper : IHotStartableService {
     return Task.CompletedTask;
   }
 
-  public string AddListener(IServerStreamWriter<V0EventData> writer) {
+  public string AddListener(IServerStreamWriter<V0DeployedEventData> writer) {
     var uuid = Guid.NewGuid().ToString();
 
     lock (Writers) {
@@ -66,9 +68,22 @@ public class EventSendHelper : IHotStartableService {
     return uuid;
   }
 
-  public async Task EnqueueEventAsync(V0EventData eventData) {
-    await _eventQueue.Writer.WriteAsync(eventData);
-    _logger.LogInformation("Enqueued event: EventId={EventId}, EventType={EventType}", eventData.EventId, eventData.EventType);
+  public async Task<string> EnqueueEventAsync(V0NewEventRequest eventData) {
+    var eventId = _eventIdProvider.GenerateEventId();
+    var deployedEventData = new V0DeployedEventData {
+      Topic = eventData.Topic,
+      EventType = eventData.EventType,
+      EventId = eventId,
+      ApiVersion = eventData.ApiVersion,
+      InvokedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = eventData.InvokedBy,
+      Payload = eventData.Payload,
+    };
+
+    await _eventQueue.Writer.WriteAsync(deployedEventData);
+    _logger.LogInformation("Enqueued event: EventId={EventId}, EventType={EventType}", deployedEventData.EventId, deployedEventData.EventType);
+
+    return eventId;
   }
 
   public void RemoveListener(string uuid) {

@@ -7,15 +7,15 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "V0/Enums/V0EventTopics.proto";
 
-message V0EventData {
+message V0DeployedEventData {
     // イベントトピック
     pocco.svc.eventbridge.protobufs.enums.V0EventTopics topic = 1;
     // イベントタイプ
     string event_type = 2;
-    // イベント発行APIバージョン
-    string api_version = 3;
     // イベントID
-    string event_id = 4;
+    string event_id = 3;
+    // イベント発行APIバージョン
+    string api_version = 4;
     // イベント発行日時
     google.protobuf.Timestamp invoked_at = 5;
     // イベント発行者ID

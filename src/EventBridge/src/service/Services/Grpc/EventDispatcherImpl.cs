@@ -15,7 +15,7 @@ public class EventDispatcherImpl : V0EventDispatcher.V0EventDispatcherBase {
   private readonly EventSendHelper _eventSendHelper;
   private readonly ILogger<EventDispatcherImpl> _logger;
 
-  public override async Task Listen(ListenRequest request, IServerStreamWriter<V0EventData> responseStream, ServerCallContext context) {
+  public override async Task Listen(ListenRequest request, IServerStreamWriter<V0DeployedEventData> responseStream, ServerCallContext context) {
     _logger.LogInformation("Client connected to ListenEvents");
 
     var uuid = _eventSendHelper.AddListener(responseStream);

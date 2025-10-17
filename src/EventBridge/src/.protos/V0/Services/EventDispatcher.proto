@@ -4,11 +4,11 @@ option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Services";
 package pocco.svc.eventbridge.protobufs.services;
 
 import "V0/Enums/V0EventTopics.proto";
-import "V0/Types/V0EventData.proto";
+import "V0/Types/DeployedEventData.proto";
 
 service V0EventDispatcher {
     // イベントを購読する
-    rpc Listen (ListenRequest) returns (stream pocco.svc.eventbridge.protobufs.types.V0EventData);
+    rpc Listen (ListenRequest) returns (stream pocco.svc.eventbridge.protobufs.types.V0DeployedEventData);
 }
 
 message ListenRequest {
