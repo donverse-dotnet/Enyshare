@@ -48,24 +48,38 @@ public class HotStarterService : IHostedService {
     _logger.LogInformation("HotStarterService stopping...");
 
     // Register application stopping event
-    _lifetime.ApplicationStopped.Register(async () => {
-      _logger.LogInformation("Application is stopping...");
-
-      // Get all services that implement IHotStartableService and call their StopAsync methods
-      using var scope = _serviceProvider.CreateScope();
-      var hotStartableServices = scope.ServiceProvider.GetServices<IHotStartableService>().ToArray();
-      foreach (var service in hotStartableServices) {
+    _lifetime.ApplicationStopped.Register(() => {
+      Task.Run(async () => {
         try {
-          await service.CoolDownAsync(cancellationToken);
-          _logger.LogInformation("Service {ServiceName} stopped successfully.", service.GetType().Name);
+          await SafeStopServicesAsync();
         } catch (Exception ex) {
-          _logger.LogError(ex, "Error stopping service {ServiceName}.", service.GetType().Name);
+          _logger.LogError(ex, "Unhandled exception during application stop.");
         }
-      }
-
-      _logger.LogInformation("All hot startable services have been stopped.");
+      });
     });
 
     await Task.CompletedTask;
+  }
+
+  private async Task SafeStopServicesAsync()
+  {
+    _logger.LogInformation("Application is stopping...");
+
+    using var scope = _serviceProvider.CreateScope();
+    var hotStartableServices = scope.ServiceProvider.GetServices<IHotStartableService>().ToArray();
+    foreach (var service in hotStartableServices)
+    {
+      try
+      {
+        await service.CoolDownAsync(CancellationToken.None);
+        _logger.LogInformation("Service {ServiceName} stopped successfully.", service.GetType().Name);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error stopping service {ServiceName}.", service.GetType().Name);
+      }
+    }
+
+    _logger.LogInformation("All hot startable services have been stopped.");
   }
 }
