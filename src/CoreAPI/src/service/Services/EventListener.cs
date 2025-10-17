@@ -27,7 +27,7 @@ public class EventListener : IHotStartableService {
   private readonly EventDistributeService _eventDistributeService;
   private readonly GrpcChannel _channel;
   private readonly V0EventDispatcher.V0EventDispatcherClient _client;
-  private AsyncServerStreamingCall<V0EventData>? _streamingCall;
+  private AsyncServerStreamingCall<V0DeployedEventData>? _streamingCall;
   private readonly CancellationTokenSource _cancellationTokenSource;
   private Task? _listeningTask;
 
