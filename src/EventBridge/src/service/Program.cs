@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Pocco.Svc.EventBridge.Services;
+using Pocco.Svc.EventBridge.Services.Grpc;
 
 namespace Pocco.Svc.EventBridge;
 
@@ -7,25 +8,36 @@ public class Program {
   public static void Main(string[] args) {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
-    builder.Services.AddSingleton(sp => {
-      var optionsBuilder = new DbContextOptionsBuilder<V0EventLogStoreService>();
-      var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ??
-                             throw new InvalidOperationException("MYSQL_CONNECTION_STRING environment variable is not set.");
-      optionsBuilder.UseMySQL(connectionString);
-      return new V0EventLogStoreService(sp.GetRequiredService<ILogger<V0EventLogStoreService>>(), optionsBuilder.Options);
+    // Use Serilog for logging
+    builder.Host.UseSerilog((ctx, cfg) => {
+      cfg
+        .Enrich.WithThreadId()
+        // Set log style -> [yyyy-MM-dd HH:mm:ss.fff] [Level] [SourceContext] Message NewLine Exception
+        .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] {Level:u4}: {SourceContext}[{ThreadId}] {Message:lj}{NewLine}{Exception}")
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day, outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] {Level:u4}: {SourceContext}[{ThreadId}] {Message:lj}{NewLine}{Exception}")
+        .Enrich.FromLogContext();
     });
 
-    builder.Services.AddSingleton<V0EventInvoker>();
+    // Add services to the container.
+    builder.Services.AddSingleton<EventIdProvider>();
+    builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventIdProvider>());
+    builder.Services.AddSingleton<EventSendHelper>();
+    builder.Services.AddSingleton<IHotStartableService>(sp => sp.GetRequiredService<EventSendHelper>());
+    builder.Services.AddHostedService<HotStarterService>();
 
     builder.Services.AddGrpc();
-    builder.Services.AddGrpcReflection();
+    if (builder.Environment.IsDevelopment()) {
+      builder.Services.AddGrpcReflection();
+    }
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    app.MapGrpcService<V0AccountEventsImpl>();
-    app.MapGrpcReflectionService();
+    app.MapGrpcService<EventReceiverImpl>();
+    app.MapGrpcService<EventDispatcherImpl>();
+    if (app.Environment.IsDevelopment()) {
+      app.MapGrpcReflectionService();
+    }
     app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
     app.Run();
