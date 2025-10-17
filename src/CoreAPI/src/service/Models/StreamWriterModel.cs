@@ -32,7 +32,7 @@ public class StreamWriterModel {
   public IServerStreamWriter<V0EventData> StreamWriter { get; init; }
   public ServerCallContext StreamContext { get; init; }
 
-  private static readonly Channel<V0EventData> _channel = Channel.CreateUnbounded<V0EventData>();
+  private static readonly Channel<V0EventData> _channel = System.Threading.Channels.Channel.CreateUnbounded<V0EventData>();
   private readonly IAsyncEnumerable<V0EventData> _eventQueue = _channel.Reader.ReadAllAsync();
   private readonly CancellationTokenSource _cancellationTokenSource = new();
   private readonly Task _processingTask;
