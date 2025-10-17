@@ -74,7 +74,7 @@ public class EventSendHelper : IHotStartableService {
       Topic = eventData.Topic,
       EventType = eventData.EventType,
       EventId = eventId,
-      ApiVersion = "v0",
+      ApiVersion = eventData.ApiVersion,
       InvokedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = eventData.InvokedBy,
       Payload = eventData.Payload,
