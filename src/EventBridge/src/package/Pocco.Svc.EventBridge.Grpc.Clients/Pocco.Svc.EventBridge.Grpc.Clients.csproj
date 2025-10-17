@@ -19,7 +19,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Protobuf files here -->
+        <Protobuf Include="../../.protos/V0/Enums/V0EventTopics.proto" ProtoRoot="../../.protos" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/EventReceivedData.proto" ProtoRoot="../../.protos" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/DeployedEventData.proto" ProtoRoot="../../.protos" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/NewEventRequest.proto" ProtoRoot="../../.protos" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Services/EventReceiver.proto" ProtoRoot="../../.protos" GrpcServices="Client" />
+        <Protobuf Include="../../.protos/V0/Services/EventDispatcher.proto" ProtoRoot="../../.protos" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
