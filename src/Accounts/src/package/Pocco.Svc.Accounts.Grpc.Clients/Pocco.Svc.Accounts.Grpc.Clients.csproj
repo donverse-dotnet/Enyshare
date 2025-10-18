@@ -15,7 +15,7 @@
 
     <PropertyGroup>
         <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
