@@ -35,10 +35,10 @@ public class Chat {
   public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
 
   public bool IsNameChanged(string name) {
-    return this.Name != name;
+    return Name != name;
   }
 
   public bool IsDescriptionChanged(string description) {
-    return this.Description != description;
+    return Description != description;
   }
 }
