@@ -42,11 +42,13 @@ public class Role {
   public bool HasParmissions => Permissions.Count > 0;
 
   public bool IsNameChanged(string name) {
-    return this.Name != name;
+    return Name != name;
   }
+
   public bool IsDescriptionChanged(string discription) {
-    return this.Description != discription;
+    return Description != discription;
   }
+
   public bool IsParmissionChanged(List<string> parmissions) {
     return Permissions != parmissions;
   }
