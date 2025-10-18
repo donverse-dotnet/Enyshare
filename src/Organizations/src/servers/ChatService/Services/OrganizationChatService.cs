@@ -61,7 +61,9 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     if (chat == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
-    return new V0GetReply();
+    return new V0GetReply {
+      Chatsmodel = chat.ToV0ChatModel()
+    };
   }
 
   public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {

@@ -1,6 +1,12 @@
 
+using System.Data;
+
+using Google.Protobuf.WellKnownTypes;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
+using Pocco.Libs.Protobufs.Types;
 
 namespace Pocco.Svc.Chats.Models;
 
@@ -24,9 +30,6 @@ public class Chat {
   [BsonElement("createdAt")]
   public DateTime CreatedAt { get; set; }
 
-  [BsonElement("memberids")]
-  public IEnumerable<string> MemberIds { get; set; } = new List<string>();
-
   [BsonElement("isprivate")]
   public bool IsPrivate { get; set; } = false;
 
@@ -40,5 +43,16 @@ public class Chat {
 
   public bool IsDescriptionChanged(string description) {
     return Description != description;
+  }
+
+  public V0ChatsModel ToV0ChatModel() {
+    return new V0ChatsModel {
+      Id = Id,
+      Name = Name,
+      Description = Description,
+      CreatedBy = CreatedBy,
+      IsPrivate = IsPrivate,
+      CreatedAt = Timestamp.FromDateTime(CreatedAt)
+    };
   }
 }
