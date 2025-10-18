@@ -15,61 +15,54 @@ public class RoleRepository : IRoleRepository {
     _client = client;
   }
 
-  private IMongoCollection<Role> GetRoleCollection(string org_Id) {
-    var db = _client.GetDatabase(org_Id);
-    return db.GetCollection<Role>("Roles");
+  private FilterDefinition<Role> CreateFilter(string roleId) {
+    if (!ObjectId.TryParse(roleId, out _)) {
+      throw new ArgumentException("Invalid id or roleId format");
+    }
+
+    return Builders<Role>.Filter.And(
+      Builders<Role>.Filter.Eq(r => r.Id, roleId)
+    );
   }
-  public async Task<Role> GetByIdAsync(string org_Id, string id) {
-    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
+
+  private IMongoCollection<Role> GetRoleCollection(string orgId) {
+    if (!ObjectId.TryParse(orgId, out _)) {
       throw new ArgumentException("Invalid id or orgId format");
     }
 
-    var roles = GetRoleCollection(org_Id);
-    var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
-      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
-    );
+    var db = _client.GetDatabase(orgId);
+    return db.GetCollection<Role>("Roles");
+  }
+
+  public async Task<Role> GetByIdAsync(string orgId, string roleId) {
+    var roles = GetRoleCollection(orgId);
+    var filter = CreateFilter(roleId);
     return await roles.Find(filter).FirstOrDefaultAsync();
   }
 
-  public async Task<Role> CreateAsync(string org_Id, Role role) {
-    var roles = GetRoleCollection(org_Id);
+  public async Task<Role> CreateAsync(string orgId, Role role) {
+    var roles = GetRoleCollection(orgId);
     await roles.InsertOneAsync(role);
 
-    var isCreated = await GetByIdAsync(org_Id, role.Id);
+    var latestRole = await GetByIdAsync(orgId, role.Id);
 
-    if (isCreated is null) {
-      throw new RpcException(new Status(StatusCode.Internal, $"Role creation failed for {org_Id}"));
+    if (latestRole is null) {
+      throw new RpcException(new Status(StatusCode.Internal, $"Role creation failed for {orgId}"));
     }
 
-    return isCreated;
+    return latestRole;
   }
 
   public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role updateRole) {
-    // 1. RoleModel に名前等の null チェック用のプロパティを追加
-
-    // 2. MongoDB から変更しようとしている最新の組織のロールを取得する
     var latestRoll = await GetByIdAsync(orgId, roleId);
-    // 3. 2 と編集されたロールの差分があるかチェック
+
     var isNameChanged = updateRole.IsNameChanged(latestRoll.Name);
     var isDescriptionChanged = updateRole.IsDescriptionChanged(latestRoll.Description);
     var isParmissionChanged = updateRole.IsParmissionChanged(latestRoll.Permissions);
-    // 4. 差分がなければ何もしない
-    if (isNameChanged == false && isDescriptionChanged == false && isParmissionChanged == false) {
+    if (!isNameChanged && !isDescriptionChanged && !isParmissionChanged) {
       return false;
     }
-    // 5. 差分があれば、Builders を更新する
-    
-    if (!ObjectId.TryParse(roleId, out var objectId) || !ObjectId.TryParse(orgId, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
 
-    var roles = GetRoleCollection(orgId);
-
-    var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
-      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
-      );
     var updateDataBuilder = Builders<Role>.Update;
     var updates = new List<UpdateDefinition<Role>>();
 
@@ -82,27 +75,17 @@ public class RoleRepository : IRoleRepository {
     if (isParmissionChanged)
       updates.Add(updateDataBuilder.Set(r => r.Permissions, updateRole.Permissions.ToList()));
 
- 
     var update = updateDataBuilder.Combine(updates);
+    var roles = GetRoleCollection(orgId);
+    var filter = CreateFilter(roleId);
     var result = await roles.UpdateOneAsync(filter, update);
 
-    if (result.ModifiedCount == 0) {
-      return false;
-    }
-
-    return true;
+    return result.ModifiedCount != 0;
   }
 
-  public async Task<bool> DeleteAsync(string org_Id, string id) {
-    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_Id, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
-
-    var roles = GetRoleCollection(org_Id);
-    var filter = Builders<Role>.Filter.And(
-      Builders<Role>.Filter.Eq(r => r.Id, objectId.ToString())
-      // Builders<Role>.Filter.Eq(r => r.Org_Id, orgObjectId.ToString())
-    );
+  public async Task<bool> DeleteAsync(string orgId, string roleId) {
+    var roles = GetRoleCollection(orgId);
+    var filter = CreateFilter(roleId);
     var result = await roles.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
