@@ -13,31 +13,42 @@ public class ChatRepository : IChatRepository {
     _client = client;
   }
 
-  private IMongoCollection<Chat> GetChatCollection(string org_id) {
-    var db = _client.GetDatabase(org_id);
+  private FilterDefinition<Chat> CreateFilter(string chatId) {
+    if (!ObjectId.TryParse(chatId, out _)) {
+      throw new ArgumentException("Invalid id or chatId format");
+    }
+
+    return Builders<Chat>.Filter.And(
+    Builders<Chat>.Filter.Eq(c => c.Id, chatId)
+    );
+  }
+
+
+  private IMongoCollection<Chat> GetChatCollection(string orgId) {
+    if (!ObjectId.TryParse(orgId, out _)) {
+      throw new ArgumentException("Invalid id or chatId format");
+    }
+    
+    var db = _client.GetDatabase(orgId);
     return db.GetCollection<Chat>("Chats");
   }
 
-  public async Task<Chat> CreateAsync(string org_id, Chat chat) {
-    var chats = GetChatCollection(org_id);
+  public async Task<Chat> CreateAsync(string orgId, Chat chat) {
+    var chats = GetChatCollection(orgId);
     await chats.InsertOneAsync(chat);
 
-    var isCreated = await GetByIdAsync(org_id, chat.Id);
+    var latestChat = await GetByIdAsync(orgId, chat.Id);
 
-    if (isCreated is null) {
-      throw new RpcException(new Status(StatusCode.Internal, $"Chat creation failed for {org_id}"));
+    if (latestChat is null) {
+      throw new RpcException(new Status(StatusCode.Internal, $"Chat creation failed for {orgId}"));
     }
-        
-    return isCreated;
+
+    return latestChat;
   }
 
-  public async Task<Chat> GetByIdAsync(string org_id, string id) {
-    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
-    var chats = GetChatCollection(org_id);
-    var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
-    );
+  public async Task<Chat> GetByIdAsync(string orgId, string chatId) {
+    var chats = GetChatCollection(orgId);
+    var filter = CreateFilter(chatId);
 
     return await chats.Find(filter).FirstOrDefaultAsync();
 
@@ -49,19 +60,9 @@ public class ChatRepository : IChatRepository {
     var isNameChanged = updatechat.IsDescriptionChanged(latestChat.Name);
     var isDescriptionChanged = updatechat.IsDescriptionChanged(latestChat.Description);
 
-    if (isNameChanged == false && isDescriptionChanged) {
+    if (!isNameChanged && isDescriptionChanged) {
       return false;
     }
-        
-    if (!ObjectId.TryParse(chatId, out var objectId) || !ObjectId.TryParse(orgId, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
-
-    var chats = GetChatCollection(orgId);
-
-    var filter = Builders<Chat>.Filter.And(
-      Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
-      );
 
     var updateDataBuilder = Builders<Chat>.Update;
     var updates = new List<UpdateDefinition<Chat>>();
@@ -74,26 +75,17 @@ public class ChatRepository : IChatRepository {
 
     updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
 
-    if (updates.Count == 0) {
-      return false;
-    }
-
     var update = updateDataBuilder.Combine(updates);
+    var chats = GetChatCollection(orgId);
+    var filter = CreateFilter(chatId);
     var result = await chats.UpdateOneAsync(filter, update);
 
-    if (result.ModifiedCount == 0) {
-      return false;
-    }
-        return true;
+    return result.ModifiedCount != 0;
   }
 
-  public async Task<bool> DeleteAsync(string org_id, string id) {
-    if (!ObjectId.TryParse(id, out var objectId) || !ObjectId.TryParse(org_id, out var orgObjectId)) {
-      throw new ArgumentException("Invalid id or orgId format");
-    }
-    var chats = GetChatCollection(org_id);
-    var filter = Builders<Chat>.Filter.And(Builders<Chat>.Filter.Eq(c => c.Id, objectId.ToString())
-    );
+  public async Task<bool> DeleteAsync(string orgId, string chatId) {
+    var chats = GetChatCollection(orgId);
+    var filter = CreateFilter(chatId);
     var result = await chats.DeleteOneAsync(filter);
     return result.DeletedCount > 0;
   }
