@@ -12,7 +12,6 @@ message V0ChatsModel{
     string description = 4;
     bool is_private = 5;
     string created_by = 6;
-    repeated string member_ids = 7;
-    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp created_at = 7;
 
 }
