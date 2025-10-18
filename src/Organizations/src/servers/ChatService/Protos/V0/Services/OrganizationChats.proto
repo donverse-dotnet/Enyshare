@@ -7,6 +7,7 @@ import "V0/Types/ChatCreateDataRequest.proto";
 import "V0/Types/ChatDeleteDataRequest.proto";
 import "V0/Types/ChatGetDataRequest.proto";
 import "V0/Types/ChatUpdateDataRequest.proto";
+import "V0/Types/ChatGetDataReply.proto";
 import "google/protobuf/empty.proto";
 
 //アカウントを登録するRPCサービスの定義
@@ -19,5 +20,5 @@ service V0OrganizationChatService{
     //チャットを削除するRPCメソッド
     rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (google.protobuf.Empty);
     //チャットを情報を取得するRPCメソッド
-    rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (google.protobuf.Empty);
+    rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (pocco.libs.protobufs.types.V0GetReply);
 }

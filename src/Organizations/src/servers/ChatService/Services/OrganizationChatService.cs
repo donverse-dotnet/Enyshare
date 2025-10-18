@@ -56,12 +56,12 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     return new Empty();
   }
 
-  public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
+  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
     var chat = await _repository.GetByIdAsync(request.OrgId, request.Id);
     if (chat == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
-    return new Empty();
+    return new V0GetReply();
   }
 
   public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {
