@@ -32,8 +32,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       Description = "",     //作成するときは空のまま
-      Is_Private = false,
-      Created_At = DateTime.UtcNow
+      IsPrivate = false,
+      CreatedAt = DateTime.UtcNow
     };
     Chat createdChat = await _repository.CreateAsync(request.OrgId, chat);
     _logger.LogInformation("{ChatId} is successfully created on {OrgId}", createdChat.Id, request.OrgId);
@@ -45,7 +45,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Id = request.Chatsmodel.Id,
       Name = request.Chatsmodel.Name,
       Description = request.Chatsmodel.Description,
-      Is_Private = request.Chatsmodel.IsPrivate
+      IsPrivate = request.Chatsmodel.IsPrivate
     };
 
     var updated = await _repository.TryUpdateAsync(request.Chatsmodel.OrgId, request.Chatsmodel.Id, updateChat);

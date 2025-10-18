@@ -6,7 +6,7 @@ namespace Pocco.Svc.Chats.Models;
 
 public class Chat {
   [BsonId]
-  [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+  [BsonRepresentation(BsonType.ObjectId)]
   public required string Id { get; set; }
 
   [BsonElement("name")]
@@ -17,18 +17,18 @@ public class Chat {
   [BsonRequired]
   public required string Description { get; set; } = string.Empty;
 
-  [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-  public string Created_By { get; set; } = default!;
+  [BsonRepresentation(BsonType.ObjectId)]
+  public string CreatedBy { get; set; } = default!;
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-  [BsonElement("created_At")]
-  public DateTime Created_At { get; set; }
+  [BsonElement("createdAt")]
+  public DateTime CreatedAt { get; set; }
 
-  [BsonElement("member_ids")]
-  public IEnumerable<string> Member_Ids { get; set; } = new List<string>();
+  [BsonElement("memberids")]
+  public IEnumerable<string> MemberIds { get; set; } = new List<string>();
 
-  [BsonElement("is_private")]
-  public bool Is_Private { get; set; } = false;
+  [BsonElement("isprivate")]
+  public bool IsPrivate { get; set; } = false;
 
   public bool HasName => !string.IsNullOrWhiteSpace(Name);
 

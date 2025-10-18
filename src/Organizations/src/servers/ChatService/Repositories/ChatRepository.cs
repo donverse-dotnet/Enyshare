@@ -73,7 +73,7 @@ public class ChatRepository : IChatRepository {
     if (isDescriptionChanged)
       updates.Add(updateDataBuilder.Set(c => c.Description, updatechat.Description));
 
-    updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatechat.Is_Private));
+    updates.Add(updateDataBuilder.Set(c => c.IsPrivate, updatechat.IsPrivate));
 
     var update = updateDataBuilder.Combine(updates);
     var chats = GetChatCollection(orgId);
