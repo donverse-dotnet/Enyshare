@@ -18,11 +18,11 @@ service V0ApiService {
 
     // Auth
     // authenticate
-    rpc Authenticate(V0AccountAuthenticateRequest) returns (V0SessionData);
+    rpc Authenticate(V0AccountAuthenticateRequest) returns (V0ApiSessionData);
     // unauthenticate (require authorized)
     rpc Unauthenticate(google.protobuf.Empty) returns (google.protobuf.Empty);
     // verify (require authorized)
-    rpc VerifyToken(google.protobuf.Empty) returns (V0SessionData);
+    rpc VerifyToken(google.protobuf.Empty) returns (V0ApiSessionData);
 
     // Organizations
 }
@@ -115,7 +115,7 @@ message V0AccountAuthenticateRequest {
 // unauthenticate request -> google.protobuf.Empty
 // unauthenticate response -> google.protobuf.Empty
 // session data
-message V0SessionData {
+message V0ApiSessionData {
     // セッションID
     string session_id = 1;
     // アカウントID
