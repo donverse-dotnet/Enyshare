@@ -8,14 +8,10 @@
 
     <ItemGroup>
         <!-- Services -->
-        <Protobuf Include="../.protos/V0/Services/AccountsService.proto" ProtoRoot="../.protos/"
-            GrpcServices="Server" />
         <Protobuf Include="../.protos/V0/Services/ApiService.proto" ProtoRoot="../.protos/"
             GrpcServices="Server" />
         <Protobuf Include="../.protos/V0/Services/EventsService.proto" ProtoRoot="../.protos/"
             GrpcServices="Server" />
-        <Protobuf Include="../.protos/V0/Services/OrganizationsService.proto"
-            ProtoRoot="../.protos/" GrpcServices="Server" />
 
         <!-- VENDORS -->
     </ItemGroup>
