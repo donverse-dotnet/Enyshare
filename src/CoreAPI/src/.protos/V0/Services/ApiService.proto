@@ -15,6 +15,8 @@ service V0ApiService {
     rpc GetProfile(V0AccountGetProfileRequest) returns (V0BaseAccount);
     // update profile (require authorized)
     rpc UpdateProfile(V0AccountUpdateProfileRequest) returns (V0BaseAccount);
+    // delete account (require authorized)
+    rpc DeleteAccount(google.protobuf.Empty) returns (google.protobuf.Empty);
 
     // Auth
     // authenticate
