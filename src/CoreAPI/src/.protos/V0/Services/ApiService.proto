@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+
+service V0ApiService {
+    // Account
+    // register
+    rpc Register(V0AccountRegisterRequest) returns (google.protobuf.Empty);
+    // get profile (require authorized)
+    rpc GetProfile(V0AccountGetProfileRequest) returns (V0BaseAccount);
+    // update profile (require authorized)
+    rpc UpdateProfile(V0AccountUpdateProfileRequest) returns (V0BaseAccount);
+
+    // Auth
+    // authenticate
+    rpc Authenticate(V0AccountAuthenticateRequest) returns (V0SessionData);
+    // unauthenticate (require authorized)
+    rpc Unauthenticate(google.protobuf.Empty) returns (google.protobuf.Empty);
+    // verify (require authorized)
+    rpc VerifyToken(google.protobuf.Empty) returns (V0SessionData);
+
+    // Organizations
+}
+
+// -------------------------------------
+// Account messages
+// -------------------------------------
+// Account
+message V0BaseAccount {
+    string id = 1;
+    string username = 2;
+    string avatar_url = 3;
+    V0AccountRoles role = 4;
+    V0AccountStatus status = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+message V0AccountProfile {
+    V0BaseAccount base = 1;
+    string email = 2;
+    google.protobuf.Timestamp last_login_at = 3;
+    V0AccountNotificationSettings notification_settings = 4;
+}
+message V0AccountStatus {
+    V0AccountStatusTypes type = 1;
+    string custom_message = 2;
+}
+message V0AccountNotificationSettings {
+    bool email = 1;
+    bool push = 2;
+    bool badge = 3;
+}
+enum V0AccountStatusTypes {
+    OFFLINE = 0;
+    ONLINE = 1;
+    IDLE = 2;
+    BUSY = 3;
+}
+enum V0AccountRoles {
+    USER = 0;
+    BOT = 1;
+    ADMIN = 2;
+}
+// register request
+message V0AccountRegisterRequest {
+    // ユーザーのメールアドレス
+    string email = 1;
+    // ユーザーのパスワード(ハッシュ化済み)
+    string password = 2;
+}
+// register response -> return empty
+// get profile request
+message V0AccountGetProfileRequest {
+    // ユーザーID
+    string user_id = 1;
+}
+// get profile response -> return V0BaseAccount
+// update profile request
+message V0AccountUpdateProfileRequest {
+    // ユーザーID
+    string user_id = 1;
+    // 更新するユーザー名
+    string username = 2;
+    // 更新するアバターURL
+    string avatar_url = 3;
+    // 更新するメールアドレス
+    string email = 4;
+    // 更新する通知設定
+    V0AccountNotificationSettings notification_settings = 5;
+    // 更新するパスワード(ハッシュ化済み)
+    string password = 6;
+    // 更新するステータス
+    V0AccountStatus status = 7;
+
+    // TODO: 秘密情報などは別ロジックに移動する
+}
+// update profile response -> return V0BaseAccount
+
+// -------------------------------------
+// Auth messages
+// -------------------------------------
+// authenticate request
+message V0AccountAuthenticateRequest {
+    // ユーザーのメールアドレス
+    string email = 1;
+    // ユーザーのパスワード(ハッシュ化済み)
+    string password = 2;
+}
+// authenticate response -> V0SessionData
+// unauthenticate request -> google.protobuf.Empty
+// unauthenticate response -> google.protobuf.Empty
+// session data
+message V0SessionData {
+    // セッションID
+    string session_id = 1;
+    // アカウントID
+    string account_id = 2;
+    // トークン
+    string token = 3;
+    // 有効期限（UNIXタイムスタンプ）
+    google.protobuf.Timestamp expires_at = 4;
+    // 作成日時（UNIXタイムスタンプ）
+    google.protobuf.Timestamp created_at = 5;
+    // 更新日時（UNIXタイムスタンプ）
+    google.protobuf.Timestamp updated_at = 6;
+}
