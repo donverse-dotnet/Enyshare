@@ -1,9 +1,8 @@
-import { Routes } from "react-router-dom";
+import { Link, Routes } from "react-router-dom";
 import "./index.css";
 
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
-import routes from "./Routes";
 
 export function Home() {
     return (
@@ -17,6 +16,11 @@ export function Home() {
             <p>
                 Edit <code>src/App.tsx</code> and save to test HMR
             </p>
+            <div className="links">
+                <Link to="about">Go to about.</Link>
+                <br />
+                <Link to="contact">Go to contact.</Link>
+            </div>
         </div>
     );
 }
