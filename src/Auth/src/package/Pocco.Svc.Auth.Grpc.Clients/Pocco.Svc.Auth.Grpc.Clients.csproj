@@ -10,6 +10,8 @@
         <Authors>ggg-alpha</Authors>
         <Company>Donverse.net</Company>
         <PackageDescription>PoccoのAuthサービスのgRPCクライアントパッケージ。</PackageDescription>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.Auth</RepositoryUrl>
     </PropertyGroup>
 
@@ -19,16 +21,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../.protos/V0/Types/SignInRequest.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/SignOutResponse.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/SessionData.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Services/AuthService.proto" ProtoRoot="../../.protos" GrpcServices="Client" />
+        <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <Protobuf Include="../../.protos/V0/Types/SignInRequest.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/SignOutResponse.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/SessionData.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Services/AuthService.proto" ProtoRoot="../../.protos"
+            GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.Core" Version="2.46.6" />
-        <PackageReference Include="Grpc.Reflection" Version="2.71.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.72.0">
+        <PackageReference Include="Grpc.Reflection" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
