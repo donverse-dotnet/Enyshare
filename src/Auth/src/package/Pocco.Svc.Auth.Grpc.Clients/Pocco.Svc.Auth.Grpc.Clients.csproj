@@ -10,6 +10,8 @@
         <Authors>ggg-alpha</Authors>
         <Company>Donverse.net</Company>
         <PackageDescription>PoccoのAuthサービスのgRPCクライアントパッケージ。</PackageDescription>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.Auth</RepositoryUrl>
     </PropertyGroup>
 
@@ -17,6 +19,12 @@
         <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
 
     <ItemGroup>
         <Protobuf Include="../../.protos/V0/Types/SignInRequest.proto" ProtoRoot="../../.protos"
