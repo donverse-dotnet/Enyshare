@@ -8,6 +8,8 @@ import "google/protobuf/timestamp.proto";
 
 
 service V0ApiService {
+    // TODO: メソッド名をわかりやすく変更する ex: RegisterAccount, AuthenticateAccount など
+
     // Account
     // register
     rpc Register(V0AccountRegisterRequest) returns (google.protobuf.Empty);
