@@ -10,32 +10,55 @@
         <Authors>ggg-alpha</Authors>
         <Company>Donverse.net</Company>
         <PackageDescription>PoccoのAccountsサービスのgRPCクライアントパッケージ。</PackageDescription>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.Accounts</RepositoryUrl>
     </PropertyGroup>
 
     <PropertyGroup>
         <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../.protos/V0/Enums/AccountRoles.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Enums/AccountStatus.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
+        <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
 
-        <Protobuf Include="../../.protos/V0/Types/Model.Account.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Model.AccountBase.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Model.AccountNotificationSettings.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Model.AccountStatus.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Request.AccountGet.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Response.AccountGet.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Request.AccountRegister.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Response.AccountRegister.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Request.AccountUpdate.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Response.AccountUpdate.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Request.AccountDelete.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/Response.AccountDelete.proto" ProtoRoot="../../.protos/" GrpcServices="None" />
+    <ItemGroup>
+        <Protobuf Include="../../.protos/V0/Enums/AccountRoles.proto" ProtoRoot="../../.protos/"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Enums/AccountStatus.proto" ProtoRoot="../../.protos/"
+            GrpcServices="None" />
 
-        <Protobuf Include="../../.protos/V0/Services/AccountService.proto" ProtoRoot="../../.protos/" GrpcServices="Client" />
+        <Protobuf Include="../../.protos/V0/Types/Model.Account.proto" ProtoRoot="../../.protos/"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountBase.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountNotificationSettings.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountStatus.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountGet.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Response.AccountGet.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountRegister.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Response.AccountRegister.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountUpdate.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Response.AccountUpdate.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountDelete.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Response.AccountDelete.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+
+        <Protobuf Include="../../.protos/V0/Services/AccountService.proto"
+            ProtoRoot="../../.protos/" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
