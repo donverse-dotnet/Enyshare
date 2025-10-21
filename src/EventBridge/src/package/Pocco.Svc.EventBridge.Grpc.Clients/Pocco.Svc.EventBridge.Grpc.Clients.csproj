@@ -19,18 +19,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../.protos/V0/Enums/V0EventTopics.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/EventReceivedData.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/DeployedEventData.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Types/NewEventRequest.proto" ProtoRoot="../../.protos" GrpcServices="None" />
-        <Protobuf Include="../../.protos/V0/Services/EventReceiver.proto" ProtoRoot="../../.protos" GrpcServices="Client" />
-        <Protobuf Include="../../.protos/V0/Services/EventDispatcher.proto" ProtoRoot="../../.protos" GrpcServices="Client" />
+        <Protobuf Include="../../.protos/V0/Enums/V0EventTopics.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/EventReceivedData.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/DeployedEventData.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/NewEventRequest.proto" ProtoRoot="../../.protos"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Services/EventReceiver.proto" ProtoRoot="../../.protos"
+            GrpcServices="Client" />
+        <Protobuf Include="../../.protos/V0/Services/EventDispatcher.proto"
+            ProtoRoot="../../.protos" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.Core" Version="2.46.6" />
-        <PackageReference Include="Grpc.Reflection" Version="2.71.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.72.0">
+        <PackageReference Include="Grpc.Reflection" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
