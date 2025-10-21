@@ -10,6 +10,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 
+const document: Document = window.document;
 const elem = document.getElementById("root")!;
 const app = (
     <StrictMode>
