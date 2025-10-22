@@ -1,26 +1,21 @@
 import { Link, Routes } from "react-router-dom";
 import "./index.css";
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+import logo2 from "./logo.png";
+import comLogo from "./ggg-alpha.png";
 
 export function Home() {
     return (
         <div className="app">
             <div className="logo-container">
-                <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-                <img src={reactLogo} alt="React Logo" className="logo react-logo" />
+                <img src={logo2} alt="Pocco Logo" className="logo bun-logo" style={{ borderRadius: "50%", height: "250px", width: "250px" }} />
+                <img src={comLogo} alt="Community Logo" className="logo bun-logo" style={{ borderRadius: "50%", height: "250px", width: "250px" }} />
             </div>
 
-            <h1>Bun + React</h1>
+            <h1>Pocco made by ggg-alpha</h1>
             <p>
-                Edit <code>src/App.tsx</code> and save to test HMR
+                Super modern communication platform.
             </p>
-            <div className="links">
-                <Link to="about">Go to about.</Link>
-                <br />
-                <Link to="contact">Go to contact.</Link>
-            </div>
         </div>
     );
 }
