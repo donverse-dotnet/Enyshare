@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "bun --hot src/index.tsx",
-        "clean": "rm -rf ./dist/*",
+        "clean": "rm -r dist",
         "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
         "start": "NODE_ENV=production bun src/index.tsx",
         "publish": "bun run build && git checkout --orphan gh-pages && git --work-tree dist add --all && git --work-tree dist commit -m \"Deploy to gh-pages\" && git push origin gh-pages --force && git checkout -f main && git branch -D gh-pages"
