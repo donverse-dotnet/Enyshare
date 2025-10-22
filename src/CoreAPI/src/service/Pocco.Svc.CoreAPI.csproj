@@ -19,10 +19,10 @@
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
-        <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1760835649" />
-        <PackageReference Include="Pocco.Svc.Auth.Grpc.Clients" Version="0.0.1-build-1760838125" />
+        <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1761087370" />
+        <PackageReference Include="Pocco.Svc.Auth.Grpc.Clients" Version="0.0.1-build-1761088359" />
         <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients"
-            Version="0.0.1-build-1760683254" />
+            Version="0.0.1-build-1761089015" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
