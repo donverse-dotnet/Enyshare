@@ -228,3 +228,7 @@ code {
 
     overflow: hidden;
 }
+
+img {
+    pointer-events: none;
+}
