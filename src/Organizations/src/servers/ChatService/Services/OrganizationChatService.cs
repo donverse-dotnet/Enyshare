@@ -30,6 +30,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
     var chat = new Chat {
       Id = ObjectId.GenerateNewId().ToString(),
+      OrgId = request.OrgId,
       Name = request.Name,
       Description = "",     //作成するときは空のまま
       CreatedBy = "",
@@ -44,6 +45,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateChat = new Chat {
       Id = request.Chatsmodel.Id,
+      OrgId = request.Chatsmodel.OrgId,
       Name = request.Chatsmodel.Name,
       Description = request.Chatsmodel.Description,
       CreatedBy = request.Chatsmodel.CreatedBy,

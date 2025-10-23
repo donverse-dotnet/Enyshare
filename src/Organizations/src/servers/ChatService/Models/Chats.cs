@@ -15,6 +15,9 @@ public class Chat {
   [BsonRepresentation(BsonType.ObjectId)]
   public required string Id { get; set; }
 
+  [BsonElement("OrgId")]
+  public required string OrgId { get; set; }
+
   [BsonElement("name")]
   [BsonRequired]
   public required string Name { get; set; }
@@ -55,6 +58,7 @@ public class Chat {
   public V0ChatsModel ToV0ChatModel() {
     return new V0ChatsModel {
       Id = Id,
+      OrgId = OrgId,
       Name = Name,
       Description = Description,
       CreatedBy = CreatedBy,
