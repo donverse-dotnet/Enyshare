@@ -33,7 +33,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       OrgId = request.OrgId,
       Name = request.Name,
       Description = "",     //作成するときは空のまま
-      CreatedBy = "",
+      CreatedBy = request.CreatedBy,
       IsPrivate = false,
       CreatedAt = DateTime.UtcNow
     };

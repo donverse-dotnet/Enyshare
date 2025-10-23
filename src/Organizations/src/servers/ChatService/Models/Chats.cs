@@ -28,7 +28,7 @@ public class Chat {
 
   [BsonElement("createdBy")]
   [BsonRequired]
-  public required string CreatedBy { get; set; } = string.Empty;
+  public required string CreatedBy { get; set; }
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("createdAt")]
