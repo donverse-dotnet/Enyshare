@@ -32,6 +32,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       Description = "",     //作成するときは空のまま
+      CreatedBy = "",
       IsPrivate = false,
       CreatedAt = DateTime.UtcNow
     };
@@ -45,6 +46,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Id = request.Chatsmodel.Id,
       Name = request.Chatsmodel.Name,
       Description = request.Chatsmodel.Description,
+      CreatedBy = request.Chatsmodel.CreatedBy,
       IsPrivate = request.Chatsmodel.IsPrivate
     };
 

@@ -23,8 +23,9 @@ public class Chat {
   [BsonRequired]
   public required string Description { get; set; } = string.Empty;
 
-  [BsonRepresentation(BsonType.ObjectId)]
-  public string CreatedBy { get; set; } = default!;
+  [BsonElement("createdBy")]
+  [BsonRequired]
+  public required string CreatedBy { get; set; } = string.Empty;
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("createdAt")]
@@ -37,12 +38,18 @@ public class Chat {
 
   public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
 
+  public bool HasCreatedBy => !string.IsNullOrWhiteSpace(CreatedBy);
+
   public bool IsNameChanged(string name) {
     return Name != name;
   }
 
   public bool IsDescriptionChanged(string description) {
     return Description != description;
+  }
+
+  public bool IsCreatedByChanged(string createdby) {
+    return CreatedBy != createdby;
   }
 
   public V0ChatsModel ToV0ChatModel() {

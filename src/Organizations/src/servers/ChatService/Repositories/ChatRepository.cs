@@ -59,6 +59,7 @@ public class ChatRepository : IChatRepository {
 
     var isNameChanged = updatechat.IsDescriptionChanged(latestChat.Name);
     var isDescriptionChanged = updatechat.IsDescriptionChanged(latestChat.Description);
+    var isCreatedByChanged = updatechat.IsCreatedByChanged(latestChat.CreatedBy);
 
     if (!isNameChanged && isDescriptionChanged) {
       return false;
@@ -72,6 +73,9 @@ public class ChatRepository : IChatRepository {
 
     if (isDescriptionChanged)
       updates.Add(updateDataBuilder.Set(c => c.Description, updatechat.Description));
+
+    if (isCreatedByChanged)
+      updates.Add(updateDataBuilder.Set(c => c.CreatedBy, updatechat.CreatedBy));
 
     updates.Add(updateDataBuilder.Set(c => c.IsPrivate, updatechat.IsPrivate));
 
