@@ -1,8 +1,8 @@
 using Pocco.Svc.Chats.Models;
 
 public interface IChatRepository {
-    Task<Chat> CreateAsync(string org_id, Chat chat);
-    Task<Chat> GetByIdAsync(string org_id, string id);
-    Task<bool> TryUpdateAsync(string org_id, string id, Chat updatechat);
-    Task<bool> DeleteAsync(string org_id, string id);
+    Task<Chat> CreateAsync(string orgId, Chat chat);
+    Task<Chat> GetByIdAsync(string orgId, string chatId);
+    Task<bool> TryUpdateAsync(string orgId, string chatId, Chat newChat);
+    Task<bool> DeleteAsync(string orgId, string chatId);
 }

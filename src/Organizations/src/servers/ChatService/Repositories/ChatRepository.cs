@@ -28,7 +28,7 @@ public class ChatRepository : IChatRepository {
     if (!ObjectId.TryParse(orgId, out _)) {
       throw new ArgumentException("Invalid id or chatId format");
     }
-    
+
     var db = _client.GetDatabase(orgId);
     return db.GetCollection<Chat>("Chats");
   }
@@ -54,11 +54,11 @@ public class ChatRepository : IChatRepository {
 
   }
 
-  public async Task<bool> TryUpdateAsync(string orgId, string chatId, Chat updatechat) {
+  public async Task<bool> TryUpdateAsync(string orgId, string chatId, Chat newChat) {
     var latestChat = await GetByIdAsync(orgId, chatId);
 
-    var isNameChanged = updatechat.IsDescriptionChanged(latestChat.Name);
-    var isDescriptionChanged = updatechat.IsDescriptionChanged(latestChat.Description);
+    var isNameChanged = newChat.IsDescriptionChanged(latestChat.Name);
+    var isDescriptionChanged = newChat.IsDescriptionChanged(latestChat.Description);
 
     if (!isNameChanged && isDescriptionChanged) {
       return false;
@@ -68,12 +68,12 @@ public class ChatRepository : IChatRepository {
     var updates = new List<UpdateDefinition<Chat>>();
 
     if (isNameChanged)
-      updates.Add(updateDataBuilder.Set(c => c.Name, updatechat.Name));
+      updates.Add(updateDataBuilder.Set(c => c.Name, newChat.Name));
 
     if (isDescriptionChanged)
-      updates.Add(updateDataBuilder.Set(c => c.Description, updatechat.Description));
+      updates.Add(updateDataBuilder.Set(c => c.Description, newChat.Description));
 
-    updates.Add(updateDataBuilder.Set(c => c.IsPrivate, updatechat.IsPrivate));
+    updates.Add(updateDataBuilder.Set(c => c.IsPrivate, newChat.IsPrivate));
 
     var update = updateDataBuilder.Combine(updates);
     var chats = GetChatCollection(orgId);
