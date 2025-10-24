@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -13,7 +15,7 @@ public class MemberEntity {
   public string OrganizationId { get; set; } // 所属組織ID
 
   [BsonElement("nickname")]
-  public string nickname { get; set; } // 表示名
+  public string Nickname { get; set; } // 表示名
 
   [BsonElement("role")]
   public List<string> Role { get; set; } = new(); // 権限ロール（例：admin, member)
@@ -32,4 +34,13 @@ public class MemberEntity {
 
   [BsonElement("updateAt")]
   public DateTime UpdateAt { get; set; }
+
+  [BsonElement("is_private")]
+  public bool Is_Private { get; set; } = false;
+
+  public bool HasNickname => !string.IsNullOrWhiteSpace(Nickname);
+
+  public bool IsNicknameChanged(string nickname) {
+    return Nickname != nickname;
+    }
 }
