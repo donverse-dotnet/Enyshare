@@ -40,8 +40,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       // Org_Id = request.OrgId,
       Description = "", // 作成するときは空のまま
       // Permissions    // 作成するときは空のまま
-      Created_At = DateTime.UtcNow,
-      Updated_At = DateTime.UtcNow
+      CreatedAt = DateTime.UtcNow,
+      UpdatedAt = DateTime.UtcNow
     };
     Role createdRole = await _repo.CreateAsync(request.OrgId, model);
     _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
@@ -54,7 +54,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Name = request.Rolemodel.Name,
       Description = request.Rolemodel.Descriptions,
       Permissions = request.Rolemodel.Permissions.ToList(),
-      Updated_At = DateTime.UtcNow
+      UpdatedAt = DateTime.UtcNow
     };
 
     var updated = await _repo.TryUpdateAsync(request.Rolemodel.OrgId, request.Rolemodel.Id, updateRole);

@@ -29,11 +29,11 @@ public class Role {
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("CreatedAt")]
-  public DateTime Created_At { get; set; }
+  public DateTime CreatedAt { get; set; }
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("UpdatedAt")]
-  public DateTime Updated_At { get; set; }
+  public DateTime UpdatedAt { get; set; }
 
   public bool HasName => !string.IsNullOrWhiteSpace(Name);
 
