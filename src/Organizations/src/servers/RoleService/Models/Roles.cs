@@ -1,8 +1,13 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
+
+using Google.Protobuf.WellKnownTypes;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
+using Pocco.Libs.Protobufs.Types;
 
 namespace Pocco.Svc.Roles.Models;
 
@@ -51,5 +56,17 @@ public class Role {
 
   public bool IsParmissionChanged(List<string> parmissions) {
     return Permissions != parmissions;
+  }
+
+  public V0RoleModel ToV0RoleModel() {
+    var model = new V0RoleModel {
+      Id = Id,
+      Name = Name,
+      Descriptions = Description,
+      CreatedAt = Timestamp.FromDateTime(CreatedAt),
+      UpdatedAt = Timestamp.FromDateTime(UpdatedAt)
+    };
+    model.Permissions.AddRange(Permissions);
+    return model;
   }
 }

@@ -24,12 +24,14 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     _logger.LogInformation("OrganiationRoleService is initialized!");
   }
 
-  public override async Task<Empty> Get(V0GetRequest request, ServerCallContext context) {
+  public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
     var role = await _repo.GetByIdAsync(request.OrgId, request.Id);
     if (role == null) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found"));
     }
-    return new Empty();
+    return new V0GetReply {
+      Rolemodel = role.ToV0RoleModel()
+    };
   }
 
   public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
