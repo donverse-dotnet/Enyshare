@@ -53,12 +53,12 @@ public class RoleRepository : IRoleRepository {
     return latestRole;
   }
 
-  public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role updateRole) {
+  public async Task<bool> TryUpdateAsync(string orgId, string roleId, Role newRole) {
     var latestRoll = await GetByIdAsync(orgId, roleId);
 
-    var isNameChanged = updateRole.IsNameChanged(latestRoll.Name);
-    var isDescriptionChanged = updateRole.IsDescriptionChanged(latestRoll.Description);
-    var isParmissionChanged = updateRole.IsParmissionChanged(latestRoll.Permissions);
+    var isNameChanged = newRole.IsNameChanged(latestRoll.Name);
+    var isDescriptionChanged = newRole.IsDescriptionChanged(latestRoll.Description);
+    var isParmissionChanged = newRole.IsParmissionChanged(latestRoll.Permissions);
     if (!isNameChanged && !isDescriptionChanged && !isParmissionChanged) {
       return false;
     }
@@ -67,13 +67,13 @@ public class RoleRepository : IRoleRepository {
     var updates = new List<UpdateDefinition<Role>>();
 
     if (isNameChanged)
-      updates.Add(updateDataBuilder.Set(r => r.Name, updateRole.Name));
+      updates.Add(updateDataBuilder.Set(r => r.Name, newRole.Name));
 
     if (isDescriptionChanged)
-      updates.Add(updateDataBuilder.Set(r => r.Description, updateRole.Description));
+      updates.Add(updateDataBuilder.Set(r => r.Description, newRole.Description));
 
     if (isParmissionChanged)
-      updates.Add(updateDataBuilder.Set(r => r.Permissions, updateRole.Permissions.ToList()));
+      updates.Add(updateDataBuilder.Set(r => r.Permissions, newRole.Permissions.ToList()));
 
     var update = updateDataBuilder.Combine(updates);
     var roles = GetRoleCollection(orgId);
