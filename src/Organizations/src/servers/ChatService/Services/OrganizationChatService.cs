@@ -26,7 +26,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
   }
 
 
-  public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
+  public override async Task<V0ChatChangesReply> Create(V0CreateRequest request, ServerCallContext context) {
 
     var chat = new Chat {
       Id = ObjectId.GenerateNewId().ToString(),
@@ -39,10 +39,12 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     };
     Chat createdChat = await _repository.CreateAsync(request.OrgId, chat);
     _logger.LogInformation("{ChatId} is successfully created on {OrgId}", createdChat.Id, request.OrgId);
-    return new Empty();
+    return new V0ChatChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+    };
   }
 
-  public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
+  public override async Task<V0ChatChangesReply> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateChat = new Chat {
       Id = request.Chatsmodel.Id,
       OrgId = request.Chatsmodel.OrgId,
@@ -57,7 +59,9 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found"));
     }
 
-    return new Empty();
+    return new V0ChatChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+    };
   }
 
   public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
@@ -70,11 +74,13 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     };
   }
 
-  public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {
+  public override async Task<V0ChatChangesReply> Delete(V0DeleteRequest request, ServerCallContext context) {
     var success = await _repository.DeleteAsync(request.OrgId, request.Id);
     if (!success) {
       throw new RpcException(new Status(StatusCode.NotFound, "Chat not found or no fields to delete"));
     }
-    return new Empty();
+    return new V0ChatChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+    };
   }
 }
