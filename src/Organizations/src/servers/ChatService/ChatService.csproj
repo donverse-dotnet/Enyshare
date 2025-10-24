@@ -7,11 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Types/ChatChangesReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatCreateDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatCreateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatDeleteDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatDeleteDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatsModel.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatUpdateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+
+    <Protobuf Include="Protos/V0/Services/OrganizationChats.proto" ProtoRoot="Protos/" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
 </Project>

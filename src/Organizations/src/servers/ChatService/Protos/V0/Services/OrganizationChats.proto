@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "V0/Types/ChatCreateDataRequest.proto";
+import "V0/Types/ChatDeleteDataRequest.proto";
+import "V0/Types/ChatGetDataRequest.proto";
+import "V0/Types/ChatUpdateDataRequest.proto";
+import "V0/Types/ChatGetDataReply.proto";
+import "V0/Types/ChatChangesReply.proto";
+
+//アカウントを登録するRPCサービスの定義
+
+service V0OrganizationChatService{
+    //チャットを作成するRPCメソッド
+    rpc Create(pocco.libs.protobufs.types.V0CreateRequest) returns (pocco.libs.protobufs.types.V0ChatChangesReply);
+    //チャットを更新するRPCメソッド
+    rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (pocco.libs.protobufs.types.V0ChatChangesReply);
+    //チャットを削除するRPCメソッド
+    rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0ChatChangesReply);
+    //チャットを情報を取得するRPCメソッド
+    rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (pocco.libs.protobufs.types.V0GetReply);
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+package pocco.libs.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+message V0ChatsModel{
+    string id = 1;
+    string org_id = 2;
+    string name = 3;
+    string description = 4;
+    bool is_private = 5;
+    string created_by = 6;
+    google.protobuf.Timestamp created_at = 7;
+
+}
