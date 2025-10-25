@@ -32,7 +32,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 組織エンティティの作成と保存
   // - 作成者を初期メンバーとして登録
   // - デフォルトロールとチャットの初期化
-  public override async Task<V0CreateOrganizationReply> Create(V0CreateOrganizationRequest request, ServerCallContext context)
+  public override async Task<V0InfoChangesReply> Create(V0CreateOrganizationRequest request, ServerCallContext context)
   {
     // 組織名の重複チェック（DeletedAtがnullのもののみ対象）
     var exists = await _orgs.Find(x => x.Name == request.Name && x.DeletedAt == null).AnyAsync();
@@ -58,18 +58,9 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     await _orgs.InsertOneAsync(org);
 
     // 作成された組織情報を gRPCレスポンスとして返却
-    return new V0CreateOrganizationReply
+    return new V0InfoChangesReply
     {
-      Organization = new V0InfoModel
-      {
-        Id = org.Id,
-        Name = org.Name,
-        Description = org.Description,
-        CreatedBy = org.CreatedBy,
-        CreatedAt = Timestamp.FromDateTime(org.CreatedAt.ToUniversalTime()),
-        UpdatedAt = Timestamp.FromDateTime(org.UpdatedAt.ToUniversalTime()),
-        DeletedAt = null
-      }
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
@@ -77,7 +68,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 他組織との名前重複チェック（自身以外）
   // - 更新対象の存在確認とフィールド更新
   // - 更新後の最新データを返却
-  public override async Task<V0UpdateOrganizationReply> Update(V0UpdateOrganizationRequest request, ServerCallContext context)
+  public override async Task<V0InfoChangesReply> Update(V0UpdateOrganizationRequest request, ServerCallContext context)
   {
     // 名前重複チェック（自身以外のIDと重複していないか）
     var conflict = await _orgs.Find(x => x.Name == request.Name && x.Id != request.Id && x.DeletedAt == null).AnyAsync();
@@ -103,11 +94,9 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     var updated = await _orgs.Find(x => x.Id == request.Id).FirstOrDefaultAsync();
 
     // 更新結果をレスポンスとして返却
-    return new V0UpdateOrganizationReply
+    return new V0InfoChangesReply
     {
-      Id = updated.Id,
-      Name = updated.Name,
-      UpdatedAt = Timestamp.FromDateTime(updated.UpdatedAt)
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
@@ -115,7 +104,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   // - 組織の存在確認
   // - DeletedAt フィールドの更新による論理削除
   // - 関連データ（メンバー・ロール・チャット）の物理削除
-  public override async Task<V0DeleteOrganizationReply> Delete(V0DeleteOrganizationRequest request, ServerCallContext context)
+  public override async Task<V0InfoChangesReply> Delete(V0DeleteOrganizationRequest request, ServerCallContext context)
   {
     // 対象組織の存在確認
     var org = await _orgs.Find(x => x.Id == request.Id).FirstOrDefaultAsync();
@@ -129,10 +118,9 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     await _orgs.UpdateOneAsync(x => x.Id == request.Id, update);
 
     // 削除結果を返却
-    return new V0DeleteOrganizationReply
+    return new V0InfoChangesReply
     {
-      Success = true,
-      Message = "Organization and related data deleted successfully."
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
