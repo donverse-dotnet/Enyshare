@@ -1,3 +1,5 @@
+using Google.Protobuf.WellKnownTypes;
+
 using Grpc.Core;
 
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +9,12 @@ using MongoDB.Driver;
 
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
+using Pocco.Svc.EventBridge.Protobufs.Enums;
+using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Svc.EventBridge.Protobufs.Types;
 using Pocco.Svc.Roles.Models;
+using Pocco.Svc.Roles.Repositories;
+
 
 
 namespace RoleService.Services;
@@ -15,9 +22,11 @@ namespace RoleService.Services;
 public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   private readonly IRoleRepository _repo;
   private readonly ILogger<OrganizationRoleService> _logger;
-  public OrganizationRoleService([FromServices] IRoleRepository repo, [FromServices] ILogger<OrganizationRoleService> logger) {
+  private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
+  public OrganizationRoleService([FromServices] IRoleRepository repo, [FromServices] ILogger<OrganizationRoleService> logger, [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
     _repo = repo;
     _logger = logger;
+    _eventBridge = eventBridge;
 
     _logger.LogInformation("OrganiationRoleService is initialized!");
   }
@@ -44,8 +53,29 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     };
     Role createdRole = await _repo.CreateAsync(request.OrgId, model);
     _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
+
+    // イベントを伝搬させるのをEventBridgeに依頼
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnRoleCreated",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy =  request.InvokedBy 
+    };
+    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
+    newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{createdRole.Id}" });
+    newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{createdRole.Name}" });
+    newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{createdRole.Description}" });
+    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{createdRole.Permissions}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{createdRole.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{createdRole.UpdatedAt}" });
+
+    var createdEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0RoleChangesReply {
-      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+      EventId = createdEventData.EventId 
     };
   }
 
@@ -64,8 +94,28 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnRoleCreated",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.InvokedBy
+    };
+
+    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.Rolemodel.OrgId}" });
+    newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{updateRole.Id}" });
+    newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{updateRole.Name}" });
+    newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{updateRole.Description}" });
+    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{updateRole.Permissions}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{updateRole.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{updateRole.UpdatedAt}" });
+
+    var updatedEventData = _eventBridge.NewEvent(
+        newEventData
+    );
+
     return new V0RoleChangesReply {
-      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+      EventId = updatedEventData.EventId 
     };
   }
 
@@ -75,8 +125,23 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to delete"));
     }
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnRoleCreated",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.InvokedBy
+    };
+
+    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
+    newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{request.Id}" });
+
+    var deletedEventData = _eventBridge.NewEvent(
+        newEventData
+    );
+
     return new V0RoleChangesReply {
-      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+      EventId =  deletedEventData.EventId
     };
   }
 }
