@@ -34,7 +34,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     };
   }
 
-  public override async Task<Empty> Create(V0CreateRequest request, ServerCallContext context) {
+  public override async Task<V0RoleChangesReply> Create(V0CreateRequest request, ServerCallContext context) {
 
     var model = new Role() {
       Id = ObjectId.GenerateNewId().ToString(),
@@ -48,10 +48,12 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     };
     Role createdRole = await _repo.CreateAsync(request.OrgId, model);
     _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
-    return new Empty();
+    return new V0RoleChangesReply {
+      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+    };
   }
 
-  public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
+  public override async Task<V0RoleChangesReply> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateRole = new Role {
       Id = request.Rolemodel.Id,
       OrgId = request.Rolemodel.OrgId,
@@ -66,15 +68,19 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to update"));
     }
 
-    return new Empty();
+    return new V0RoleChangesReply {
+      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+    };
   }
 
-  public override async Task<Empty> Delete(V0DeleteRequest request, ServerCallContext context) {
+  public override async Task<V0RoleChangesReply> Delete(V0DeleteRequest request, ServerCallContext context) {
     var success = await _repo.DeleteAsync(request.OrgId, request.Id);
     if (!success) {
       throw new RpcException(new Status(StatusCode.NotFound, "Role not found or no fields to delete"));
     }
 
-    return new Empty();
+    return new V0RoleChangesReply {
+      EventId = "fake id" //TODO eventbridgeからのidに置き換える
+    };
   }
 }
