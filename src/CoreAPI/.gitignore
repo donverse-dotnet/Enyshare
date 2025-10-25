@@ -1,6 +1,7 @@
 # Text editor files
 .vscode/
 .vs/
+.idea/
 
 # Git functional files
 !.gitkeep
@@ -8,3 +9,4 @@
 # Global ignore files
 .env
 data/
+[Nn]u[Gg]et.config

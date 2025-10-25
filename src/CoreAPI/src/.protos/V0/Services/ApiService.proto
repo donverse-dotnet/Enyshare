@@ -1,0 +1,317 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+package pocco.libs.protobufs.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+
+service V0ApiService {
+    // TODO: メソッド名をわかりやすく変更する ex: RegisterAccount, AuthenticateAccount など
+
+    // Account
+    // register
+    rpc Register(V0AccountRegisterRequest) returns (google.protobuf.Empty);
+    // get profile (require authorized)
+    rpc GetProfile(V0AccountGetProfileRequest) returns (V0BaseAccount);
+    // update profile (require authorized)
+    rpc UpdateProfile(V0AccountUpdateProfileRequest) returns (V0BaseAccount);
+    // delete account (require authorized)
+    rpc DeleteAccount(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    // Auth
+    // authenticate
+    rpc Authenticate(V0AccountAuthenticateRequest) returns (V0ApiSessionData);
+    // unauthenticate (require authorized)
+    rpc Unauthenticate(google.protobuf.Empty) returns (google.protobuf.Empty);
+    // verify (require authorized)
+    rpc VerifyToken(google.protobuf.Empty) returns (V0ApiSessionData);
+
+    // Organizations
+    // Infos
+    // List: Authorized
+    rpc List (google.protobuf.Empty) returns (V0ListOrganizationsResponse);
+    // Get: Authorized
+    rpc Get (V0BaseRequest) returns (Organization);
+    // Create: Authorized
+    rpc Create (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // Update: Authorized
+    rpc UpdateOrganizationName (V0UpdateOrganizationNameRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // Delete: Authorized
+    rpc Delete (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+
+    // Members
+    // ListMembers: Authorized
+    rpc ListMembers (V0ListXRequest) returns (V0ListMembersResponse);
+    // GetMember: Authorized
+    rpc GetMember (V0BaseRequest) returns (Member);
+    // JoinMember: Authorized
+    rpc JoinMember (V0JoinMemberRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // LeaveMember: Authorized
+    rpc LeaveMember (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // ModerateMember: Authorized    // Not implemented
+    // UpdateMemberInfo: Authorized  // Not implemented
+
+    // Roles
+    // ListRoles: Authorized
+    rpc ListRoles (V0ListXRequest) returns (V0ListRolesResponse);
+    // GetRole: Authorized
+    rpc GetRole (V0BaseRequest) returns (Role);
+    // CreateRole: Authorized
+    rpc CreateRole (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // UpdateRole: Authorized
+    rpc UpdateRole (Role) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // DeleteRole: Authorized
+    rpc DeleteRole (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+
+    // Chats
+    // ListChats: Authorized
+    rpc ListChats (V0ListXRequest) returns (V0ListChatsResponse); // 全チャット取得を行うことを想定した設計に
+    // GetChat: Authorized
+    rpc GetChat (V0BaseRequest) returns (Chat);
+    // CreateChat: Authorized
+    rpc CreateChat (V0CreateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // UpdateChat: Authorized
+    rpc UpdateChat (V0UpdateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // DeleteChat: Authorized
+    rpc DeleteChat (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+
+    // Messages
+    // ListMessages: Authorized
+    rpc ListMessages (V0ListMessagesRequest) returns (V0ListMessagesResponse);
+    // GetMessage: Authorized
+    rpc GetMessage (V0BaseRequest) returns (Message);
+    // CreateMessage: Authorized
+    rpc CreateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // UpdateMessage: Authorized
+    rpc UpdateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    // DeleteMessage: Authorized
+    rpc DeleteMessage (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+}
+
+// -------------------------------------
+// Account messages
+// -------------------------------------
+// Account
+message V0BaseAccount {
+    string id = 1;
+    string username = 2;
+    string avatar_url = 3;
+    V0AccountRoles role = 4;
+    V0AccountStatus status = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+message V0AccountProfile {
+    V0BaseAccount base = 1;
+    string email = 2;
+    google.protobuf.Timestamp last_login_at = 3;
+    V0AccountNotificationSettings notification_settings = 4;
+}
+message V0AccountStatus {
+    V0AccountStatusTypes type = 1;
+    string custom_message = 2;
+}
+message V0AccountNotificationSettings {
+    bool email = 1;
+    bool push = 2;
+    bool badge = 3;
+}
+enum V0AccountStatusTypes {
+    OFFLINE = 0;
+    ONLINE = 1;
+    IDLE = 2;
+    BUSY = 3;
+}
+enum V0AccountRoles {
+    USER = 0;
+    BOT = 1;
+    ADMIN = 2;
+}
+// register request
+message V0AccountRegisterRequest {
+    // ユーザーのメールアドレス
+    string email = 1;
+    // ユーザーのパスワード(ハッシュ化済み)
+    string password = 2;
+}
+// register response -> return empty
+// get profile request
+message V0AccountGetProfileRequest {
+    // ユーザーID
+    string user_id = 1;
+}
+// get profile response -> return V0BaseAccount
+// update profile request
+message V0AccountUpdateProfileRequest {
+    // ユーザーID
+    string user_id = 1;
+    // 更新するユーザー名
+    string username = 2;
+    // 更新するアバターURL
+    string avatar_url = 3;
+    // 更新するメールアドレス
+    string email = 4;
+    // 更新する通知設定
+    V0AccountNotificationSettings notification_settings = 5;
+    // 更新するパスワード(ハッシュ化済み)
+    string password = 6;
+    // 更新するステータス
+    V0AccountStatus status = 7;
+
+    // TODO: 秘密情報などは別ロジックに移動する
+}
+// update profile response -> return V0BaseAccount
+
+// -------------------------------------
+// Auth messages
+// -------------------------------------
+// authenticate request
+message V0AccountAuthenticateRequest {
+    // ユーザーのメールアドレス
+    string email = 1;
+    // ユーザーのパスワード(ハッシュ化済み)
+    string password = 2;
+}
+// authenticate response -> V0SessionData
+// unauthenticate request -> google.protobuf.Empty
+// unauthenticate response -> google.protobuf.Empty
+// session data
+message V0ApiSessionData {
+    // セッションID
+    string session_id = 1;
+    // アカウントID
+    string account_id = 2;
+    // トークン
+    string token = 3;
+    // 有効期限（UNIXタイムスタンプ）
+    google.protobuf.Timestamp expires_at = 4;
+    // 作成日時（UNIXタイムスタンプ）
+    google.protobuf.Timestamp created_at = 5;
+    // 更新日時（UNIXタイムスタンプ）
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+// --------------------------------------
+// Organizations messages
+// --------------------------------------
+
+message V0BaseRequest {
+    // 識別ID
+    string id = 1;
+}
+message V0EventInvokedResponse {
+    string event_id = 1;
+}
+message V0ListMembersResponse {
+    // メンバーのリスト
+    repeated Member members = 1;
+}
+message V0ListOrganizationsResponse {
+    // 組織のリスト
+    repeated Organization organizations = 1;
+}
+message V0CreateXRequest {
+    // 名前
+    string name = 1;
+}
+message V0CreateChatRequest {
+    // ベース
+    V0CreateXRequest base = 1;
+    // 組織
+    string organization_id = 2;
+    // タイプ
+    string type = 3; // 例: "text", "forum"
+}
+message V0UpdateOrganizationNameRequest {
+    // 組織ID
+    string organization_id = 1;
+    // 新しい組織名
+    string name = 2;
+}
+message V0UpdateChatRequest {
+    // 組織ID
+    string organization_id = 1;
+    // チャットID
+    string chat_id = 2;
+    // 新しいチャット名
+    string name = 3;
+    // 新しいチャット説明
+    string description = 4;
+}
+message V0JoinMemberRequest {
+    // 組織ID
+    string organization_id = 1;
+    // ユーザーID
+    string user_id = 2;
+    // 招待コード（プライベートなら）
+    string invite_code = 3;
+}
+message V0ListXRequest {
+    // ベース
+    V0BaseRequest base = 1;
+    // ページサイズ
+    int32 page_size = 2;
+    // ページ番号
+    int32 page_number = 3;
+}
+message V0ListMessagesRequest {
+    // チャットID
+    string chat_id = 1;
+    // ページサイズ
+    int32 page_size = 2;
+    // ページ番号
+    int32 page_number = 3;
+}
+message V0ListRolesResponse {
+    // 役割のリスト
+    repeated Role roles = 1;
+}
+message V0ListChatsResponse {
+    // チャットのリスト
+    repeated Chat chats = 1;
+}
+message V0ListMessagesResponse {
+    // メッセージのリスト
+    repeated Message messages = 1;
+}
+message Organization {
+    string organization_id = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 3; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 4; // ISO 8601形式の日時文字列
+}
+message Member {
+    string member_id = 1;
+    string user_id = 2;
+    string organization_id = 3;
+    string role = 4; // 例: "admin", "member"
+    google.protobuf.Timestamp joined_at = 5; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 6; // ISO 8601形式の日時文字列
+}
+message Role {
+    string role_id = 1;
+    string organization_id = 2;
+    string name = 3; // 例: "admin", "member"
+    repeated string permissions = 4; // 例: ["read", "write"]
+    google.protobuf.Timestamp created_at = 5; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 6; // ISO 8601形式の日時文字列
+}
+message Chat {
+    string chat_id = 1;
+    string organization_id = 2;
+    string name = 3;
+    string description = 4;
+    string type = 5; // 例: "text", "forum"
+    google.protobuf.Timestamp created_at = 6; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 7; // ISO 8601形式の日時文字列
+}
+message Message {
+    string message_id = 1;
+    string chat_id = 2;
+    string sender_id = 3; // user_id
+    string content = 4;
+    google.protobuf.Timestamp created_at = 5; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 6; // ISO 8601形式の日時文字列
+}

@@ -5,7 +5,6 @@
 
 # dotenv files
 .env
-launchSettings.json
 
 # User-specific files
 *.rsuser
