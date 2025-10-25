@@ -11,6 +11,7 @@ import "Protos/V0/Types/DeleteInfoData.proto";
 import "Protos/V0/Types/OrganizationData.proto";
 import "Protos/V0/Types/GetInfoData.proto";
 import "Protos/V0/Types/UpdateInfoData.proto";
+import "Protos/V0/Types/InfoChangesReply.proto";
 
 service V0OrganizationInfoService{
     rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
