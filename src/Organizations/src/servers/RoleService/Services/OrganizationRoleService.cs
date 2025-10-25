@@ -38,6 +38,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var model = new Role() {
       Id = ObjectId.GenerateNewId().ToString(),
+      OrgId = request.OrgId,
       Name = request.Name,
       // Org_Id = request.OrgId,
       Description = "", // 作成するときは空のまま
@@ -53,6 +54,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   public override async Task<Empty> Update(V0UpdateRequest request, ServerCallContext context) {
     var updateRole = new Role {
       Id = request.Rolemodel.Id,
+      OrgId = request.Rolemodel.OrgId,
       Name = request.Rolemodel.Name,
       Description = request.Rolemodel.Descriptions,
       Permissions = request.Rolemodel.Permissions.ToList(),

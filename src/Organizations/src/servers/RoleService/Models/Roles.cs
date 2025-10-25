@@ -16,9 +16,8 @@ public class Role {
   [BsonRepresentation(BsonType.ObjectId)]
   public required string Id { get; set; }
 
-  // [BsonElement("org_id")]
-  // [BsonRepresentation(BsonType.ObjectId)]
-  // public string Org_Id { get; set; } = string.Empty;
+  [BsonElement("orgid")]
+  public required string OrgId { get; set; }
 
   [BsonElement("name")]
   [BsonRequired]
@@ -61,6 +60,7 @@ public class Role {
   public V0RoleModel ToV0RoleModel() {
     var model = new V0RoleModel {
       Id = Id,
+      OrgId = OrgId,
       Name = Name,
       Descriptions = Description,
       CreatedAt = Timestamp.FromDateTime(CreatedAt),
