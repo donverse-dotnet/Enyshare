@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Protobuf Include="./Protos/V0/Types/MemberChangesReply.proto" ProtoRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/Members.proto" ProtoRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/CreateMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/DeleteMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
