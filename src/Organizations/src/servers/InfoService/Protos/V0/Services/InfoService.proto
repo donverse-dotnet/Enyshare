@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+
+package pocco.libs.protobufs.services;
+
+import "Protos/V0/Types/CreateInfoData.proto";
+import "Protos/V0/Types/DeleteInfoData.proto";
+import "Protos/V0/Types/GetInfoData.proto";
+import "Protos/V0/Types/UpdateInfoData.proto";
+import "Protos/V0/Types/InfoChangesReply.proto";
+
+service V0OrganizationInfoService{
+    rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
+    rpc Update(pocco.libs.protobufs.types.V0UpdateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
+    rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
+    rpc GetInfo(pocco.libs.protobufs.types.V0GetInfoOrganizationRequest) returns (pocco.libs.protobufs.types.V0GetInfoOrganizationReply);
+}

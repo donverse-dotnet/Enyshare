@@ -7,11 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <Protobuf Include="./Protos/V0/Types/InfoChangesReply.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/CreateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/DeleteInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/OrganizationData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Services/InfoService.proto" GrpcRoot="./Protos" GrpcServices="Server" />
+    <Protobuf Include="./Protos/V0/Types/UpdateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
+    <Protobuf Include="./Protos/V0/Types/GetInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
   </ItemGroup>
 
 </Project>

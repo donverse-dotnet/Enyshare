@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+message V0GetInfoOrganizationRequest{
+    string id = 1;
+}
+
+message V0GetInfoOrganizationReply{
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string created_by = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+}
