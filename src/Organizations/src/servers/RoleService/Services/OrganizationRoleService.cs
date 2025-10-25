@@ -96,7 +96,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRoleCreated",
+      EventType = "OnRoleUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy
@@ -127,7 +127,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRoleCreated",
+      EventType = "OnRoleDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy
