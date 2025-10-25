@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="./Protos/V0/Types/InfoChangesReply.proto" GrpcRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/CreateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/DeleteInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos" GrpcServices="None" />
