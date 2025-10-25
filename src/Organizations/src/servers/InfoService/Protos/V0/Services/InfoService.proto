@@ -4,11 +4,8 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Services";
 
 package pocco.libs.protobufs.services;
 
-import "Protos/V0/Types/InfoModel.proto";
-import "google/protobuf/empty.proto";
 import "Protos/V0/Types/CreateInfoData.proto";
 import "Protos/V0/Types/DeleteInfoData.proto";
-import "Protos/V0/Types/OrganizationData.proto";
 import "Protos/V0/Types/GetInfoData.proto";
 import "Protos/V0/Types/UpdateInfoData.proto";
 import "Protos/V0/Types/InfoChangesReply.proto";
