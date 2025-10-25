@@ -32,7 +32,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - メンバーエンティティの作成とMongoDBへの保存
   /// - 登録されたメンバー情報をレスポンスとして返却
   /// </summary>
-  public override async Task<V0CreateMemberReply> RequestToJoin(V0CreateMemberRequest request, ServerCallContext context) {
+  public override async Task<V0MemberChangesReply> RequestToJoin(V0CreateMemberRequest request, ServerCallContext context) {
     // 重複チェック：同じ組織・ユーザーIDで論理削除されていないメンバーが存在するか
     var exists = await _members.Find(x =>
     x.OrganizationId == request.OrganizationId &&
@@ -68,8 +68,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     model.Role.AddRange(member.Role);
 
-    return new V0CreateMemberReply {
-      Member = model
+    return new V0MemberChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
@@ -79,7 +79,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - RoleとUpdatedAtを更新
   /// - 更新後のメンバー情報をレスポンスとして返却
   /// </summary>
-  public override async Task<V0UpdateMemberReply> UpdateOrgUser(V0UpdateMemberRequest request, ServerCallContext context) {
+  public override async Task<V0MemberChangesReply> UpdateOrgUser(V0UpdateMemberRequest request, ServerCallContext context) {
     // 更新内容の定義（RoleとUpdatedAt）
     var updateDefinition = Builders<MemberEntity>.Update
     .Set(x => x.Role, request.Role.ToList())
@@ -111,8 +111,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     model.Role.AddRange(updated.Role);
 
-    return new V0UpdateMemberReply {
-      Member = model
+    return new V0MemberChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
@@ -121,7 +121,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - 指定IDのメンバーの DeletedAt を現在時刻に設定
   /// - 該当メンバーが存在しない場合は NotFound を返却
   /// </summary>
-  public override async Task<V0DeleteMemberReply> RequestToLeave(V0DeleteMemberRequest request, ServerCallContext context) {
+  public override async Task<V0MemberChangesReply> RequestToLeave(V0DeleteMemberRequest request, ServerCallContext context) {
     // DeletedAtを現在時刻に設定（論理削除）
     var update = Builders<MemberEntity>.Update.Set(x => x.DeletedAt, DateTime.UtcNow);
     var result = await _members.UpdateOneAsync(x => x.Id == request.Id, update);
@@ -131,10 +131,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found"));
     }
 
-    // 削除成功レスポンスを返却
-    return new V0DeleteMemberReply {
-      Success = true,
-      Message = "Member deleted successfully"
+    return new V0MemberChangesReply {
+      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
     };
   }
 
