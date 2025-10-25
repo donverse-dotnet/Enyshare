@@ -12,7 +12,6 @@ using MongoDB.Driver;
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 using InfoService.Repositories;
-using InfoService.Entities;
 
 namespace InfoService.Services;
 
