@@ -1,5 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-
 using Grpc.Core;
 
 using Microsoft.AspNetCore.Mvc;
@@ -40,9 +38,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Id = ObjectId.GenerateNewId().ToString(),
       OrgId = request.OrgId,
       Name = request.Name,
-      // Org_Id = request.OrgId,
       Description = "", // 作成するときは空のまま
-      // Permissions    // 作成するときは空のまま
       CreatedAt = DateTime.UtcNow,
       UpdatedAt = DateTime.UtcNow
     };
