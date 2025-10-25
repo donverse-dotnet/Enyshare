@@ -7,11 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Types/RoleChangesReply.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/CreateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/UpdateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/DeleteRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/RoleModel.proto" ProtoRoot="Protos" GrpcServices="None" />
+
+
+    <Protobuf Include="Protos/V0/Services/RoleService.proto" ProtoRoot="Protos" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.32.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
 </Project>
