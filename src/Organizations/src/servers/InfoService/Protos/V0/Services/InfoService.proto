@@ -13,8 +13,8 @@ import "Protos/V0/Types/GetInfoData.proto";
 import "Protos/V0/Types/UpdateInfoData.proto";
 
 service V0OrganizationInfoService{
-    rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0CreateOrganizationReply);
-    rpc Update(pocco.libs.protobufs.types.V0UpdateOrganizationRequest) returns (pocco.libs.protobufs.types.V0UpdateOrganizationReply);
-    rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0DeleteOrganizationReply);
+    rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
+    rpc Update(pocco.libs.protobufs.types.V0UpdateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
+    rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
     rpc GetInfo(pocco.libs.protobufs.types.V0GetInfoOrganizationRequest) returns (pocco.libs.protobufs.types.V0GetInfoOrganizationReply);
 }
