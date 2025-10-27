@@ -6,6 +6,7 @@ package pocco.libs.protobufs.types;
 
 message V0DeleteOrganizationRequest{
     string id = 1;
+    string invoked_by = 2;
 }
 
 message V0DeleteOrganizationReply{

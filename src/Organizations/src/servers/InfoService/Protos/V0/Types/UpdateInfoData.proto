@@ -11,6 +11,7 @@ message V0UpdateOrganizationRequest{
     string description = 2;
     // 組織の識別に必要な情報なので書き換え不可
     string id = 3;
+    string invoked_by = 4;
 }
 
 message V0UpdateOrganizationReply{
