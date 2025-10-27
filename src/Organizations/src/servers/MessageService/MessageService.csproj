@@ -21,7 +21,6 @@
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
-    <PackageReference Include="Pocco.Svc.CoreAPI.Grpc.Clients" Version="0.0.1-build-1761396923" />
   </ItemGroup>
 
 </Project>
