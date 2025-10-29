@@ -24,6 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="3.5.0" />
+    <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1761089015" />
   </ItemGroup>
 
 </Project>
