@@ -1,3 +1,4 @@
+using MemberService.Repositories;
 using MemberService.Services;
 
 using MongoDB.Driver;
@@ -6,10 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton(sp => {
-    var connectionString = Environment.GetEnvironmentVariable("POCCO_DB") ?? throw new
-    ArgumentException("POCCO_DB is not set.");
-    var client = new MongoClient(connectionString);
-    return client.GetDatabase("Entities");
+  var connectionString = Environment.GetEnvironmentVariable("POCCO_DB") ?? throw new
+  ArgumentException("POCCO_DB is not set.");
+  return new MongoClient(connectionString);
+});
+
+builder.Services.AddSingleton<IMemberRepository>(sp => {
+  var MongoClient = sp.GetRequiredService<IMongoClient>();
+  return new MemberRepository(MongoClient);
 });
 
 builder.Services.AddGrpc();

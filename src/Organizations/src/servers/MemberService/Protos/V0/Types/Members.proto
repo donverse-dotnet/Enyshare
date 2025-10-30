@@ -26,6 +26,7 @@ message V0UpdateMemberRequest{
     repeated string role = 2;
     string nickname = 3;
     string join_at = 4;
+    string organization_id = 5;
 }
 
 message V0UpdateMemberReply{
@@ -38,6 +39,7 @@ message V0UpdateMemberReply{
 
 message V0GetMemberRequest{
     string id = 1;
+    string organization_id = 2;
 }
 
 message V0GetMemberReply{
