@@ -40,6 +40,12 @@ if (builder.Environment.IsDevelopment()) {
 }
 
 builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ACCOUNT_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ACCOUNT_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0AccountService.V0AccountServiceClient(channel);
+});
+builder.Services.AddTransient(sp => {
   var serverAddress = Environment.GetEnvironmentVariable("AUTH_SERVICE_ADDRESS") ?? throw new InvalidOperationException("AUTH_SERVICE_ADDRESS environment variable is not set.");
 
   var channel = GrpcChannel.ForAddress(serverAddress);
