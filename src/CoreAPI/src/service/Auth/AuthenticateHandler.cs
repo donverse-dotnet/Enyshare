@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authentication;
@@ -62,13 +63,17 @@ public class AuthenticateHandler(
     try {
       Logger.LogInformation("Verifying access token: {AccessToken} for {SessionId}", accessToken, sessionId);
 
+      var expiresAtData = JsonSerializer.Deserialize<Timestamp>(expiresAt.ToString());
+      var createdAtData = JsonSerializer.Deserialize<Timestamp>(createdAt.ToString());
+      var updatedAtData = JsonSerializer.Deserialize<Timestamp>(updatedAt.ToString());
+
       var res = await _v0AuthServiceClient.AuthAsync(new V0SessionData {
         SessionId = sessionId.ToString(),
         AccountId = accountId.ToString(),
         Token = accessToken,
-        ExpiresAt = Timestamp.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(long.Parse(expiresAt.ToString())).UtcDateTime),
-        CreatedAt = Timestamp.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(long.Parse(createdAt.ToString())).UtcDateTime),
-        UpdatedAt = Timestamp.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(long.Parse(updatedAt.ToString())).UtcDateTime)
+        ExpiresAt = expiresAtData,
+        CreatedAt = createdAtData,
+        UpdatedAt = updatedAtData
       });
 
       if (res is null) {
