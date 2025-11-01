@@ -8,4 +8,5 @@ message V0CreateOrganizationRequest{
     string name = 1;
     string description = 2;
     string created_by = 3;
+    string invoked_by = 4;
 }

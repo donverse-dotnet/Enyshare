@@ -8,7 +8,8 @@
       "applicationUrl": "http://localhost:5065",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "POCCO_DB": "CHANGE_HERE"
+        "POCCO_DB": "CHANGE_HERE",
+        "EVENTBRIDGE_URL": "CHANGE_HERE"
       }
     },
     "https": {
