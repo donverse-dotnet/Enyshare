@@ -31,4 +31,12 @@ service OrganizationMessageRpcService {
     rpc TryBulkRemoveReactionsFromMessage (
         pocco.svc.messages.protobufs.types.V0TryBulkRemoveReactionsFromMessageRequest
     ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+    // メッセージを取得する
+    rpc GetMessageInOrganization (
+        pocco.svc.messages.protobufs.types.V0GetMessageInOrganizationRequest
+    ) returns (pocco.svc.messages.protobufs.types.V0GetMessageInOrganizationResponse);
+    // メッセージリストを取得する
+    rpc GetMessageListInOrganization (
+        pocco.svc.messages.protobufs.types.V0GetMessageListInOrganizationRequest
+    ) returns (pocco.svc.messages.protobufs.types.V0GetMessageListInOrganizationResponse);
 }

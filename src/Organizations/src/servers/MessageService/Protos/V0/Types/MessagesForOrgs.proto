@@ -45,7 +45,6 @@ message V0TryAddReactionToMessageRequest {
     string sender_id = 3;
     string message_id = 4; // メッセージID
     pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 5;
-
 }
 message V0TryRemoveReactionFromMessageRequest {
     string organization_id = 1;
@@ -60,4 +59,22 @@ message V0TryBulkRemoveReactionsFromMessageRequest {
     string sender_id = 3;
     string message_id = 4; // メッセージID
     repeated pocco.svc.messages.protobufs.types.V0MessageReaction reactions = 5;
+}
+
+message V0GetMessageInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3;
+}
+message V0GetMessageInOrganizationResponse {
+    pocco.svc.messages.protobufs.types.V0Messages message = 1;
+}
+
+message V0GetMessageListInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    int32 page_size = 3;
+}
+message V0GetMessageListInOrganizationResponse {
+    repeated pocco.svc.messages.protobufs.types.V0Messages messages = 1;
 }
