@@ -13,7 +13,7 @@ builder.Services.AddSingleton(sp => {
 });
 
 builder.Services.AddSingleton<IMemberRepository>(sp => {
-  var MongoClient = sp.GetRequiredService<IMongoClient>();
+  var MongoClient = sp.GetRequiredService<MongoClient>();
   return new MemberRepository(MongoClient);
 });
 
