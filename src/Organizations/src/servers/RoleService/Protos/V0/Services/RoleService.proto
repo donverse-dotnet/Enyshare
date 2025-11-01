@@ -9,6 +9,8 @@ import "V0/Types/DeleteRequestData.proto";
 import "V0/Types/UpdateRequestData.proto";
 import "V0/Types/GetReplyData.proto";
 import "V0/Types/RoleChangesReply.proto";
+import "V0/Types/GetListDataRequest.proto";
+import "V0/Types/GetListDataReply.proto";
 
 //組織のロールを管理するRPCサービスの定義
 
@@ -21,4 +23,6 @@ service V0RoleService {
     rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (pocco.libs.protobufs.types.V0RoleChangesReply);
     //組織のロールを削除するRPCメソッド
     rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0RoleChangesReply);
+    //組織のロールリストを取得するRPCメソッド
+    rpc GetList(pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
 }
