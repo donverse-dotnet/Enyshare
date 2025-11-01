@@ -65,7 +65,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnSendMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
@@ -120,7 +120,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnUpdateMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
@@ -175,7 +175,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnDeleteMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
     
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
@@ -221,7 +221,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnAddReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
@@ -272,7 +272,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnRemoveReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
@@ -323,7 +323,7 @@ public class OrganizationMessageGrpcService(
       EventType = "OnBulkRemoveReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.SenderId
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });

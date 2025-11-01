@@ -15,21 +15,19 @@ message V0TrySendMessageToOrganizationRequest {
     string chat_id = 2;
     string sender_id = 3;
     string content = 4;
-    string invoked_by = 5;
-    pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 6;
-    pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 7;
-    pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 8;
+    pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 5;
+    pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 6;
+    pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 7;
 }
 message V0TryUpdateMessageInOrganizationRequest {
     string organization_id = 1;
     string chat_id = 2;
     string sender_id = 3;
-    string invoked_by = 4;
     oneof update {
-        string content = 5;
-        pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 6;
-        pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 7;
-        pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 8;
+        string content = 4;
+        pocco.svc.messages.protobufs.types.V0MessageAttachments attachments = 5;
+        pocco.svc.messages.protobufs.types.V0MessageMentions mentions = 6;
+        pocco.svc.messages.protobufs.types.V0MessageReactions reactions = 7;
     }
     string message_id = 9; // メッセージID
     google.protobuf.Timestamp created_at = 10;
@@ -40,28 +38,26 @@ message V0TryDeleteMessageFromOrganizationRequest {
     string chat_id = 2;
     string sender_id = 3;
     string message_id = 4; // メッセージID
-    string invoked_by = 5;
 }
 message V0TryAddReactionToMessageRequest {
     string organization_id = 1;
     string chat_id = 2;
     string sender_id = 3;
     string message_id = 4; // メッセージID
-    string invoked_by = 5;
-    pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 6;
+    pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 5;
 
 }
 message V0TryRemoveReactionFromMessageRequest {
     string organization_id = 1;
     string chat_id = 2;
-    string message_id = 3; // メッセージID
-    string invoked_by = 4;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
     pocco.svc.messages.protobufs.types.V0MessageReaction reaction = 5;
 }
 message V0TryBulkRemoveReactionsFromMessageRequest {
     string organization_id = 1;
     string chat_id = 2;
-    string message_id = 3; // メッセージID
-    string invoked_by = 4;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
     repeated pocco.svc.messages.protobufs.types.V0MessageReaction reactions = 5;
 }
