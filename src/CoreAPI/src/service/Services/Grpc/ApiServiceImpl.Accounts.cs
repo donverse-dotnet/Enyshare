@@ -82,8 +82,14 @@ public partial class ApiServiceImpl {
   }
   // DeleteAccount
   public override async Task<Empty> DeleteAccount(Empty request, ServerCallContext context) {
+    var userId = context.GetHttpContext().Request.Headers["x-account-id"].ToString();
+    if (string.IsNullOrEmpty(userId)) {
+      _logger.LogWarning("DeleteAccount called without x-account-id header");
+      throw new RpcException(new Status(StatusCode.Unauthenticated, "Missing account ID"));
+    }
+
     var dard = new V0DeleteRequest {
-      // Id = request.UserId
+      Id = userId
     };
 
     try {
