@@ -74,6 +74,7 @@ message V0GetMessageListInOrganizationRequest {
     string organization_id = 1;
     string chat_id = 2;
     int32 page_size = 3;
+    string first_message_id = 4;
 }
 message V0GetMessageListInOrganizationResponse {
     repeated pocco.svc.messages.protobufs.types.V0Messages messages = 1;
