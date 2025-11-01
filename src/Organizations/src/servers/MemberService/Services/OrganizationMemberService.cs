@@ -1,5 +1,4 @@
 using Grpc.Core;
-using MongoDB.Driver;
 using MongoDB.Bson;
 using Pocco.Libs.Protobufs.Types;
 using MemberService.Repositories;
