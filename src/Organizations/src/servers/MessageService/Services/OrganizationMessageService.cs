@@ -322,4 +322,58 @@ public class OrganizationMessageGrpcService(
       MessageSentEventId = bulkremoveReactionEventData.EventId
     };
   }
+
+  public override async Task<V0GetMessageInOrganizationResponse> GetMessageInOrganization(V0GetMessageInOrganizationRequest request, ServerCallContext context) {
+    // Get organization database client
+    var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
+    if (_mongoOrg is null) {
+      _logger.LogError("MongoDB client is not initialized for organization: {OrgId}", request.OrganizationId);
+      throw new RpcException(new Status(StatusCode.Internal, "MongoDB client is not initialized."));
+    }
+
+    // Get messages collection for the organization
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
+
+    // Find the message
+    var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
+    var message = await messagesCollection.Find(filter).FirstOrDefaultAsync();
+
+    if (message is null) {
+      _logger.LogError("Message not found in organization: {OrgId}, ChatId: {ChatId}, MessageId: {MessageId}", request.OrganizationId, request.ChatId, request.MessageId);
+      throw new RpcException(new Status(StatusCode.NotFound, "Message not found."));
+    }
+
+    return new V0GetMessageInOrganizationResponse {
+      Message = message
+    };
+  }
+
+  public override async Task<V0GetMessageListInOrganizationResponse> GetMessageListInOrganization(V0GetMessageListInOrganizationRequest request, ServerCallContext context) {
+    // Get organization database client
+    var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
+    if (_mongoOrg is null) {
+      _logger.LogError("MongoDB client is not initialized for organization: {OrgId}", request.OrganizationId);
+      throw new RpcException(new Status(StatusCode.Internal, "MongoDB client is not initialized."));
+    }
+
+    // Get messages collection for the organization
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
+
+    // Build the filter
+    var filter = Builders<V0Messages>.Filter.Empty;
+    if (!string.IsNullOrEmpty(request.FirstMessageId)) {
+      filter = Builders<V0Messages>.Filter.Gt(m => m.Id, request.FirstMessageId);
+    }
+
+    // Retrieve the messages
+    var messages = await messagesCollection.Find(filter)
+        .SortBy(m => m.Id)
+        .Limit(request.PageSize)
+        .ToListAsync();
+
+    var response = new V0GetMessageListInOrganizationResponse();
+    response.Messages.AddRange(messages);
+
+    return response;
+  }
 }
