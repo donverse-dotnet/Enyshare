@@ -1,9 +1,8 @@
 syntax = "proto3";
 
 option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-package pocco.libs.protobufs.types;
 
-import "V0/Types/Members.proto";
+package pocco.libs.protobufs.types;
 
 message V0CreateMemberRequest{
     string id = 1;
@@ -13,6 +12,5 @@ message V0CreateMemberRequest{
 }
 
 message V0CreateMemberReply{
-    V0MemberModel member = 1;
-    string organization_id = 2;
+    string organization_id = 1;
 }

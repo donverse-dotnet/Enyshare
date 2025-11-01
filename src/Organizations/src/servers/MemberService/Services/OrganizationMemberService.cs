@@ -112,7 +112,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     };
 
     return new V0GetMemberReply {
-      Member = model
+      Id = model.Id
     };
   }
 }

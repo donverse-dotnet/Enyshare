@@ -3,9 +3,10 @@ syntax = "proto3";
 option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
-import "V0/Types/Members.proto";
 import "V0/Types/CreateMemberData.proto";
+import "V0/Types/UpdateMemberData.proto";
 import "V0/Types/DeleteMemberData.proto";
+import "V0/Types/GetMemberData.proto";
 import "V0/Types/MemberChangesReply.proto";
 import "V0/Types/GetList.proto";
 

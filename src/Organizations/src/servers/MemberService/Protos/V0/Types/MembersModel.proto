@@ -16,35 +16,9 @@ message Member{
 
 message MemberResponse {
     string id = 1;
-    repeated string relo = 2;
+    repeated string role = 2;
     string join_at = 3;
     string nickname = 4;
-}
-
-message V0UpdateMemberRequest{
-    string id = 1;
-    repeated string role = 2;
-    string nickname = 3;
-    string join_at = 4;
-    string organization_id = 5;
-}
-
-message V0UpdateMemberReply{
-    string id = 1;
-    repeated string role = 2;
-    string nickname = 3;
-    string join_at = 4;
-    V0MemberModel member = 5;
-}
-
-message V0GetMemberRequest{
-    string id = 1;
-    string organization_id = 2;
-}
-
-message V0GetMemberReply{
-    string id = 1;
-    V0MemberModel member = 2;
 }
 
 message V0MemberModel{
