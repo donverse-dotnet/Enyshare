@@ -8,9 +8,3 @@ message V0DeleteMemberRequest{
     string organization_id = 2;
     string nickname = 3;
 }
-
-message V0DeleteMemberReply{
-    bool success = 1;
-    string message = 2;
-    string deleted_at = 3;
-}
