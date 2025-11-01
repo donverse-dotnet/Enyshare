@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
 
 // メンバー情報を保持するMongoDBドキュメント
 public class MemberEntity {

@@ -1,6 +1,5 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
-using MemberService.Services;
 using Grpc.Core;
 
 namespace MemberService.Repositories {

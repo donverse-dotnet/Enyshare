@@ -1,6 +1,3 @@
-using MongoDB.Bson;
-using MemberService.Services;
-
 namespace MemberService.Repositories {
     public interface IMemberRepository {
         Task<MemberEntity> CreateAsync(string org_id, MemberEntity member);
