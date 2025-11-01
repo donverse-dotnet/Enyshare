@@ -7,12 +7,14 @@ import "V0/Types/Members.proto";
 import "V0/Types/CreateMemberData.proto";
 import "V0/Types/DeleteMemberData.proto";
 import "V0/Types/MemberChangesReply.proto";
+import "V0/Types/GetList.proto";
 
 service V0OrganizationMemberService {
     rpc RequestToJoin(pocco.libs.protobufs.types.V0CreateMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
     rpc UpdateOrgUser(pocco.libs.protobufs.types.V0UpdateMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
     rpc RequestToLeave(pocco.libs.protobufs.types.V0DeleteMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
     rpc Get(pocco.libs.protobufs.types.V0GetMemberRequest) returns (pocco.libs.protobufs.types.V0GetMemberReply);
+    rpc GetList (pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
 }
 
 

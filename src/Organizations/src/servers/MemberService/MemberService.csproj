@@ -12,6 +12,7 @@
     <Protobuf Include="./Protos/V0/Types/CreateMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Types/DeleteMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
     <Protobuf Include="./Protos/V0/Services/MemberService.proto" ProtoRoot="./Protos" GrpcServices="Server" />
+    <Protobuf Include="./Protos/V0/Types/GetList.proto" ProtoRoot="./Protos" GrpcServices="None" />
   </ItemGroup>
 
   <ItemGroup>

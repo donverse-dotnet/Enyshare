@@ -4,9 +4,19 @@ using Grpc.Core;
 
 namespace MemberService.Repositories {
   public class MemberRepository : IMemberRepository {
+    private readonly IMongoCollection<MemberEntity> _membersCollection;
     private readonly IMongoClient _client;
-    public MemberRepository(IMongoClient client) {
-      _client = client;
+    public MemberRepository(IMongoClient mongoClient) {
+      _client = mongoClient;
+      var database = mongoClient.GetDatabase("PoccoDb");
+      _membersCollection = database.GetCollection<MemberEntity>("Members");
+    }
+
+    public async Task<List<MemberEntity>> GetListAsync(string org_id) {
+      var filter = Builders<MemberEntity>.Filter.Eq(e => e.OrganizationId, org_id)
+      & Builders<MemberEntity>.Filter.Eq(e => e.DeletedAt, null);
+
+      return await _membersCollection.Find(filter).ToListAsync();
     }
 
     private FilterDefinition<MemberEntity> CreateFilter(string Id) {

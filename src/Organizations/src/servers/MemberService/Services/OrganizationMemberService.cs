@@ -22,6 +22,17 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     _logger.LogInformation("OrganizationsMemberServiceImpl is initialized!");
   }
+
+  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
+    var members = await _repository.GetListAsync(request.OrganizationId);
+
+    var response = new V0GetListReply();
+    response.Members.AddRange(members.Select(m => new  MemberListResponse {
+      Id = m.Id
+    }));
+
+    return response;
+    }
   /// <summary>
   /// メンバーの新規登録処理
   /// - 組織IDとユーザーIDの重複チェック（論理処理されていないもののみ対象）

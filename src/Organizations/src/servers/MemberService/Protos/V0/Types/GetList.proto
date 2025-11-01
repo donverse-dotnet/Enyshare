@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+message V0GetListRequest{
+    string OrganizationId = 1;
+}
+
+message V0GetListReply{
+    repeated MemberListResponse Members = 1;
+}
+
+message MemberListResponse{
+    string Id = 1;
+}
