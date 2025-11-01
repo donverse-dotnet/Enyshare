@@ -32,7 +32,7 @@ public class OrganizationMessageGrpcService(
     }
 
     // Get messages collection for the organization
-    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"chat_{request.ChatId}");
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
     // Create a new message
     var newMessage = new V0Messages {
@@ -56,9 +56,6 @@ public class OrganizationMessageGrpcService(
       _logger.LogError("Failed to insert message into organization: {OrgId}, ChatId: {ChatId}", request.OrganizationId, request.ChatId);
       throw new RpcException(new Status(StatusCode.Internal, "Failed to insert message into organization."));
     }
-
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageCreatedEvent(newMessage, request.OrganizationId);
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
@@ -96,7 +93,7 @@ public class OrganizationMessageGrpcService(
     }
 
     // Get messages collection for the organization
-    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"chat_{request.ChatId}");
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
     // Find the message to update
     var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
@@ -111,9 +108,6 @@ public class OrganizationMessageGrpcService(
       _logger.LogError("Failed to update message in organization: {OrgId}, ChatId: {ChatId}, MessageId: {MessageId}", request.OrganizationId, request.ChatId, request.MessageId);
       throw new RpcException(new Status(StatusCode.NotFound, "Message not found or not updated."));
     }
-
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageCreatedEvent(newMessage, request.OrganizationId);
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
@@ -143,7 +137,7 @@ public class OrganizationMessageGrpcService(
       MessageSentEventId = updatedEventData.EventId
     };
   }
-  
+
   public override async Task<V0TryMessageActionResponse> TryDeleteMessageFromOrganization(V0TryDeleteMessageFromOrganizationRequest request, ServerCallContext context) {
     // Get organization database client
     var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
@@ -153,7 +147,7 @@ public class OrganizationMessageGrpcService(
     }
 
     // Get messages collection for the organization
-    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"chat_{request.ChatId}");
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
     // Find the message to delete
     var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
@@ -167,9 +161,6 @@ public class OrganizationMessageGrpcService(
       throw new RpcException(new Status(StatusCode.NotFound, "Message not found or not deleted."));
     }
 
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageDeletedEvent(request.MessageId, request.OrganizationId);
-
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnDeleteMessage",
@@ -177,7 +168,7 @@ public class OrganizationMessageGrpcService(
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId
     };
-    
+
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
     newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.ChatId}" });
     newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
@@ -213,9 +204,6 @@ public class OrganizationMessageGrpcService(
       throw new RpcException(new Status(StatusCode.NotFound, "Message not found or not deleted."));
     }
 
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageReactionAddedEvent(request.MessageId, request.Reaction, request.OrganizationId);
-
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnAddReactionMessage",
@@ -247,7 +235,7 @@ public class OrganizationMessageGrpcService(
     }
 
     // Get messages collection for the organization
-    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"chat_{request.ChatId}");
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
     // Find the message to update
     var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
@@ -263,9 +251,6 @@ public class OrganizationMessageGrpcService(
       _logger.LogError("Failed to remove reaction from message in organization: {OrgId}, ChatId: {ChatId}, MessageId: {MessageId}", request.OrganizationId, request.ChatId, request.MessageId);
       throw new RpcException(new Status(StatusCode.NotFound, "Message not found or reaction not removed."));
     }
-
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageReactionRemovedEvent(request.MessageId, request.Reaction, request.OrganizationId);
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
@@ -298,7 +283,7 @@ public class OrganizationMessageGrpcService(
     }
 
     // Get messages collection for the organization
-    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"chat_{request.ChatId}");
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
     // Find the message to update
     var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
@@ -314,9 +299,6 @@ public class OrganizationMessageGrpcService(
       _logger.LogError("Failed to bulk remove reactions from message in organization: {OrgId}, ChatId: {ChatId}, MessageId: {MessageId}", request.OrganizationId, request.ChatId, request.MessageId);
       throw new RpcException(new Status(StatusCode.NotFound, "Message not found or reactions not removed."));
     }
-
-    // Call event bridge method
-    // var eventId = eventBridge.PublishOrganizationMessageReactionsRemovedEvent(request.MessageId, request.Reactions, request.OrganizationId);
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
@@ -339,5 +321,59 @@ public class OrganizationMessageGrpcService(
     return new V0TryMessageActionResponse {
       MessageSentEventId = bulkremoveReactionEventData.EventId
     };
+  }
+
+  public override async Task<V0GetMessageInOrganizationResponse> GetMessageInOrganization(V0GetMessageInOrganizationRequest request, ServerCallContext context) {
+    // Get organization database client
+    var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
+    if (_mongoOrg is null) {
+      _logger.LogError("MongoDB client is not initialized for organization: {OrgId}", request.OrganizationId);
+      throw new RpcException(new Status(StatusCode.Internal, "MongoDB client is not initialized."));
+    }
+
+    // Get messages collection for the organization
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
+
+    // Find the message
+    var filter = Builders<V0Messages>.Filter.Eq(m => m.Id, request.MessageId);
+    var message = await messagesCollection.Find(filter).FirstOrDefaultAsync();
+
+    if (message is null) {
+      _logger.LogError("Message not found in organization: {OrgId}, ChatId: {ChatId}, MessageId: {MessageId}", request.OrganizationId, request.ChatId, request.MessageId);
+      throw new RpcException(new Status(StatusCode.NotFound, "Message not found."));
+    }
+
+    return new V0GetMessageInOrganizationResponse {
+      Message = message
+    };
+  }
+
+  public override async Task<V0GetMessageListInOrganizationResponse> GetMessageListInOrganization(V0GetMessageListInOrganizationRequest request, ServerCallContext context) {
+    // Get organization database client
+    var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
+    if (_mongoOrg is null) {
+      _logger.LogError("MongoDB client is not initialized for organization: {OrgId}", request.OrganizationId);
+      throw new RpcException(new Status(StatusCode.Internal, "MongoDB client is not initialized."));
+    }
+
+    // Get messages collection for the organization
+    var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
+
+    // Build the filter
+    var filter = Builders<V0Messages>.Filter.Empty;
+    if (!string.IsNullOrEmpty(request.FirstMessageId)) {
+      filter = Builders<V0Messages>.Filter.Gt(m => m.Id, request.FirstMessageId);
+    }
+
+    // Retrieve the messages
+    var messages = await messagesCollection.Find(filter)
+        .SortBy(m => m.Id)
+        .Limit(request.PageSize)
+        .ToListAsync();
+
+    var response = new V0GetMessageListInOrganizationResponse();
+    response.Messages.AddRange(messages);
+
+    return response;
   }
 }
