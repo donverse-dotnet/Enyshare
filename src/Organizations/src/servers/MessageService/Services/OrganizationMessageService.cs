@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Driver;
 
+using Pocco.Svc.EventBridge.Protobufs.Enums;
+using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Svc.EventBridge.Protobufs.Types;
 using Pocco.Svc.Messages.Protobufs.Services;
 using Pocco.Svc.Messages.Protobufs.Types;
 
@@ -13,10 +16,12 @@ namespace MessageService.Services;
 
 public class OrganizationMessageGrpcService(
     [FromServices] DatabaseManager dbs,
-    [FromServices] ILogger<OrganizationMessageGrpcService> logger
+    [FromServices] ILogger<OrganizationMessageGrpcService> logger,
+    [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge
 ) : OrganizationMessageRpcService.OrganizationMessageRpcServiceBase {
   private readonly DatabaseManager dbManager = dbs;
   private readonly ILogger<OrganizationMessageGrpcService> _logger = logger;
+  private readonly V0EventReceiver.V0EventReceiverClient _eventBridge = eventBridge;
 
   public override Task<V0TryMessageActionResponse> TrySendMessageToOrganization(V0TrySendMessageToOrganizationRequest request, ServerCallContext context) {
     // Get organization database client
@@ -55,8 +60,31 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageCreatedEvent(newMessage, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnSendMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{newMessage.Id}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{newMessage.ChatId}" });
+    newEventData.Payload.Fields.Add("sender_id", new Value { StringValue = $"{newMessage.SenderId}" });
+    newEventData.Payload.Fields.Add("content", new Value { StringValue = $"{newMessage.Content}" });
+    newEventData.Payload.Fields.Add("attachments", new Value { StringValue = $"{newMessage.Attachments}" });
+    newEventData.Payload.Fields.Add("mentions", new Value { StringValue = $"{newMessage.Mentions}" });
+    newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{newMessage.Reactions}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{newMessage.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{newMessage.UpdatedAt}" });
+
+    var createdEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return Task.FromResult(new V0TryMessageActionResponse {
-      // MessageSentEventId = eventId
+      MessageSentEventId = createdEventData.EventId
     });
   }
   public override async Task<V0TryMessageActionResponse> TryUpdateMessageInOrganization(V0TryUpdateMessageInOrganizationRequest request, ServerCallContext context) {
@@ -87,10 +115,35 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageCreatedEvent(newMessage, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnUpdateMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.MessageId}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
+    newEventData.Payload.Fields.Add("sender_id", new Value { StringValue = $"{request.SenderId}" });
+    newEventData.Payload.Fields.Add("content", new Value { StringValue = $"{request.Content}" });
+    newEventData.Payload.Fields.Add("attachments", new Value { StringValue = $"{request.Attachments}" });
+    newEventData.Payload.Fields.Add("mentions", new Value { StringValue = $"{request.Mentions}" });
+    newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{request.Reactions}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{request.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{request.UpdatedAt}" });
+
+
+    var updatedEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0TryMessageActionResponse {
-      // MessageUpdatedEventId = eventId
+      MessageSentEventId = updatedEventData.EventId
     };
   }
+  
   public override async Task<V0TryMessageActionResponse> TryDeleteMessageFromOrganization(V0TryDeleteMessageFromOrganizationRequest request, ServerCallContext context) {
     // Get organization database client
     var _mongoOrg = dbManager.GetDatabaseClient(request.OrganizationId);
@@ -117,8 +170,24 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageDeletedEvent(request.MessageId, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnDeleteMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+    
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.ChatId}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
+
+    var deletedEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0TryMessageActionResponse {
-      // MessageDeletedEventId = eventId
+      MessageSentEventId = deletedEventData.EventId
     };
   }
   public override async Task<V0TryMessageActionResponse> TryAddReactionToMessage(V0TryAddReactionToMessageRequest request, ServerCallContext context) {
@@ -147,8 +216,26 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageReactionAddedEvent(request.MessageId, request.Reaction, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnAddReactionMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.MessageId}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
+    newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{request.Reaction}" });
+
+
+    var addReactionEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0TryMessageActionResponse {
-      // MessageReactionAddedEventId = eventId
+      MessageSentEventId = addReactionEventData.EventId
     };
   }
   public override async Task<V0TryMessageActionResponse> TryRemoveReactionFromMessage(V0TryRemoveReactionFromMessageRequest request, ServerCallContext context) {
@@ -180,8 +267,26 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageReactionRemovedEvent(request.MessageId, request.Reaction, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnRemoveReactionMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.MessageId}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
+    newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{request.Reaction}" });
+
+
+    var removeReactionEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0TryMessageActionResponse {
-      // MessageReactionRemovedEventId = eventId
+      MessageSentEventId = removeReactionEventData.EventId
     };
   }
   public override async Task<V0TryMessageActionResponse> TryBulkRemoveReactionsFromMessage(V0TryBulkRemoveReactionsFromMessageRequest request, ServerCallContext context) {
@@ -213,8 +318,26 @@ public class OrganizationMessageGrpcService(
     // Call event bridge method
     // var eventId = eventBridge.PublishOrganizationMessageReactionsRemovedEvent(request.MessageId, request.Reactions, request.OrganizationId);
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnBulkRemoveReactionMessage",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.SenderId
+    };
+
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
+    newEventData.Payload.Fields.Add("message_id", new Value { StringValue = $"{request.MessageId}" });
+    newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{request.ChatId}" });
+    newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{request.Reactions}" });
+
+
+    var bulkremoveReactionEventData = _eventBridge.NewEvent(
+      newEventData
+    );
+
     return new V0TryMessageActionResponse {
-      // MessageReactionBulkRemovedEventId = eventId
+      MessageSentEventId = bulkremoveReactionEventData.EventId
     };
   }
 }
