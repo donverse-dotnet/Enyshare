@@ -6,9 +6,13 @@ package pocco.libs.protobufs.types;
 import "V0/Types/CreateMemberData.proto";
 import "V0/Types/UpdateMemberData.proto";
 import "V0/Types/DeleteMemberData.proto";
-import "V0/Types/GetMemberData.proto";
+import "V0/Types/GetListReply.proto";
+import "V0/Types/GetListRequest.proto";
+import "V0/Types/GetMemberReply.proto";
+import "V0/Types/GetMemberRequest.proto";
 import "V0/Types/MemberChangesReply.proto";
-import "V0/Types/GetList.proto";
+import "V0/Types/MemberListResponse.proto";
+import "V0/Types/MemberResponse.proto";
 
 service V0OrganizationMemberService {
     rpc RequestToJoin(pocco.libs.protobufs.types.V0CreateMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);

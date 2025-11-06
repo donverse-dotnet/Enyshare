@@ -8,7 +8,3 @@ message V0GetMemberRequest{
     string id = 1;
     string organization_id = 2;
 }
-
-message V0GetMemberReply{
-    string id = 1;
-}
