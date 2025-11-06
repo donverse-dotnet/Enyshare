@@ -11,10 +11,3 @@ message V0UpdateMemberRequest{
     string join_at = 4;
     string organization_id = 5;
 }
-
-message V0UpdateMemberReply{
-    string id = 1;
-    repeated string role = 2;
-    string nickname = 3;
-    string join_at = 4;
-}

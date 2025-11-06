@@ -10,7 +10,3 @@ message V0CreateMemberRequest{
     string invite_code = 3;
     string organization_id = 4;
 }
-
-message V0CreateMemberReply{
-    string organization_id = 1;
-}
