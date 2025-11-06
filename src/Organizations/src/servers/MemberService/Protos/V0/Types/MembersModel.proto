@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+import "google/protobuf/timestamp.proto";
+
+message V0MemberModel{
+    string id = 1;
+    string organization_id = 2;
+    string user_id = 3;
+    repeated string role = 4;
+    google.protobuf.Timestamp joined_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
+
