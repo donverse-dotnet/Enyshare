@@ -74,8 +74,6 @@ namespace MemberService.Repositories {
       if (isNicknameChanged)
         updates.Add(updateDataBuilder.Set(c => c.Nickname, updatemember.Nickname));
 
-      updates.Add(updateDataBuilder.Set(c => c.Is_Private, updatemember.Is_Private));
-
       var update = updateDataBuilder.Combine(updates);
       var members = GetMongoCollection(org_id);
       var filter = CreateFilter(Id);

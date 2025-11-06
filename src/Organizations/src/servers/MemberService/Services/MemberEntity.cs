@@ -19,20 +19,8 @@ public class MemberEntity {
   [BsonElement("joinedAt")]
   public DateTime JoinedAt { get; set; } // 参加日時（UTC)
 
-  [BsonElement("isAvtive")]
-  public bool isAvtive { get; set; } = true; // 有効状態（大会時 false）
-
-  [BsonElement("userId")]
-  public string UserId { get; set; }
-
-  [BsonElement("deleteAt")]
-  public DateTime? DeletedAt { get; set; }
-
   [BsonElement("updateAt")]
   public DateTime UpdateAt { get; set; }
-
-  [BsonElement("is_private")]
-  public bool Is_Private { get; set; } = false;
 
   public bool HasNickname => !string.IsNullOrWhiteSpace(Nickname);
 
