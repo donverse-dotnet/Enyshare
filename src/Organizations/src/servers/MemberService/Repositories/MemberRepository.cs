@@ -13,10 +13,11 @@ namespace MemberService.Repositories {
     }
 
     public async Task<List<MemberEntity>> GetListAsync(string org_id) {
-      var filter = Builders<MemberEntity>.Filter.Eq(e => e.OrganizationId, org_id)
-      & Builders<MemberEntity>.Filter.Eq(e => e.DeletedAt, null);
+      var collection = GetMongoCollection(org_id);
 
-      return await _membersCollection.Find(filter).ToListAsync();
+      var filter = Builders<MemberEntity>.Filter.Empty;
+
+      return await collection.Find(filter).ToListAsync();
     }
 
     private FilterDefinition<MemberEntity> CreateFilter(string Id) {
