@@ -42,8 +42,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   public override async Task<V0MemberChangesReply> RequestToJoin(V0CreateMemberRequest request, ServerCallContext context) {
     // メンバーエンティティの作成
     var member = new MemberEntity {
-      Id = ObjectId.GenerateNewId().ToString(),
-      OrganizationId = request.OrganizationId
+      Id = ObjectId.GenerateNewId().ToString()
     };
 
     MemberEntity createdMember = await _repository.CreateAsync(request.OrganizationId, member);
@@ -64,7 +63,6 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     // 更新結果をレスポンスとして返却
     var model = new MemberEntity {
       Id = request.Id,
-      OrganizationId = request.OrganizationId,
       Nickname = request.Nickname,
     };
 
