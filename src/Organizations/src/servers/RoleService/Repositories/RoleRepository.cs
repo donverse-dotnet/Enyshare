@@ -21,7 +21,7 @@ public class RoleRepository : IRoleRepository {
     var filter = Builders<Role>.Filter.Empty;
 
     return await collection.Find(filter).ToListAsync();
-    }
+  }
 
   private FilterDefinition<Role> CreateFilter(string roleId) {
     if (!ObjectId.TryParse(roleId, out _)) {
