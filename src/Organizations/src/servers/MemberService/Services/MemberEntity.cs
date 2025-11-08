@@ -16,11 +16,6 @@ public class MemberEntity {
   [BsonElement("joinedAt")]
   public DateTime JoinedAt { get; set; } // 参加日時（UTC)
 
-  [BsonElement("updateAt")]
-  public DateTime UpdateAt { get; set; }
-
-  public bool HasNickname => !string.IsNullOrWhiteSpace(Nickname);
-
   public bool IsNicknameChanged(string nickname) {
     return Nickname != nickname;
     }
