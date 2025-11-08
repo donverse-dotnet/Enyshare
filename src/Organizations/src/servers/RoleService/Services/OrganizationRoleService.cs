@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
@@ -31,6 +32,25 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     _logger.LogInformation("OrganiationRoleService is initialized!");
   }
 
+  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
+    var roles = await _repo.GetListAsync(request.OrgId);
+    var reply = new V0GetListReply();
+    reply.Roles.AddRange(roles.Select(r => {
+      var model = new V0RoleModel {
+        Id = r.Id,
+        OrgId = r.OrgId,
+        Name = r.Name,
+        Descriptions = r.Description,
+        CreatedAt = Timestamp.FromDateTime(r.CreatedAt),
+        UpdatedAt = Timestamp.FromDateTime(r.UpdatedAt)
+      };
+      model.Permissions.AddRange(r.Permissions);
+
+      return model;
+    }));
+
+    return reply;
+  }
   public override async Task<V0GetReply> Get(V0GetRequest request, ServerCallContext context) {
     var role = await _repo.GetByIdAsync(request.OrgId, request.Id);
     if (role == null) {
@@ -60,7 +80,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       EventType = "OnRoleCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy =  request.InvokedBy 
+      InvokedBy = request.InvokedBy
     };
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{createdRole.Id}" });
@@ -75,7 +95,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     );
 
     return new V0RoleChangesReply {
-      EventId = createdEventData.EventId 
+      EventId = createdEventData.EventId
     };
   }
 
@@ -115,7 +135,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     );
 
     return new V0RoleChangesReply {
-      EventId = updatedEventData.EventId 
+      EventId = updatedEventData.EventId
     };
   }
 
@@ -141,7 +161,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     );
 
     return new V0RoleChangesReply {
-      EventId =  deletedEventData.EventId
+      EventId = deletedEventData.EventId
     };
   }
 }

@@ -13,6 +13,8 @@
     <Protobuf Include="Protos/V0/Types/CreateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/UpdateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/DeleteRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetListDataRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetListDataReply.proto" ProtoRoot="Protos" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/RoleModel.proto" ProtoRoot="Protos" GrpcServices="None" />
 
 
