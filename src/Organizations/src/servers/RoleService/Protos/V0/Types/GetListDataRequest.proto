@@ -4,6 +4,5 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
 message V0GetListRequest {
-    string id = 1;
-    string org_id = 2;
+    string org_id = 1;
 }
