@@ -35,8 +35,18 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
   public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
     var roles = await _repo.GetListAsync(request.OrgId);
     var reply = new V0GetListReply();
-    reply.Rolemodel.AddRange(roles.Select(r => new V0RoleModel {
-      Id = r.Id
+    reply.Roles.AddRange(roles.Select(r => {
+      var model = new V0RoleModel {
+        Id = r.Id,
+        OrgId = r.OrgId,
+        Name = r.Name,
+        Descriptions = r.Description,
+        CreatedAt = Timestamp.FromDateTime(r.CreatedAt),
+        UpdatedAt = Timestamp.FromDateTime(r.UpdatedAt)
+      };
+      model.Permissions.AddRange(r.Permissions);
+
+      return model;
     }));
 
     return reply;
