@@ -24,5 +24,5 @@ service V0OrganizationChatService{
     //チャットを情報を取得するRPCメソッド
     rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (pocco.libs.protobufs.types.V0GetReply);
     //チャットリストを取得するRPCメソッド
-    rpc GetList(pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.V0GetListReply);
+    rpc GetList(pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
 }
