@@ -9,6 +9,8 @@ import "V0/Types/ChatGetDataRequest.proto";
 import "V0/Types/ChatUpdateDataRequest.proto";
 import "V0/Types/ChatGetDataReply.proto";
 import "V0/Types/ChatChangesReply.proto";
+import "V0/Types/ChatGetListDataRequest.proto";
+import "V0/Types/ChatGetListDataReply.proto";
 
 //アカウントを登録するRPCサービスの定義
 
@@ -21,4 +23,6 @@ service V0OrganizationChatService{
     rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0ChatChangesReply);
     //チャットを情報を取得するRPCメソッド
     rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (pocco.libs.protobufs.types.V0GetReply);
+    //チャットリストを取得するRPCメソッド
+    rpc GetList(pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
 }

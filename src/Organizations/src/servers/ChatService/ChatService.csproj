@@ -14,6 +14,8 @@
     <Protobuf Include="Protos/V0/Types/ChatDeleteDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/ChatGetDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/ChatGetDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetListDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/ChatGetListDataReply.proto" ProtoRoot="Protos/" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/ChatsModel.proto" ProtoRoot="Protos/" GrpcServices="None" />
     <Protobuf Include="Protos/V0/Types/ChatUpdateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
 
