@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+
+package pocco.libs.protobufs.types;
+
+message ChatListReply{
+    string Id = 1;
+}
