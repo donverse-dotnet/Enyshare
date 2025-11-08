@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
@@ -30,6 +31,16 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     _logger.LogInformation("OrganizationChatService is initialized!");
   }
 
+  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
+    var chats = await _repository.GetListAsync(request.OrgId);
+
+    var reply = new V0GetListReply();
+
+    reply.Chatsmodel.AddRange(chats.Select(c => new V0ChatsModel {
+      Id = c.Id
+    }));
+    return reply;
+  }
 
   public override async Task<V0ChatChangesReply> Create(V0CreateRequest request, ServerCallContext context) {
 

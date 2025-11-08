@@ -13,6 +13,14 @@ public class ChatRepository : IChatRepository {
     _client = client;
   }
 
+  public async Task<List<Chat>> GetListAsync(string orgId) {
+    var collection = GetChatCollection(orgId);
+
+    var filter = Builders<Chat>.Filter.Empty;
+
+    return await collection.Find(filter).ToListAsync();
+  }
+
   private FilterDefinition<Chat> CreateFilter(string chatId) {
     if (!ObjectId.TryParse(chatId, out _)) {
       throw new ArgumentException("Invalid id or chatId format");
