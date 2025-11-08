@@ -1,3 +1,4 @@
+using Pocco.Libs.Protobufs.Types;
 using Pocco.Svc.Roles.Models;
 
 public interface IRoleRepository {
@@ -5,4 +6,5 @@ public interface IRoleRepository {
   Task<Role> CreateAsync(string orgId, Role role);
   Task<bool> TryUpdateAsync(string orgId, string roleId, Role newRole);
   Task<bool> DeleteAsync(string orgId, string roleId);
+  Task<List<Role>> GetListAsync(string orgId);
 }
