@@ -36,9 +36,16 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
     var reply = new V0GetListReply();
 
-    reply.Chatsmodel.AddRange(chats.Select(c => new V0ChatsModel {
-      Id = c.Id
+    reply.Chats.AddRange(chats.Select(c => new V0ChatsModel {
+      Id = c.Id,
+      OrgId = c.OrgId,
+      Name = c.Name,
+      Description = c.Description,
+      CreatedBy = c.CreatedBy,
+      CreatedAt = Timestamp.FromDateTime(c.CreatedAt),
+      IsPrivate = c.IsPrivate
     }));
+    
     return reply;
   }
 
