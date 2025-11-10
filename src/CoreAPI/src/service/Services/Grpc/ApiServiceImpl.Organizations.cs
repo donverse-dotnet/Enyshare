@@ -73,4 +73,40 @@ public partial class ApiServiceImpl {
   // TODO: ModerateMember (ban, kick, etc.)
   // TODO: UpdateMemberInfo (role, status, etc.)
   #endregion
+
+  #region Roles
+  public override Task<V0ListRolesResponse> ListRoles(V0ListXRequest request, ServerCallContext context) {
+    // var roles = await _organizationService.ListOrganizationRolesAsync(request.Id);
+    var roles = new List<Role>
+    {
+      new Role { },
+      new Role { }
+    }; // TODO: Remove mock
+
+    var response = new V0ListRolesResponse();
+    response.Roles.AddRange(roles);
+    return Task.FromResult(response);
+  }
+
+  public override async Task<Role> GetRole(V0BaseRequest request, ServerCallContext context) {
+    // var role = await _organizationService.GetOrganizationRoleByIdAsync(request.Id);
+    var role = new Role { }; // TODO: Remove mock
+    return role;
+  }
+
+  public override async Task<V0EventInvokedResponse> CreateRole(V0CreateXRequest request, ServerCallContext context) {
+    // await _organizationService.CreateOrganizationRoleAsync(request.Name, request.Permissions);
+    return new V0EventInvokedResponse();
+  }
+
+  public override async Task<V0EventInvokedResponse> UpdateRole(Role request, ServerCallContext context) {
+    // await _organizationService.UpdateOrganizationRoleAsync(request.Id, request.Name, request.Permissions);
+    return new V0EventInvokedResponse();
+  }
+
+  public override async Task<V0EventInvokedResponse> DeleteRole(V0BaseRequest request, ServerCallContext context) {
+    // await _organizationService.DeleteOrganizationRoleAsync(request.Id);
+    return new V0EventInvokedResponse();
+  }
+  #endregion
 }
