@@ -145,4 +145,39 @@ public partial class ApiServiceImpl {
     return new V0EventInvokedResponse();
   }
   #endregion
+
+  #region Messages
+  public override async Task<V0ListMessagesResponse> ListMessages(V0ListMessagesRequest request, ServerCallContext context) {
+    // var messages = await _organizationService.ListChatMessagesAsync(request.Id);
+    var messages = new List<Message> {
+      new Message { },
+      new Message { }
+    };
+
+    var response = new V0ListMessagesResponse();
+    response.Messages.AddRange(messages);
+    return response;
+  }
+
+  public override async Task<Message> GetMessage(V0BaseRequest request, ServerCallContext context) {
+    // var message = await _organizationService.GetChatMessageByIdAsync(request.Id);
+    var message = new Message { }; // TODO: Remove mock
+    return message;
+  }
+
+  public override async Task<V0EventInvokedResponse> CreateMessage(Message request, ServerCallContext context) {
+    // await _organizationService.SendMessageToChatAsync(request.ChatId, request.SenderId, request.Content);
+    return new V0EventInvokedResponse();
+  }
+
+  public override async Task<V0EventInvokedResponse> UpdateMessage(Message request, ServerCallContext context) {
+    // await _organizationService.UpdateChatMessageAsync(request.Id, request.Content);
+    return new V0EventInvokedResponse();
+  }
+
+  public override async Task<V0EventInvokedResponse> DeleteMessage(V0BaseRequest request, ServerCallContext context) {
+    // await _organizationService.DeleteChatMessageAsync(request.Id);
+    return new V0EventInvokedResponse();
+  }
+  #endregion
 }
