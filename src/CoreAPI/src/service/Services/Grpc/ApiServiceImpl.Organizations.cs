@@ -39,4 +39,38 @@ public partial class ApiServiceImpl {
     return new V0EventInvokedResponse();
   }
   #endregion
+
+  #region Members
+  public override async Task<V0ListMembersResponse> ListMembers(V0ListXRequest request, ServerCallContext context) {
+    // var members = await _organizationService.ListOrganizationMembersAsync(request.Id);
+    var members = new List<Member>
+    {
+      new Member { },
+      new Member { }
+    };
+
+    var response = new V0ListMembersResponse();
+    response.Members.AddRange(members);
+    return response;
+  }
+
+  public override async Task<Member> GetMember(V0BaseRequest request, ServerCallContext context) {
+    // var member = await _organizationService.GetOrganizationMemberByIdAsync(request.Id);
+    var member = new Member { }; // TODO: Remove mock
+    return member;
+  }
+
+  public override async Task<V0EventInvokedResponse> JoinMember(V0JoinMemberRequest request, ServerCallContext context) {
+    // await _organizationService.AddMemberToOrganizationAsync(request.OrganizationId, request.UserId, request.Role);
+    return new V0EventInvokedResponse();
+  }
+
+  public override async Task<V0EventInvokedResponse> LeaveMember(V0BaseRequest request, ServerCallContext context) {
+    // await _organizationService.RemoveMemberFromOrganizationAsync(request.Id);
+    return new V0EventInvokedResponse();
+  }
+
+  // TODO: ModerateMember (ban, kick, etc.)
+  // TODO: UpdateMemberInfo (role, status, etc.)
+  #endregion
 }
