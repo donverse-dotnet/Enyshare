@@ -26,14 +26,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/InfoChangesReply.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/CreateInfoData.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/DeleteInfoData.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/InfoModel.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/OrganizationData.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Services/InfoService.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="Client" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/UpdateInfoData.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/GetInfoData.proto" GrpcRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/InfoModel.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/InfoChangesReply.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/CreateInfoData.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/DeleteInfoData.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/OrganizationData.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/UpdateInfoData.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Types/GetInfoData.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/InfoService/Protos/V0/Services/InfoService.proto" ProtoRoot="../../servers/InfoService/Protos" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>

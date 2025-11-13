@@ -1,27 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
-    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
-    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
-    <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1761089015" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+        <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
+        <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients"
+            Version="0.0.1-build-1761089015" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Protobuf Include="./Protos/V0/Types/InfoChangesReply.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/CreateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/DeleteInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/InfoModel.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/OrganizationData.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Services/InfoService.proto" GrpcRoot="./Protos" GrpcServices="Server" />
-    <Protobuf Include="./Protos/V0/Types/UpdateInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/GetInfoData.proto" GrpcRoot="./Protos" GrpcServices="None" />
-  </ItemGroup>
+    <ItemGroup>
+        <Protobuf Include="Protos/V0/Types/InfoChangesReply.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Types/CreateInfoData.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Types/DeleteInfoData.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Types/InfoModel.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Types/OrganizationData.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Services/InfoService.proto" ProtoRoot="Protos" GrpcServices="Server" />
+        <Protobuf Include="Protos/V0/Types/UpdateInfoData.proto" ProtoRoot="Protos" GrpcServices="None" />
+        <Protobuf Include="Protos/V0/Types/GetInfoData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    </ItemGroup>
 
 </Project>
