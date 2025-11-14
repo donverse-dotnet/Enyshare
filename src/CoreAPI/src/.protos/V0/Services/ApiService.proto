@@ -31,11 +31,11 @@ service V0ApiService {
     // Organizations
     // Infos
     // List: Authorized
-    rpc List (google.protobuf.Empty) returns (V0ListOrganizationsResponse);
+    // rpc List (google.protobuf.Empty) returns (V0ListOrganizationsResponse);
     // Get: Authorized
     rpc Get (V0BaseRequest) returns (Organization);
     // Create: Authorized
-    rpc Create (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc Create (V0CreateOrganizationRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Update: Authorized
     rpc UpdateOrganizationName (V0UpdateOrganizationNameRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Delete: Authorized
@@ -216,6 +216,12 @@ message V0CreateXRequest {
     // 名前
     string name = 1;
 }
+message V0CreateOrganizationRequest {
+    // ベース
+    V0CreateXRequest base = 1;
+    // 説明
+    string description = 2;
+}
 message V0CreateChatRequest {
     // ベース
     V0CreateXRequest base = 1;
@@ -279,8 +285,10 @@ message V0ListMessagesResponse {
 message Organization {
     string organization_id = 1;
     string name = 2;
-    google.protobuf.Timestamp created_at = 3; // ISO 8601形式の日時文字列
-    google.protobuf.Timestamp updated_at = 4; // ISO 8601形式の日時文字列
+    string description = 3;
+    string created_by = 4; // user_id
+    google.protobuf.Timestamp created_at = 5; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 6; // ISO 8601形式の日時文字列
 }
 message Member {
     string member_id = 1;

@@ -1,42 +1,59 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
 public partial class ApiServiceImpl {
+  private readonly V0OrganizationInfoService.V0OrganizationInfoServiceClient _orgInfoService;
+
   #region Informations
-  public override async Task<V0ListOrganizationsResponse> List(Empty request, ServerCallContext context) {
-    // var organizations = await _organizationService.ListOrganizationsAsync();
-    var organizations = new List<Organization>
-    {
-      new Organization { },
-      new Organization { }
-    }; // TODO: Remove mock
-    var response = new V0ListOrganizationsResponse();
-    response.Organizations.AddRange(organizations);
-    return response;
-  }
+  // public override Task<V0ListOrganizationsResponse> List(Empty request, ServerCallContext context) {
+  //   return base.List(request, context);
+  // }
 
   public override async Task<Organization> Get(V0BaseRequest request, ServerCallContext context) {
-    // var organization = await _organizationService.GetOrganizationByIdAsync(request.Id);
-    var organization = new Organization { }; // TODO: Remove mock
-    return organization;
+    var organization = await _orgInfoService.GetInfoAsync(new V0GetInfoOrganizationRequest { Id = request.Id });
+
+    return new Organization {
+      OrganizationId = organization.Id,
+      Name = organization.Name,
+      Description = organization.Description,
+      CreatedBy = organization.CreatedBy,
+      CreatedAt = organization.CreatedAt,
+      UpdatedAt = organization.UpdatedAt
+    };
   }
 
-  public override async Task<V0EventInvokedResponse> Create(V0CreateXRequest request, ServerCallContext context) {
-    // await _organizationService.CreateOrganizationAsync(request.Name, request.Description);
-    return new V0EventInvokedResponse();
+  public override async Task<V0EventInvokedResponse> Create(Libs.Protobufs.Services.V0CreateOrganizationRequest request, ServerCallContext context) {
+    var reply = await _orgInfoService.CreateAsync(new Libs.Protobufs.Types.V0CreateOrganizationRequest { // TODO: 名前空間の整理
+      Name = request.Base.Name,
+      Description = request.Description
+    });
+    return new V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
 
   public override async Task<V0EventInvokedResponse> UpdateOrganizationName(V0UpdateOrganizationNameRequest request, ServerCallContext context) {
-    // await _organizationService.UpdateOrganizationNameAsync(request.Id, request.NewName);
-    return new V0EventInvokedResponse();
+    var reply = await _orgInfoService.UpdateAsync(new V0UpdateOrganizationRequest {
+      Id = request.OrganizationId,
+      Name = request.Name
+    });
+
+    return new V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
 
   public override async Task<V0EventInvokedResponse> Delete(V0BaseRequest request, ServerCallContext context) {
-    // await _organizationService.DeleteOrganizationAsync(request.Id);
-    return new V0EventInvokedResponse();
+    var reply = await _orgInfoService.DeleteAsync(new V0DeleteOrganizationRequest {
+      Id = request.Id
+    });
+    return new V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
   #endregion
 
