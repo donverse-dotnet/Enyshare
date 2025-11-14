@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-package pocco.libs.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Types";
+package pocco.libs.protobufs.accounts.types;
 
 
 // アカウント削除リプライ
-message V0DeleteReply {
+message V0DeleteAccountReply {
     string message = 1;
     bool Success = 2;
 }

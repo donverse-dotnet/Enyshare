@@ -1,5 +1,5 @@
-using Pocco.Libs.Protobufs.Enums;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Accounts.Enums;
+using Pocco.Libs.Protobufs.Accounts.Types;
 
 namespace Pocco.Svc.Accounts.Models;
 

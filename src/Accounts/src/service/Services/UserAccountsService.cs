@@ -3,8 +3,9 @@ using Grpc.Core;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Accounts.Enums;
+using Pocco.Libs.Protobufs.Accounts.Services;
+using Pocco.Libs.Protobufs.Accounts.Types;
 using Pocco.Svc.Accounts.Models;
 
 namespace Pocco.Svc.Accounts.Services;
@@ -32,7 +33,7 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     };
   }
 
-  public override async Task<V0RegisterReply> Register(V0RegisterRequest request, ServerCallContext context) {
+  public override async Task<V0RegisterAccountReply> Register(V0RegisterAccountRequest request, ServerCallContext context) {
     var model = new Account {
       Email = request.Email,
       IsEmailVerified = false,
@@ -46,13 +47,13 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     };
 
     await _accounts.InsertOneAsync(model);
-    return new V0RegisterReply {
+    return new V0RegisterAccountReply {
       Success = true,
       Message = "Account Register successfully."
     };
   }
 
-  public override async Task<V0UpdateReply> Update(V0UpdateRequest request, ServerCallContext context) {
+  public override async Task<V0UpdateAccountReply> Update(V0UpdateAccountRequest request, ServerCallContext context) {
 
     var filter = Builders<Account>.Filter.Eq(a => a.Id, ObjectId.Parse(request.NewAccount.Id));
     var updateDataBuilder = Builders<Account>.Update;
@@ -91,19 +92,19 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     var result = await _accounts.UpdateOneAsync(filter, updateDataBuilder.Combine(updates));
     // 4.リプライ
     if (result.ModifiedCount > 0) {
-      return new V0UpdateReply {
+      return new V0UpdateAccountReply {
         Account = request.NewAccount,
         Success = true,
       };
     } else {
-      return new V0UpdateReply {
+      return new V0UpdateAccountReply {
         Account = null,
         Success = false,
       };
     }
   }
 
-  public override async Task<V0DeleteReply> Delete(V0DeleteRequest request, ServerCallContext context) {
+  public override async Task<V0DeleteAccountReply> Delete(V0DeleteAccountRequest request, ServerCallContext context) {
 
     var filter = Builders<Account>.Filter.Eq(a => a.Id, ObjectId.Parse(request.Id));
     var updateDataBuilder = Builders<Account>.Update;
@@ -116,12 +117,12 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     var result = await _accounts.UpdateOneAsync(filter, updateDataBuilder.Combine(updates));
 
     if (result.ModifiedCount > 0) {
-      return new V0DeleteReply {
+      return new V0DeleteAccountReply {
         Success = true,
         Message = "Account deleted successfully."
       };
     } else {
-      return new V0DeleteReply {
+      return new V0DeleteAccountReply {
         Success = false,
         Message = "Account not found or already deleted."
       };

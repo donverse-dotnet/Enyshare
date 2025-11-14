@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Enums";
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Enums";
 
-package pocco.libs.protobufs.enums;
+package pocco.libs.protobufs.accounts.enums;
 
 enum V0AccountStatus{
     V0_OFFLINE = 0;
