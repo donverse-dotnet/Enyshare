@@ -2,7 +2,7 @@ using Google.Protobuf.WellKnownTypes;
 
 using MongoDB.Bson.Serialization.Attributes;
 
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Auth.Types;
 
 namespace Pocco.Srv.Auth.Models;
 
