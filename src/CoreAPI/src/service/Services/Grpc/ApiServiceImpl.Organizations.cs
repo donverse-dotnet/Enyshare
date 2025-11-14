@@ -60,10 +60,10 @@ public partial class ApiServiceImpl {
   #region Members
   public override async Task<V0ListMembersResponse> ListMembers(V0ListXRequest request, ServerCallContext context) {
     // var members = await _organizationService.ListOrganizationMembersAsync(request.Id);
-    var members = new List<Member>
+    var members = new List<Libs.Protobufs.Services.Member>
     {
-      new Member { },
-      new Member { }
+      new Libs.Protobufs.Services.Member { },
+      new Libs.Protobufs.Services.Member { }
     };
 
     var response = new V0ListMembersResponse();
@@ -71,9 +71,9 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<Member> GetMember(V0BaseRequest request, ServerCallContext context) {
+  public override async Task<Libs.Protobufs.Services.Member> GetMember(V0BaseRequest request, ServerCallContext context) {
     // var member = await _organizationService.GetOrganizationMemberByIdAsync(request.Id);
-    var member = new Member { }; // TODO: Remove mock
+    var member = new Libs.Protobufs.Services.Member { }; // TODO: Remove mock
     return member;
   }
 
