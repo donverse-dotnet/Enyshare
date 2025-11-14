@@ -4,7 +4,7 @@ using Grpc.Core;
 
 using MongoDB.Driver;
 
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Auth.Types;
 using Pocco.Srv.Auth.Models;
 
 
