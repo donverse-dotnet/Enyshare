@@ -1,6 +1,6 @@
 using MongoDB.Bson;
 
-using Pocco.Libs.Protobufs.Enums;
+using Pocco.Libs.Protobufs.Accounts.Enums;
 
 namespace Pocco.Svc.Accounts.Models;
 

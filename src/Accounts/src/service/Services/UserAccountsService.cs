@@ -3,8 +3,9 @@ using Grpc.Core;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Accounts.Enums;
+using Pocco.Libs.Protobufs.Accounts.Services;
+using Pocco.Libs.Protobufs.Accounts.Types;
 using Pocco.Svc.Accounts.Models;
 
 namespace Pocco.Svc.Accounts.Services;

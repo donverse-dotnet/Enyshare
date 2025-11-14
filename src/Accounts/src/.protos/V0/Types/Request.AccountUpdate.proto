@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Types";
 
-package pocco.libs.protobufs.types;
+package pocco.libs.protobufs.accounts.types;
 
 import "V0/Types/Model.Account.proto";
 
 // アカウント更新リクエスト
 message V0UpdateAccountRequest {
     // 更新後のアカウント情報
-    pocco.libs.protobufs.types.V0AccountModel new_account = 1;
+    pocco.libs.protobufs.accounts.types.V0AccountModel new_account = 1;
 }
