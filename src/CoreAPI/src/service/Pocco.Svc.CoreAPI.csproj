@@ -19,7 +19,7 @@
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
-        <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1761087370" />
+        <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1763079381" />
         <PackageReference Include="Pocco.Svc.Auth.Grpc.Clients" Version="0.0.1-build-1761088359" />
         <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients"
             Version="0.0.1-build-1761089015" />
