@@ -1,8 +1,9 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
+using Pocco.Libs.Protobufs.Accounts.Services;
+using Pocco.Libs.Protobufs.Accounts.Types;
 using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -12,7 +13,7 @@ public partial class ApiServiceImpl {
 
   // Register
   public override async Task<Empty> Register(V0AccountRegisterRequest request, ServerCallContext context) {
-    var rrd = new V0RegisterRequest {
+    var rrd = new V0RegisterAccountRequest {
       Email = request.Email,
       Password = request.Password
     };
@@ -40,10 +41,10 @@ public partial class ApiServiceImpl {
 
     var status = new V0AccountStatus {
       Type = response.Account.Status.Status switch {
-        Libs.Protobufs.Enums.V0AccountStatus.V0Offline => V0AccountStatusTypes.Offline,
-        Libs.Protobufs.Enums.V0AccountStatus.V0Online => V0AccountStatusTypes.Online,
-        Libs.Protobufs.Enums.V0AccountStatus.V0Idle => V0AccountStatusTypes.Idle,
-        Libs.Protobufs.Enums.V0AccountStatus.V0Meeting => V0AccountStatusTypes.Busy,
+        Libs.Protobufs.Accounts.Enums.V0AccountStatus.V0Offline => V0AccountStatusTypes.Offline,
+        Libs.Protobufs.Accounts.Enums.V0AccountStatus.V0Online => V0AccountStatusTypes.Online,
+        Libs.Protobufs.Accounts.Enums.V0AccountStatus.V0Idle => V0AccountStatusTypes.Idle,
+        Libs.Protobufs.Accounts.Enums.V0AccountStatus.V0Meeting => V0AccountStatusTypes.Busy,
         _ => V0AccountStatusTypes.Offline,
       },
       CustomMessage = response.Account.Status.Message
@@ -62,7 +63,7 @@ public partial class ApiServiceImpl {
   }
   // UpdateProfile
   public override async Task<V0BaseAccount> UpdateProfile(V0AccountUpdateProfileRequest request, ServerCallContext context) {
-    var uprd = new V0UpdateRequest {
+    var uprd = new V0UpdateAccountRequest {
       // NewAccount = new Libs.Protobufs.Types.V0BaseAccount {
       // Id = request.UserId,
       // Username = request.NewProfile.Username,
@@ -88,7 +89,7 @@ public partial class ApiServiceImpl {
       throw new RpcException(new Status(StatusCode.Unauthenticated, "Missing account ID"));
     }
 
-    var dard = new V0DeleteRequest {
+    var dard = new V0DeleteAccountRequest {
       Id = userId
     };
 

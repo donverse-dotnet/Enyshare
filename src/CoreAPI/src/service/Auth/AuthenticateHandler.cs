@@ -6,8 +6,8 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Auth.Services;
+using Pocco.Libs.Protobufs.Auth.Types;
 
 namespace Pocco.Svc.CoreAPI.Auth;
 

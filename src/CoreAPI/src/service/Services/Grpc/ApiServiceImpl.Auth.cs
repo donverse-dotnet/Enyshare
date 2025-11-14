@@ -1,8 +1,8 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.AspNetCore.Mvc;
+using Pocco.Libs.Protobufs.Auth.Services;
+using Pocco.Libs.Protobufs.Auth.Types;
 using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
