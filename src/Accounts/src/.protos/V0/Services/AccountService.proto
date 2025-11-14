@@ -18,9 +18,9 @@ service V0AccountService {
   // アカウントを取得するRPCメソッド
   rpc Get(pocco.libs.protobufs.types.V0GetAccountRequest) returns (pocco.libs.protobufs.types.V0GetAccountReply);
   // アカウントを登録するRPCメソッド
-  rpc Register(pocco.libs.protobufs.types.V0RegisterRequest) returns (pocco.libs.protobufs.types.V0RegisterReply);
+  rpc Register(pocco.libs.protobufs.types.V0RegisterAccountRequest) returns (pocco.libs.protobufs.types.V0RegisterAccountReply);
   //アカウントを更新するRPCメソッド
-  rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (pocco.libs.protobufs.types.V0UpdateReply);
+  rpc Update(pocco.libs.protobufs.types.V0UpdateAccountRequest) returns (pocco.libs.protobufs.types.V0UpdateAccountReply);
   //アカウントを削除するRPCメソッド
-  rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0DeleteReply);
+  rpc Delete(pocco.libs.protobufs.types.V0DeleteAccountRequest) returns (pocco.libs.protobufs.types.V0DeleteAccountReply);
 }

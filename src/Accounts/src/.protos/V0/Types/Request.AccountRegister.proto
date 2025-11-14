@@ -4,7 +4,7 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
 // アカウント登録リクエスト
-message V0RegisterRequest {
+message V0RegisterAccountRequest {
     string email = 1;
     string password = 2;
 }

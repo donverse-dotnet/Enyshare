@@ -4,6 +4,6 @@ option csharp_namespace = "Pocco.Libs.Protobufs.Types";
 package pocco.libs.protobufs.types;
 
 // アカウント削除リクエスト
-message V0DeleteRequest {
+message V0DeleteAccountRequest {
     string Id = 1;
 }

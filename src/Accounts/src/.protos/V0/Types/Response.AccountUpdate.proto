@@ -6,7 +6,7 @@ package pocco.libs.protobufs.types;
 import "V0/Types/Model.Account.proto";
 
 // アカウント更新リプライ
-message V0UpdateReply {
+message V0UpdateAccountReply {
     // 更新後のアカウント情報
     pocco.libs.protobufs.types.V0AccountModel account = 1;
     // 更新成功フラグ

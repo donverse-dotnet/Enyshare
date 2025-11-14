@@ -5,7 +5,7 @@ package pocco.libs.protobufs.types;
 
 
 // アカウント削除リプライ
-message V0DeleteReply {
+message V0DeleteAccountReply {
     string message = 1;
     bool Success = 2;
 }
