@@ -1,0 +1,50 @@
+name: 💡 タスク
+description: このプロジェクトのタスクを作成するためのテンプレートです。
+labels: ["change_me"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ このテンプレートは、タスクを開発者チームに伝えるためのものです。チーム以外の方は、機能リクエストテンプレートを使用してください。
+
+  - type: textarea
+    id: task_description
+    attributes:
+      label: "🦺 仕事"
+      description: "タスクの内容を説明してください。"
+      placeholder: "タスクの明確で簡潔な説明。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_reason
+    attributes:
+      label: "🔍 理由"
+      description: "このタスクが必要な理由を説明してください。"
+      placeholder: "このタスクが必要な理由の明確で簡潔な説明。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_results
+    attributes:
+      label: "🗿 タスクの想定結果"
+      description: "このタスクが完了したときに期待される結果を説明してください。"
+      placeholder: "タスク完了時の期待される結果の明確で簡潔な説明。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "⚗️ 補足情報"
+      description: "このタスクに関する補足情報を提供してください。"
+      placeholder: "関連するその他の詳細。"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        迅速にタスクを処理できるよう、関連情報がすべて提供されていることを確認してください。
