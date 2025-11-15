@@ -1,14 +1,17 @@
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Pocco.Libs.Protobufs.Services;
 
 namespace Pocco.APIClient.Core;
 
 public class SessionManager {
     private SessionData? _sessionData;
-    private readonly V0ApiService.V0ApiServiceClient _api;
+    private readonly APIClient _client;
 
-    public SessionManager(V0ApiService.V0ApiServiceClient apiClient) {
-        _api = apiClient;
+    public SessionManager(APIClient apiClient) {
+        _client = apiClient;
+
+        _client.Logger.LogInformation("SessionManager initialized.");
     }
 
     /// <summary>
@@ -19,7 +22,7 @@ public class SessionManager {
     /// <returns>成功したかどうかを真偽値で返します。</returns>
     public async Task<bool> LoginASync(string email, string password) {
         try {
-            var reply = await _api.AuthenticateAsync(new V0AccountAuthenticateRequest {
+            var reply = await _client.API.AuthenticateAsync(new V0AccountAuthenticateRequest {
                 Email = email,
                 Password = password
             });
@@ -28,16 +31,16 @@ public class SessionManager {
 
             return true;
         } catch (RpcException ex) {
-            Console.WriteLine($"Login failed: {ex.Status.Detail}");
+            _client.Logger.LogWarning("RPC Error during login: {ex}", ex);
             return false;
         } catch (Exception ex) {
-            Console.WriteLine($"An unexpected error occurred during login: {ex.Message}");
+            _client.Logger.LogWarning("Unexpected error during login: {ex}", ex);
             return false;
         } finally {
             if (_sessionData is not null) {
-                Console.WriteLine($"Login successful. Session ID: {_sessionData.SessionId}");
+                _client.Logger.LogInformation("Login successful. Session ID: {SessionId}", _sessionData.SessionId);
             } else {
-                Console.WriteLine("Login failed. No session data received.");
+                _client.Logger.LogWarning("Login failed. No session data obtained.");
             }
         }
     }

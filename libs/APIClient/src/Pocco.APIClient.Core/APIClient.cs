@@ -6,24 +6,25 @@ namespace Pocco.APIClient.Core;
 
 public partial class APIClient {
     public readonly ILogger<APIClient> Logger;
+    public readonly V0ApiService.V0ApiServiceClient API;
 
     private readonly APIClientConfigurations _config;
-    private readonly V0ApiService.V0ApiServiceClient _api;
     private readonly SessionManager _sessionManager;
 
     /// <summary>
     /// APIClientを<seealso cref="APIClientConfigurations"/>と共に初期化します。
     /// </summary>
     /// <param name="config">クライアントの設定</param>
+    /// <param name="logger">ロガーインスタンス</param>
     public APIClient(APIClientConfigurations config, ILogger<APIClient> logger) {
         _config = config;
         Logger = logger;
         Log("Initializing APIClient...", null);
 
         var channel = GrpcChannel.ForAddress(_config.APIEndpoint);
-        _api = new V0ApiService.V0ApiServiceClient(channel);
+        API = new V0ApiService.V0ApiServiceClient(channel);
 
-        _sessionManager = new SessionManager(_api);
+        _sessionManager = new SessionManager(this);
 
         Log("APIClient initialized with endpoint: {Endpoint}", null, LogLevel.Information, _config.APIEndpoint);
     }
