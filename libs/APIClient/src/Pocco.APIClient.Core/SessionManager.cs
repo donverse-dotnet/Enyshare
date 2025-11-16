@@ -20,7 +20,7 @@ public class SessionManager {
     /// <param name="email">ログインしたいアカウントのメールアドレスです。</param>
     /// <param name="password">ログインしたいアカウントのパスワードです。この関数を呼び出す前にSHA256でHASH化しておく必要があります。</param>
     /// <returns>成功したかどうかを真偽値で返します。</returns>
-    public async Task<bool> LoginASync(string email, string password) {
+    public async Task<bool> LoginAsync(string email, string password) {
         try {
             var reply = await _client.API.AuthenticateAsync(new V0AccountAuthenticateRequest {
                 Email = email,
