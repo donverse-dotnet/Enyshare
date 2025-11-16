@@ -27,7 +27,7 @@ public class AuthenticateHandler(
     Logger.LogInformation("Handling authentication for request: {RequestPath} (from {ip})", Request.Path, Request.HttpContext.Connection.RemoteIpAddress);
 
     // Get data from headers(metadata)
-    var tokenFound = Request.Headers.TryGetValue("Authorization", out var token);
+    var tokenFound = Request.Headers.TryGetValue("authorization", out var token);
     var sessionIdFound = Request.Headers.TryGetValue("x-session-id", out var sessionId);
     var accountIdFound = Request.Headers.TryGetValue("x-account-id", out var accountId);
     var createdAtFound = Request.Headers.TryGetValue("x-created-at", out var createdAt);

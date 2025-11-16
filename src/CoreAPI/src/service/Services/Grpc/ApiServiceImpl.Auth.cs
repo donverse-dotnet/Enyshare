@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Auth.Services;
 using Pocco.Libs.Protobufs.Auth.Types;
 using Pocco.Libs.Protobufs.Services;
@@ -29,21 +31,22 @@ public partial class ApiServiceImpl {
 
     return sessionData;
   }
+
   // Unauthenticate
+  [Authorize(Policy = "RequireGeneral")]
   public override async Task<Empty> Unauthenticate(Empty request, ServerCallContext context) {
-    var urd = new V0SessionData {
-      SessionId = "" // TODO: コンテキストからセッションIDを取得
-    };
+    var urd = BuildSessionDataFromContext(context);
 
     var response = await _authServiceClient.SignOutAsync(urd, cancellationToken: context.CancellationToken);
 
     return new Empty();
   }
+
   // VerifyToken
+  [Authorize(Policy = "RequireGeneral")]
   public override async Task<V0ApiSessionData> VerifyToken(Empty request, ServerCallContext context) {
-    var vtrd = new V0SessionData {
-      SessionId = "" // TODO: コンテキストからセッションIDを取得
-    };
+    _logger.LogInformation("Verifying token for request => {header}", context.RequestHeaders);
+    var vtrd = BuildSessionDataFromContext(context);
 
     var response = await _authServiceClient.AuthAsync(vtrd, cancellationToken: context.CancellationToken);
 
@@ -57,5 +60,53 @@ public partial class ApiServiceImpl {
     };
 
     return sessionData;
+  }
+
+
+  private V0SessionData BuildSessionDataFromContext(ServerCallContext context) {
+    var headers = GetSessionFromContext(context);
+    var sessionData = new V0SessionData();
+
+    foreach (var header in headers) {
+      _logger.LogInformation("Processing header: {Key} => {Value}", header.Key, header.Value);
+
+      switch (header.Key) {
+        case "authorization":
+          if (header.Value.StartsWith("Bearer ")) {
+            sessionData.Token = header.Value.Substring("Bearer ".Length).Trim();
+          }
+          break;
+        case "x-session-id":
+          sessionData.SessionId = header.Value;
+          break;
+        case "x-account-id":
+          sessionData.AccountId = header.Value;
+          break;
+        case "x-created-at":
+          sessionData.CreatedAt = JsonSerializer.Deserialize<Timestamp>(header.Value);
+          break;
+        case "x-expires-at":
+          sessionData.ExpiresAt = JsonSerializer.Deserialize<Timestamp>(header.Value);
+          break;
+        case "x-updated-at":
+          sessionData.UpdatedAt = JsonSerializer.Deserialize<Timestamp>(header.Value);
+          break;
+        default:
+          _logger.LogWarning("Unknown header key: {Key}", header.Key);
+          break;
+      }
+    }
+
+    return sessionData;
+  }
+
+  private Dictionary<string, string> GetSessionFromContext(ServerCallContext context) {
+    var headers = new Dictionary<string, string>();
+
+    foreach (var header in context.RequestHeaders) {
+      headers[header.Key] = header.Value;
+    }
+
+    return headers;
   }
 }
