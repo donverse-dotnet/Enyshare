@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <RunConfiguration>
+        <EnvironmentVariables>
+            <POCCO_API_ENDPOINT>http://localhost:PORT</POCCO_API_ENDPOINT>
+            <POCCO_TEST_EMAIL>TEST@email.here</POCCO_TEST_EMAIL>
+            <POCCO_TEST_PASSWORD>TEST_PASSWORD_HERE</POCCO_TEST_PASSWORD>
+        </EnvironmentVariables>
+    </RunConfiguration>
+</RunSettings>

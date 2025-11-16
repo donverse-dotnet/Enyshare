@@ -5,6 +5,7 @@
 
 # dotenv files
 .env
+test.runsettings
 
 # User-specific files
 *.rsuser
