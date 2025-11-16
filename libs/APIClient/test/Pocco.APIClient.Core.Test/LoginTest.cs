@@ -23,7 +23,7 @@ public class LoginTest {
         var email = Environment.GetEnvironmentVariable("POCCO_TEST_EMAIL") ?? string.Empty;
         var password = Environment.GetEnvironmentVariable("POCCO_TEST_PASSWORD") ?? string.Empty;
 
-        var loginResult = await _client.LoginAsync(email, password);
+        var loginResult = await _client.SessionManager.LoginAsync(email, password);
         Assert.True(loginResult, "Login should succeed with valid credentials.");
     }
 }
