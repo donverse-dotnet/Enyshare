@@ -50,6 +50,33 @@ public class SessionManager : IDisposable {
     }
 
     /// <summary>
+    /// アカウントからのログアウトメソッドを提供します。
+    /// </summary>
+    /// <returns>ログアウトできたかどうかを真偽値で表します。</returns>
+    public async Task<bool> LogoutAsync() {
+        if (_sessionData is null) {
+            _client.Logger.LogWarning("Cannot logout: No session data available.");
+            return false;
+        }
+
+        try {
+            var header = _sessionData.ToMetadata();
+            await _client.API.UnauthenticateAsync(new Empty(), header);
+
+            _client.Logger.LogInformation("Logout successful. Session ID: {SessionId}", _sessionData.SessionId);
+            return true;
+        } catch (RpcException ex) {
+            _client.Logger.LogWarning("RPC Error during logout: {ex}", ex);
+            return false;
+        } catch (Exception ex) {
+            _client.Logger.LogWarning("Unexpected error during logout: {ex}", ex);
+            return false;
+        } finally {
+            _sessionData = null;
+        }
+    }
+
+    /// <summary>
     /// 現在のセッションデータを取得します。
     /// </summary>
     /// <returns>現在のセッションデータ。なければnullです。</returns>
