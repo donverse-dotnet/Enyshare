@@ -1,0 +1,39 @@
+using Grpc.Net.Client;
+using Microsoft.Extensions.Logging;
+using Pocco.Libs.Protobufs.Services;
+
+namespace Pocco.APIClient.Core;
+
+public partial class APIClient {
+    public readonly ILogger<APIClient> Logger;
+    public readonly V0ApiService.V0ApiServiceClient API;
+    public readonly SessionManager SessionManager;
+
+    private readonly APIClientConfigurations _config;
+
+    /// <summary>
+    /// APIClientを<seealso cref="APIClientConfigurations"/>と共に初期化します。
+    /// </summary>
+    /// <param name="config">クライアントの設定</param>
+    /// <param name="logger">ロガーインスタンス</param>
+    public APIClient(APIClientConfigurations config, ILogger<APIClient> logger) {
+        _config = config;
+        Logger = logger;
+        Log("Initializing APIClient...", null);
+
+        var channel = GrpcChannel.ForAddress(_config.APIEndpoint);
+        API = new V0ApiService.V0ApiServiceClient(channel);
+
+        SessionManager = new SessionManager(this);
+
+        Log("APIClient initialized with endpoint: {Endpoint}", null, LogLevel.Information, _config.APIEndpoint);
+    }
+
+    public async Task LogAsync(string? message, Exception? exception, LogLevel level = LogLevel.Information, params object?[] args) {
+        Log(message, exception, level, args);
+        await Task.CompletedTask;
+    }
+    public void Log(string? message, Exception? exception, LogLevel level = LogLevel.Information, params object?[] args) {
+        Logger.Log(level, exception, message, args);
+    }
+}
