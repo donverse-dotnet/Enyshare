@@ -4,8 +4,9 @@ using Pocco.Libs.Protobufs.Services;
 
 namespace Pocco.APIClient.Core;
 
-public partial class APIClient {
+public partial class APIClient : IDisposable {
     public readonly ILogger<APIClient> Logger;
+    public readonly CancellationTokenSource CancellationTokenSource;
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
 
@@ -19,21 +20,25 @@ public partial class APIClient {
     public APIClient(APIClientConfigurations config, ILogger<APIClient> logger) {
         _config = config;
         Logger = logger;
-        Log("Initializing APIClient...", null);
+        CancellationTokenSource = new CancellationTokenSource();
+        Logger.LogInformation("Initializing APIClient...");
 
         var channel = GrpcChannel.ForAddress(_config.APIEndpoint);
         API = new V0ApiService.V0ApiServiceClient(channel);
 
-        SessionManager = new SessionManager(this);
+        SessionManager = new SessionManager(this, CancellationTokenSource.Token);
 
-        Log("APIClient initialized with endpoint: {Endpoint}", null, LogLevel.Information, _config.APIEndpoint);
+        Logger.LogInformation("APIClient initialized with {Endpoint}.", _config.APIEndpoint);
     }
 
-    public async Task LogAsync(string? message, Exception? exception, LogLevel level = LogLevel.Information, params object?[] args) {
-        Log(message, exception, level, args);
-        await Task.CompletedTask;
-    }
-    public void Log(string? message, Exception? exception, LogLevel level = LogLevel.Information, params object?[] args) {
-        Logger.Log(level, exception, message, args);
+    public void Dispose() {
+        Logger.LogInformation("Disposing APIClient...");
+
+        CancellationTokenSource.Cancel();
+        SessionManager.Dispose();
+        CancellationTokenSource.Dispose();
+
+        Logger.LogInformation("APIClient disposed.");
+        GC.SuppressFinalize(this);
     }
 }

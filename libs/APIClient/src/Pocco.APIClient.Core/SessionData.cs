@@ -1,5 +1,7 @@
 #pragma warning disable CS8618
+using System.Text.Json;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Pocco.Libs.Protobufs.Services;
 
 namespace Pocco.APIClient.Core;
@@ -32,5 +34,28 @@ public class SessionData {
             ExpiresAt = Timestamp.FromDateTime(DateTime.SpecifyKind(data.ExpiresAt, DateTimeKind.Utc)),
             UpdatedAt = Timestamp.FromDateTime(DateTime.SpecifyKind(data.UpdatedAt, DateTimeKind.Utc))
         };
+    }
+
+    public Metadata ToMetadata() {
+        var catJson = JsonSerializer.Serialize(Timestamp.FromDateTime(CreatedAt));
+        var expJson = JsonSerializer.Serialize(Timestamp.FromDateTime(ExpiresAt));
+        var updJson = JsonSerializer.Serialize(Timestamp.FromDateTime(UpdatedAt));
+
+        return new Metadata {
+            { "authorization", $"Bearer {Token}" },
+            { "x-session-id", SessionId },
+            { "x-account-id", AccountId },
+            { "x-created-at", catJson },
+            { "x-expires-at", expJson },
+            { "x-updated-at", updJson }
+        };
+    }
+
+    public bool IsExpired() {
+        return DateTime.UtcNow >= ExpiresAt;
+    }
+
+    public bool NeedsRefresh(TimeSpan refreshThreshold) {
+        return DateTime.UtcNow >= ExpiresAt - refreshThreshold;
     }
 }
