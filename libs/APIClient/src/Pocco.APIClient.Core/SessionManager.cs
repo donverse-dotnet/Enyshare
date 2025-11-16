@@ -1,15 +1,19 @@
+using System.Text.Json;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Pocco.Libs.Protobufs.Services;
 
 namespace Pocco.APIClient.Core;
 
-public class SessionManager {
+public class SessionManager : IDisposable {
     private SessionData? _sessionData;
     private readonly APIClient _client;
+    private readonly CancellationToken _cancellationToken;
 
-    public SessionManager(APIClient apiClient) {
+    public SessionManager(APIClient apiClient, CancellationToken cancellationToken = default) {
         _client = apiClient;
+        _cancellationToken = cancellationToken;
 
         _client.Logger.LogInformation("SessionManager initialized.");
     }
