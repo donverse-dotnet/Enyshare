@@ -9,6 +9,7 @@ public partial class APIClient : IDisposable {
     public readonly CancellationTokenSource CancellationTokenSource;
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
+    public readonly EventHub EventHub;
 
     private readonly APIClientConfigurations _config;
 
@@ -27,6 +28,16 @@ public partial class APIClient : IDisposable {
         API = new V0ApiService.V0ApiServiceClient(channel);
 
         SessionManager = new SessionManager(this, CancellationTokenSource.Token);
+        EventHub = new EventHub();
+
+        EventHub.GetObservable<Events.OnClientLoggedIn>()
+            .Subscribe(e => Logger.LogInformation("Client logged in. SessionId: {SessionId}", e.Session.SessionId));
+        EventHub.GetObservable<Events.OnClientLoggedOut>()
+            .Subscribe(e => Logger.LogInformation("Client logged out."));
+        EventHub.GetObservable<Events.OnSessionExpired>()
+            .Subscribe(e => Logger.LogWarning("Session expired."));
+        EventHub.GetObservable<Events.OnSessionRefreshed>()
+            .Subscribe(e => Logger.LogInformation("Session refreshed. New SessionId: {SessionId}", e.Session.SessionId));
 
         Logger.LogInformation("APIClient initialized with {Endpoint}.", _config.APIEndpoint);
     }
@@ -36,6 +47,7 @@ public partial class APIClient : IDisposable {
 
         CancellationTokenSource.Cancel();
         SessionManager.Dispose();
+        EventHub.Dispose();
         CancellationTokenSource.Dispose();
 
         Logger.LogInformation("APIClient disposed.");
