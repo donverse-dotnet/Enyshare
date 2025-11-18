@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.Auth.Services;
+using Pocco.Libs.Protobufs.Services;
 using Pocco.Svc.CoreAPI.Auth;
 using Pocco.Svc.CoreAPI.Services;
 using Pocco.Svc.CoreAPI.Services.Grpc;
@@ -51,6 +52,13 @@ builder.Services.AddTransient(sp => {
 
   var channel = GrpcChannel.ForAddress(serverAddress);
   return new V0AuthService.V0AuthServiceClient(channel);
+});
+
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_INFO_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_INFO_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0OrganizationInfoService.V0OrganizationInfoServiceClient(channel);
 });
 
 builder.Services.AddAuthentication()
