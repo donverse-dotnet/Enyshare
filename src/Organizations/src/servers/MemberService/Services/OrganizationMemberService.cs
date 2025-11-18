@@ -26,7 +26,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
     _repository = repository;
     _logger = logger;
-    _eventBridge = _eventBridge;
+    _eventBridge = eventBridge;
 
     _logger.LogInformation("OrganizationsMemberServiceImpl is initialized!");
   }
