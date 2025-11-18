@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0EventInvokedResponse> CreateOrganizationAsync(
-        V0CreateXRequest request,
+        V0CreateOrganizationRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot create organization: No session data available.");
