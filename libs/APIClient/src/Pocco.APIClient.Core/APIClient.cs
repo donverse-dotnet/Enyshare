@@ -30,6 +30,11 @@ public partial class APIClient : IDisposable {
         SessionManager = new SessionManager(this, CancellationTokenSource.Token);
         EventHub = new EventHub();
 
+        EventHub.GetObservable<Events.OnLog>()
+            .Subscribe(e => Logger.LogInformation("{Message}", e.Message));
+        EventHub.GetObservable<Events.OnError>()
+            .Subscribe(e => Logger.LogError("{Message}", e.Message));
+
         EventHub.GetObservable<Events.OnClientLoggedIn>()
             .Subscribe(e => Logger.LogInformation("Client logged in. SessionId: {SessionId}", e.Session.SessionId));
         EventHub.GetObservable<Events.OnClientLoggedOut>()
