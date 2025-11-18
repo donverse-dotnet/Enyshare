@@ -22,7 +22,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
 
   public OrganizationsMemberServiceImpl([FromServices] IMemberRepository repository,
-[FromServices] ILogger<OrganizationsMemberServiceImpl> logger) {
+[FromServices] ILogger<OrganizationsMemberServiceImpl> logger,
+[FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
     _repository = repository;
     _logger = logger;
     _eventBridge = _eventBridge;
