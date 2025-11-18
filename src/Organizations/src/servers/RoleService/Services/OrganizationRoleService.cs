@@ -80,8 +80,10 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       EventType = "OnRoleCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
+
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{createdRole.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{createdRole.Name}" });
@@ -119,7 +121,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       EventType = "OnRoleUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.Rolemodel.OrgId}" });
@@ -150,7 +153,8 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       EventType = "OnRoleDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });

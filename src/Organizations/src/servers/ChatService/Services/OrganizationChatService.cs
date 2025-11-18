@@ -45,7 +45,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       CreatedAt = Timestamp.FromDateTime(c.CreatedAt),
       IsPrivate = c.IsPrivate
     }));
-    
+
     return reply;
   }
 
@@ -64,15 +64,14 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     _logger.LogInformation("{ChatId} is successfully created on {OrgId}", createdChat.Id, request.OrgId);
 
     //イベントを伝搬させるのをEventBridgeに依頼
-
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnChatCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
-
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("chat_id", new Value { StringValue = $"{createdChat.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{createdChat.Name}" });
@@ -110,7 +109,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       EventType = "OnChatUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.Chatsmodel.OrgId}" });
@@ -151,7 +151,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       EventType = "OnChatDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrgId}" });

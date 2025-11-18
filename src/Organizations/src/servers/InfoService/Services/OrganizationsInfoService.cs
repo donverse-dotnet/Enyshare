@@ -60,13 +60,13 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     await _orgs.InsertOneAsync(org);
 
     //イベントを伝搬させるのをEventBridgeに依頼
-
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnInfoCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("info_id", new Value { StringValue = $"{org.Id}" });
@@ -114,13 +114,13 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     var updated = await _orgs.Find(x => x.Id == request.Id).FirstOrDefaultAsync();
 
     //イベントを伝搬させるのをEventBridgeに依頼
-
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnInfoUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("info_id", new Value { StringValue = $"{updated.Id}" });
@@ -163,7 +163,8 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
       EventType = "OnInfoDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("info_id", new Value { StringValue = $"{request.Id}" });
