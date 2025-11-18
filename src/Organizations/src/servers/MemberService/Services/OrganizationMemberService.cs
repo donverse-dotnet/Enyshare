@@ -51,7 +51,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Topic = V0EventTopics.EventTopicOrganization,
       EventType = "OnMemberCreated",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
@@ -89,7 +90,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       EventType = "OnMemberUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
@@ -120,7 +122,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       EventType = "OnMemberDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      InvokedBy = request.InvokedBy
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
     };
 
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
