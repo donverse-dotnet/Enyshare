@@ -1,6 +1,6 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using static Pocco.APIClient.Core.Events;
+using static Pocco.APIClient.Core.ClientEvents;
 
 namespace Pocco.APIClient.Core;
 

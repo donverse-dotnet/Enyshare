@@ -30,18 +30,18 @@ public partial class APIClient : IDisposable {
         SessionManager = new SessionManager(this, CancellationTokenSource.Token);
         EventHub = new EventHub();
 
-        EventHub.GetObservable<Events.OnLog>()
+        EventHub.GetObservable<ClientEvents.OnLog>()
             .Subscribe(e => Logger.LogInformation("{Message}", e.Message));
-        EventHub.GetObservable<Events.OnError>()
+        EventHub.GetObservable<ClientEvents.OnError>()
             .Subscribe(e => Logger.LogError("{Message}", e.Message));
 
-        EventHub.GetObservable<Events.OnClientLoggedIn>()
+        EventHub.GetObservable<ClientEvents.OnClientLoggedIn>()
             .Subscribe(e => Logger.LogInformation("Client logged in. SessionId: {SessionId}", e.Session.SessionId));
-        EventHub.GetObservable<Events.OnClientLoggedOut>()
+        EventHub.GetObservable<ClientEvents.OnClientLoggedOut>()
             .Subscribe(e => Logger.LogInformation("Client logged out."));
-        EventHub.GetObservable<Events.OnSessionExpired>()
+        EventHub.GetObservable<ClientEvents.OnSessionExpired>()
             .Subscribe(e => Logger.LogWarning("Session expired."));
-        EventHub.GetObservable<Events.OnSessionRefreshed>()
+        EventHub.GetObservable<ClientEvents.OnSessionRefreshed>()
             .Subscribe(e => Logger.LogInformation("Session refreshed. New SessionId: {SessionId}", e.Session.SessionId));
 
         Logger.LogInformation("APIClient initialized with {Endpoint}.", _config.APIEndpoint);

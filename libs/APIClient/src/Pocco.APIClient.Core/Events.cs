@@ -1,6 +1,6 @@
 namespace Pocco.APIClient.Core;
 
-public static partial class Events {
+public static partial class ClientEvents {
     public const string PRIVATE_EVENT_ID = "PRIVATE_EVENT";
 
     public record BaseEvent(string EventId);

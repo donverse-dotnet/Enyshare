@@ -43,7 +43,7 @@ public class SessionManager : IDisposable {
         } finally {
             if (_sessionData is not null) {
                 _client.Logger.LogInformation("Login successful. Session ID: {SessionId}", _sessionData.SessionId);
-                _client.EventHub.Publish(new Events.OnClientLoggedIn(Events.PRIVATE_EVENT_ID, _sessionData));
+                _client.EventHub.Publish(new ClientEvents.OnClientLoggedIn(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
             } else {
                 _client.Logger.LogWarning("Login failed. No session data obtained.");
             }
@@ -74,7 +74,7 @@ public class SessionManager : IDisposable {
             return false;
         } finally {
             _sessionData = null;
-            _client.EventHub.Publish(new Events.OnClientLoggedOut(Events.PRIVATE_EVENT_ID));
+            _client.EventHub.Publish(new ClientEvents.OnClientLoggedOut(ClientEvents.PRIVATE_EVENT_ID));
         }
     }
 
@@ -108,7 +108,7 @@ public class SessionManager : IDisposable {
 
             if (_sessionData.IsExpired()) {
                 _client.Logger.LogWarning("Session has expired. Please log in again.");
-                _client.EventHub.Publish(new Events.OnSessionExpired(Events.PRIVATE_EVENT_ID));
+                _client.EventHub.Publish(new ClientEvents.OnSessionExpired(ClientEvents.PRIVATE_EVENT_ID));
                 break;
             }
 
@@ -133,7 +133,7 @@ public class SessionManager : IDisposable {
                 _client.Logger.LogWarning("Unexpected error during session refresh: {ex}", ex);
             }
 
-            _client.EventHub.Publish(new Events.OnSessionRefreshed(Events.PRIVATE_EVENT_ID, _sessionData));
+            _client.EventHub.Publish(new ClientEvents.OnSessionRefreshed(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
 
             await Task.Delay(TimeSpan.FromMilliseconds(2000));
             break;
