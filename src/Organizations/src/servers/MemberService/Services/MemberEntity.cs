@@ -1,3 +1,4 @@
+#pragma warning disable CS8618
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
