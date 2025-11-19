@@ -29,7 +29,7 @@ public class SessionManager : IDisposable {
             var reply = await _client.API.AuthenticateAsync(new V0AccountAuthenticateRequest {
                 Email = email,
                 Password = password
-            });
+            }, cancellationToken: _cancellationToken);
 
             _sessionData = SessionData.FromProto(reply);
 
@@ -62,7 +62,7 @@ public class SessionManager : IDisposable {
 
         try {
             var header = _sessionData.ToMetadata();
-            await _client.API.UnauthenticateAsync(new Empty(), header);
+            await _client.API.UnauthenticateAsync(new Empty(), header, cancellationToken: _cancellationToken);
 
             _client.Logger.LogInformation("Logout successful. Session ID: {SessionId}", _sessionData.SessionId);
             return true;
