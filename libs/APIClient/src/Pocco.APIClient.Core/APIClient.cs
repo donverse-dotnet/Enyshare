@@ -10,6 +10,7 @@ public partial class APIClient : IDisposable {
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
     public readonly EventHub EventHub;
+    public string APIEndpoint => _config.APIEndpoint;
 
     private readonly APIClientConfigurations _config;
 
