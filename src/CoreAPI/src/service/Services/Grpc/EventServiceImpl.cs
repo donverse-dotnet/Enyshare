@@ -42,7 +42,7 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
     // Wait until the client disconnects
     try {
       while (!context.CancellationToken.IsCancellationRequested) {
-        Task.Delay(100, context.CancellationToken).Wait(); // Keep the connection alive
+        await Task.Delay(100, context.CancellationToken); // Keep the connection alive
       }
     } catch (TaskCanceledException) {
       // Client disconnected

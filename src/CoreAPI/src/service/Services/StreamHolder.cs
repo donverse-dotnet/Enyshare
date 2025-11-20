@@ -28,6 +28,7 @@ public class StreamHolder : IHotStartableService {
   public void RemoveStreamWriter(string sessionId) {
     var writer = _streamWriters.FirstOrDefault(x => x.SessionId == sessionId);
     if (writer != null) {
+      writer.Dispose();
       _streamWriters.Remove(writer);
     } else {
       _logger.LogWarning("StreamWriter not found for removal: SessionId={SessionId}", sessionId);

@@ -5,7 +5,7 @@ using Pocco.Libs.Protobufs.Services;
 
 namespace Pocco.Svc.CoreAPI.Models;
 
-public class StreamWriterModel {
+public class StreamWriterModel : IDisposable {
 
   public StreamWriterModel(string sessionId, string userId, StreamWriterFilterModel filters, IServerStreamWriter<V0EventData> streamWriter, ServerCallContext context, ILogger logger) {
     SessionId = sessionId;
@@ -17,12 +17,6 @@ public class StreamWriterModel {
 
     // Start processing the event queue
     _processingTask = Task.Run(async () => await ProcessEventQueueAsync(_cancellationTokenSource.Token));
-  }
-  ~StreamWriterModel() {
-    // Clean up
-    _cancellationTokenSource.Cancel();
-    _processingTask.Wait();
-    _cancellationTokenSource.Dispose();
   }
 
   public ILogger Logger { get; init; }
@@ -53,10 +47,23 @@ public class StreamWriterModel {
       Logger.LogInformation("Sending event to SessionId={SessionId}, UserId={UserId}: Topic={Topic}, Payload={Payload}",
         SessionId, UserId, eventData.Topic, eventData.Payload);
 
-      await StreamWriter.WriteAsync(eventData, cancellationToken);
+      try {
+        await StreamWriter.WriteAsync(eventData, cancellationToken);
+      } catch (Exception ex) {
+        Logger.LogError(ex, "Error sending event to SessionId={SessionId}, UserId={UserId}", SessionId, UserId);
+        break;
+      }
 
       Logger.LogInformation("Event sent to SessionId={SessionId}, UserId={UserId}: Topic={Topic}, Payload={Payload}",
         SessionId, UserId, eventData.Topic, eventData.Payload);
     }
+  }
+
+  public void Dispose() {
+    _cancellationTokenSource.Cancel();
+    // _processingTask.Wait();
+    _cancellationTokenSource.Dispose();
+
+    GC.SuppressFinalize(this);
   }
 }
