@@ -8,6 +8,7 @@ using Pocco.Svc.EventBridge.Protobufs.Enums;
 using Pocco.Svc.EventBridge.Protobufs.Services;
 using Pocco.Svc.EventBridge.Protobufs.Types;
 using System.Data;
+using Pocco.Libs.Protobufs.Services;
 
 
 namespace MemberService.Services;
@@ -21,9 +22,11 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   private readonly ILogger<OrganizationsMemberServiceImpl> _logger;
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
 
-  public OrganizationsMemberServiceImpl([FromServices] IMemberRepository repository,
-[FromServices] ILogger<OrganizationsMemberServiceImpl> logger,
-[FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
+  public OrganizationsMemberServiceImpl(
+    [FromServices] IMemberRepository repository,
+    [FromServices] ILogger<OrganizationsMemberServiceImpl> logger,
+    [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge
+  ) {
     _repository = repository;
     _logger = logger;
     _eventBridge = eventBridge;
