@@ -6,6 +6,8 @@ using Pocco.Libs.Protobufs.Services;
 namespace Pocco.APIClient.Core.Events;
 
 public class EventListener : IDisposable {
+    public List<string> TempOrganizationIds = [];
+
     private readonly APIClient _client;
     private readonly V0EventsService.V0EventsServiceClient _eventListener;
     private Task? _listeningTask;
@@ -21,11 +23,11 @@ public class EventListener : IDisposable {
         _client.Logger.LogInformation("EventListener initialized.");
     }
 
-    public async Task StartListeningAsync() {
+    public async Task StartListeningAsync(ListenRequest? request = null) {
         _client.Logger.LogInformation("EventListener started listening for events.");
 
         if (_listeningTask == null || _listeningTask.IsCompleted) {
-            _listeningTask = ListenForEventsAsync();
+            _listeningTask = Task.Run(async () => await ListenForEventsAsync(request), _cancellationToken);
         } else {
             _client.Logger.LogWarning("EventListener is already listening for events.");
         }
@@ -40,23 +42,33 @@ public class EventListener : IDisposable {
         await _eventListener.UpdateListenAsync(data, header, cancellationToken: _cancellationToken);
     }
 
-    private async Task ListenForEventsAsync() {
+    private async Task ListenForEventsAsync(ListenRequest? request = null) {
+        if (request is null) {
+            _client.Logger.LogInformation("No ListenRequest provided. Listening to all events.");
+        } else {
+            _client.Logger.LogInformation("Listening to events with request: {Request}", request);
+        }
+
         var header = _client.SessionManager.GetSessionData()?.ToMetadata() ?? [];
-        using var call = _eventListener.Listen(new ListenRequest(), header, cancellationToken: _cancellationToken);
+        using var call = _eventListener.Listen(request ?? new ListenRequest(), header, cancellationToken: _cancellationToken);
 
         await foreach (var eventMessage in call.ResponseStream.ReadAllAsync(_cancellationToken)) {
-            _client.Logger.LogInformation("Received event: {EventMessage}", eventMessage);
             // 受信したイベントメッセージの処理をここに実装
             switch (eventMessage.EventType) {
                 // 未実装はこれより下にbreakなしで追加
                 case ClientEvents.ON_ORGANIZATION_CREATED:
                 case ClientEvents.ON_ORGANIZATION_NAME_UPDATED:
                 case ClientEvents.ON_ORGANIZATION_DELETED:
+                    _client.Logger.LogInformation("Organization event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
+                    TempOrganizationIds.Add(eventMessage.Payload.Fields["info_id"].StringValue);
+                    break;
 
                 default:
                     _client.Logger.LogWarning("Unhandled event type: {EventType}", eventMessage.EventType);
                     break;
             }
+
+            _client.Logger.LogInformation("Current TempOrganizationIds: {OrgIds}", string.Join(", ", TempOrganizationIds));
         }
 
         await Task.CompletedTask;

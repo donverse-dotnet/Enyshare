@@ -3,12 +3,12 @@ using Pocco.Libs.Protobufs.Services;
 namespace Pocco.APIClient.Core;
 
 public static partial class ClientEvents {
-    public const string ON_ORGANIZATION_CREATED = "OnOrganizationCreated";
+    public const string ON_ORGANIZATION_CREATED = "OnInfoCreated";
     public record OnOrganizationCreated(string EventId, Organization Organization) : BaseEvent(EventId);
 
-    public const string ON_ORGANIZATION_NAME_UPDATED = "OnOrganizationNameUpdated"; // TODO: 名前ではなく情報すべての更新に変更する
+    public const string ON_ORGANIZATION_NAME_UPDATED = "OnInfoUpdated"; // TODO: 名前ではなく情報すべての更新に変更する
     public record OnOrganizationNameUpdated(string EventId, string Latest, string Old) : BaseEvent(EventId);
 
-    public const string ON_ORGANIZATION_DELETED = "OnOrganizationDeleted";
+    public const string ON_ORGANIZATION_DELETED = "OnInfoDeleted";
     public record OnOrganizationDeleted(string EventId, string OrganizationId) : BaseEvent(EventId);
 }

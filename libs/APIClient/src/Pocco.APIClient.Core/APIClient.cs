@@ -1,3 +1,4 @@
+using Pocco.APIClient.Core.Events;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Pocco.Libs.Protobufs.Services;
@@ -9,6 +10,7 @@ public partial class APIClient : IDisposable {
     public readonly CancellationTokenSource CancellationTokenSource;
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
+    public readonly EventListener EventListener;
     public readonly EventHub EventHub;
     public string APIEndpoint => _config.APIEndpoint;
 
@@ -29,6 +31,7 @@ public partial class APIClient : IDisposable {
         API = new V0ApiService.V0ApiServiceClient(channel);
 
         SessionManager = new SessionManager(this, CancellationTokenSource.Token);
+        EventListener = new EventListener(this, CancellationTokenSource.Token);
         EventHub = new EventHub();
 
         EventHub.GetObservable<ClientEvents.OnLog>()
