@@ -62,7 +62,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     //イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnInfoCreated",
+      EventType = "OnOrganizationInfoCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -116,7 +116,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     //イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnInfoUpdated",
+      EventType = "OnOrganizationInfoUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -160,7 +160,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnInfoDeleted",
+      EventType = "OnOrganizationInfoDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,

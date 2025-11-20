@@ -209,7 +209,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnAddReactionMessage",
+      EventType = "OnOrganizationAddReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,
@@ -258,7 +258,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRemoveReactionMessage",
+      EventType = "OnOrganizationRemoveReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,
@@ -307,7 +307,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnBulkRemoveReactionMessage",
+      EventType = "OnOrganizationBulkRemoveReactionMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,

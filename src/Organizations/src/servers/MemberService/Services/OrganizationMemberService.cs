@@ -52,7 +52,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     //　イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnMemberCreated",
+      EventType = "OnOrganizationMemberCreated",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
       Payload = new Struct()
@@ -90,7 +90,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnMemberUpdated",
+      EventType = "OnOrganizationMemberUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -122,7 +122,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnMemberDeleted",
+      EventType = "OnOrganizationMemberDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
