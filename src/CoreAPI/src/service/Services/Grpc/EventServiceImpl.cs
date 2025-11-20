@@ -32,7 +32,8 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
       userId: request.UserId,
       filters: filters, // TODO: 1つのフィルターになるように変更
       streamWriter: responseStream,
-      context: context
+      context: context,
+      logger: _logger
     );
 
     // Register the StreamWriterModel
@@ -51,6 +52,7 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
       _logger.LogInformation("Operation canceled for SessionId={SessionId}", request.SessionId);
     } finally {
       // Unregister the StreamWriterModel
+      _logger.LogInformation("Removing StreamWriter for SessionId={SessionId}", request.SessionId);
       _streamHolder.RemoveStreamWriter(request.SessionId);
     }
 
