@@ -23,6 +23,7 @@ await client.EventListener.StartListeningAsync(listenRequest);
 await Task.Delay(2000); // 少し待ってからイベント購読を更新
 
 var randomOrgName = $"TestOrg-{Guid.NewGuid().ToString().Substring(0, 8)}";
+client.Logger.LogInformation("Creating organization with name: {OrgName}", randomOrgName);
 await client.CreateOrganizationAsync(new V0CreateOrganizationRequest {
     Base = new V0CreateXRequest {
         Name = randomOrgName,
@@ -32,7 +33,12 @@ await client.CreateOrganizationAsync(new V0CreateOrganizationRequest {
 
 await Task.Delay(5000); // イベント受信のために少し待機
 
-var orgId = client.EventListener.TempOrganizationIds.LastOrDefault() ?? throw new Exception("Organization ID not found from events.");
+await client.EventListener.UpdateSubscriptionAsync(client.EventListener.CurrentListeningEvents);
+
+await Task.Delay(5000); // イベント受信のために少し待機
+
+var orgId = client.EventListener.CurrentListeningEvents.OrganizationIds.LastOrDefault() ?? throw new Exception("Organization ID not found from events.");
+client.Logger.LogInformation("Updating organization with name: {OrgName}", randomOrgName);
 await client.UpdateOrganizationNameAsync(new V0UpdateOrganizationNameRequest {
     OrganizationId = orgId,
     Name = randomOrgName + "-Updated",
@@ -40,11 +46,18 @@ await client.UpdateOrganizationNameAsync(new V0UpdateOrganizationNameRequest {
 
 await Task.Delay(5000); // イベント受信のために少し待機
 
+client.Logger.LogInformation("Deleting organization with name: {OrgName}", randomOrgName);
 await client.DeleteOrganizationAsync(new V0BaseRequest {
     Id = orgId,
 });
 
-await Task.Delay(5000); // 最後に少し待ってから終了
+await Task.Delay(5000); // イベント受信のために少し待機
+
+await client.EventListener.UpdateSubscriptionAsync(client.EventListener.CurrentListeningEvents);
+
+await Task.Delay(5000); // イベント受信のために少し待機
+
+await client.SessionManager.LogoutAsync();
 client.Dispose();
 
 #region Helper Classes
@@ -60,7 +73,7 @@ class Logger<T> : ILogger<T> {
     public bool IsEnabled(LogLevel logLevel) => true;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter) {
-        Console.WriteLine($"[{_name}] {logLevel}: {formatter(state, exception!)}");
+        Console.WriteLine($"[{DateTime.Now:yyyy/MM/dd HH:mm:ss:fff}] [{_name}] {logLevel}: {formatter(state, exception!)}");
     }
 }
 static class LoggerFactory {
