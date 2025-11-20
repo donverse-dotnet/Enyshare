@@ -9,4 +9,5 @@ message V0CreateMemberRequest{
     string nickname = 2;
     string invite_code = 3;
     string organization_id = 4;
+    string invoked_by = 5;
 }

@@ -1,8 +1,14 @@
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MongoDB.Bson;
 using Pocco.Libs.Protobufs.Types;
 using MemberService.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Pocco.Svc.EventBridge.Protobufs.Enums;
+using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Svc.EventBridge.Protobufs.Types;
+using System.Data;
+using Pocco.Libs.Protobufs.Services;
 
 
 namespace MemberService.Services;
@@ -14,25 +20,20 @@ namespace MemberService.Services;
 public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0OrganizationMemberServiceBase {
   private readonly IMemberRepository _repository;
   private readonly ILogger<OrganizationsMemberServiceImpl> _logger;
+  private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
 
-  public OrganizationsMemberServiceImpl([FromServices] IMemberRepository repository,
-[FromServices] ILogger<OrganizationsMemberServiceImpl> logger) {
+  public OrganizationsMemberServiceImpl(
+    [FromServices] IMemberRepository repository,
+    [FromServices] ILogger<OrganizationsMemberServiceImpl> logger,
+    [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge
+  ) {
     _repository = repository;
     _logger = logger;
+    _eventBridge = eventBridge;
 
     _logger.LogInformation("OrganizationsMemberServiceImpl is initialized!");
   }
 
-  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
-    var members = await _repository.GetListAsync(request.OrganizationId);
-
-    var response = new V0GetListReply();
-    response.Members.AddRange(members.Select(m => new  MemberListResponse {
-      Id = m.Id
-    }));
-
-    return response;
-    }
   /// <summary>
   /// メンバーの新規登録処理
   /// - 組織IDとユーザーIDの重複チェック（論理処理されていないもののみ対象）
@@ -48,8 +49,24 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     MemberEntity createdMember = await _repository.CreateAsync(request.OrganizationId, member);
     _logger.LogInformation("{MemberId} is successfully created on {OrganizationId}", createdMember.Id, request.OrganizationId);
 
+    //　イベントを伝搬させるのをEventBridgeに依頼
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnMemberCreated",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
+    };
+
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+    newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{createdMember.Nickname}" });
+    newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{createdMember.Roles}" });
+    newEventData.Payload.Fields.Add("joined_at", new Value { StringValue = $"{createdMember.JoinedAt}" });
+
+    var createdEventData = _eventBridge.NewEvent(newEventData);
+
     return new V0MemberChangesReply {
-      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+      EventId = createdEventData.EventId
     };
   }
 
@@ -71,8 +88,24 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields update"));
     }
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnMemberUpdated",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
+    };
+
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+    newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{model.Nickname}" });
+    newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{model.Roles}" });
+    newEventData.Payload.Fields.Add("joined_at", new Value { StringValue = $"{model.JoinedAt}" });
+
+    var updatedEventData = _eventBridge.NewEvent(newEventData);
+
     return new V0MemberChangesReply {
-      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+      EventId = updatedEventData.EventId
     };
   }
 
@@ -87,8 +120,21 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields to delete"));
     }
 
+    var newEventData = new V0NewEventRequest {
+      Topic = V0EventTopics.EventTopicOrganization,
+      EventType = "OnMemberDeleted",
+      ApiVersion = "0",
+      InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      InvokedBy = request.InvokedBy,
+      Payload = new Struct()
+    };
+
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+
+    var deletedEventData = _eventBridge.NewEvent(newEventData);
+
     return new V0MemberChangesReply {
-      EventId = "fake id" //TODO: eventbridgeからのidに置き換える
+      EventId = deletedEventData.EventId
     };
   }
 
@@ -112,5 +158,15 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     return new V0GetMemberReply {
       Id = model.Id
     };
+  }
+  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
+    var members = await _repository.GetListAsync(request.OrganizationId);
+
+    var response = new V0GetListReply();
+    response.Members.AddRange(members.Select(m => new  MemberListResponse {
+      Id = m.Id
+    }));
+
+    return response;
   }
 }

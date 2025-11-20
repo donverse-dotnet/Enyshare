@@ -10,4 +10,5 @@ message V0UpdateMemberRequest{
     string nickname = 3;
     string join_at = 4;
     string organization_id = 5;
+    string invoked_by = 6;
 }

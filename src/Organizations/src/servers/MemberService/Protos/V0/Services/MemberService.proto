@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-package pocco.libs.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+
+package pocco.libs.protobufs.services;
 
 import "V0/Types/CreateMemberData.proto";
 import "V0/Types/UpdateMemberData.proto";

@@ -7,4 +7,5 @@ message V0DeleteMemberRequest{
     string id = 1;
     string organization_id = 2;
     string nickname = 3;
+    string invoked_by = 4;
 }
