@@ -28,7 +28,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
 
   // コンストラクタ：MongoDBインスタンスから必要なコレクションを取得
   public OrganizationsInfoServiceImpl([FromServices] IMongoDatabase mongo, [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
-    _orgs = mongo.GetCollection<OrganizationEntity>("organizations");
+    _orgs = mongo.GetCollection<OrganizationEntity>("Organizations");
     _eventBridge = eventBridge;
   }
 
