@@ -29,11 +29,17 @@ public class EventDistributeService : IHotStartableService {
 
   private async Task ProcessEventQueueAsync(CancellationToken cancellationToken) {
     await foreach (var eventData in _eventQueue.WithCancellation(cancellationToken)) {
-      var writers = _streamHolder.GetStreamWriters(item => item.Filters.MatchesTopic(eventData.Topic.ToString()) ||
+      var writers = _streamHolder.GetStreamWriters(item =>
+        item.UserId == eventData.InvokedBy ||
+        item.Filters.MatchesTopic(eventData.Topic.ToString()) ||
         item.Filters.MatchesOrganizationId(eventData.Payload.Fields["ornigazation_id"].ToString()) ||
         item.Filters.MatchesActiveOrganizationId(eventData.Payload.Fields["ornigazation_id"].ToString()) ||
-        item.Filters.MatchesActiveOrganizationChatId(eventData.Payload.Fields["chat_id"].ToString()));
+        item.Filters.MatchesActiveOrganizationChatId(eventData.Payload.Fields["chat_id"].ToString())
+      );
+
       foreach (var writer in writers) {
+        _logger.LogInformation("Dispatching event to SessionId={SessionId}, UserId={UserId}",
+          writer.SessionId, writer.UserId);
         writer.EnqueueEvent(eventData);
       }
 

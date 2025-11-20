@@ -32,7 +32,8 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
       userId: request.UserId,
       filters: filters, // TODO: 1つのフィルターになるように変更
       streamWriter: responseStream,
-      context: context
+      context: context,
+      logger: _logger
     );
 
     // Register the StreamWriterModel
@@ -41,7 +42,7 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
     // Wait until the client disconnects
     try {
       while (!context.CancellationToken.IsCancellationRequested) {
-        await Task.Delay(100, context.CancellationToken); // Keep the connection alive
+        Task.Delay(100, context.CancellationToken).Wait(); // Keep the connection alive
       }
     } catch (TaskCanceledException) {
       // Client disconnected
@@ -51,6 +52,7 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
       _logger.LogInformation("Operation canceled for SessionId={SessionId}", request.SessionId);
     } finally {
       // Unregister the StreamWriterModel
+      _logger.LogInformation("Removing StreamWriter for SessionId={SessionId}", request.SessionId);
       _streamHolder.RemoveStreamWriter(request.SessionId);
     }
 
