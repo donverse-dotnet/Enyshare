@@ -36,10 +36,11 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<V0EventInvokedResponse> UpdateOrganizationName(V0UpdateOrganizationNameRequest request, ServerCallContext context) {
-    var reply = await _orgInfoService.UpdateAsync(new V0UpdateOrganizationRequest {
+  public override async Task<V0EventInvokedResponse> UpdateOrganization(Libs.Protobufs.Services.V0UpdateOrganizationRequest request, ServerCallContext context) {
+    var reply = await _orgInfoService.UpdateAsync(new Libs.Protobufs.Types.V0UpdateOrganizationRequest {
       Id = request.OrganizationId,
-      Name = request.Name
+      Name = request.Name,
+      Description = request.Description
     });
 
     return new V0EventInvokedResponse {
