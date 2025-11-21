@@ -37,7 +37,7 @@ service V0ApiService {
     // Create: Authorized
     rpc Create (V0CreateOrganizationRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Update: Authorized
-    rpc UpdateOrganizationName (V0UpdateOrganizationNameRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc UpdateOrganization (V0UpdateOrganizationRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Delete: Authorized
     rpc Delete (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
@@ -230,11 +230,13 @@ message V0CreateChatRequest {
     // タイプ
     string type = 3; // 例: "text", "forum"
 }
-message V0UpdateOrganizationNameRequest {
+message V0UpdateOrganizationRequest {
     // 組織ID
     string organization_id = 1;
     // 新しい組織名
     string name = 2;
+    // 新しい組織説明
+    string description = 3;
 }
 message V0UpdateChatRequest {
     // 組織ID
