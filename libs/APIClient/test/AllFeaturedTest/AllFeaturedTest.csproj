@@ -4,10 +4,6 @@
     <ProjectReference Include="..\..\src\Pocco.APIClient.Core\Pocco.APIClient.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Pocco.Svc.CoreAPI.Grpc.Clients" Version="0.0.1-build-1763684620" />
-  </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
