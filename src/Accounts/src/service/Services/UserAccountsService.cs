@@ -34,6 +34,10 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
   }
 
   public override async Task<V0RegisterAccountReply> Register(V0RegisterAccountRequest request, ServerCallContext context) {
+    var existingAccount = await _accounts.FindAsync(acc => acc.Email == request.Email).Result.FirstOrDefaultAsync();
+    if (existingAccount is not null) {
+      throw new RpcException(new Status(StatusCode.AlreadyExists, "An account with this email already exists."));
+    }
     var model = new Account {
       Email = request.Email,
       IsEmailVerified = false,
