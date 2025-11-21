@@ -63,7 +63,7 @@ public class OrganizationActionsTest {
         var organizationId = Environment.GetEnvironmentVariable("POCCO_TEST_ORGANIZATION_ID") ?? string.Empty;
         var newName = "Updated Test Organization";
 
-        var updateResult = await _client.UpdateOrganizationNameAsync(new V0UpdateOrganizationNameRequest {
+        var updateResult = await _client.UpdateOrganizationNameAsync(new V0UpdateOrganizationRequest {
             OrganizationId = organizationId,
             Name = newName
         });

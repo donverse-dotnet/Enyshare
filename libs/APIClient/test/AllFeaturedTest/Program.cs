@@ -39,7 +39,7 @@ await Task.Delay(5000); // イベント受信のために少し待機
 
 var orgId = client.EventListener.CurrentListeningEvents.OrganizationIds.LastOrDefault() ?? throw new Exception("Organization ID not found from events.");
 client.Logger.LogInformation("Updating organization with name: {OrgName}", randomOrgName);
-await client.UpdateOrganizationNameAsync(new V0UpdateOrganizationNameRequest {
+await client.UpdateOrganizationNameAsync(new V0UpdateOrganizationRequest {
     OrganizationId = orgId,
     Name = randomOrgName + "-Updated",
 });

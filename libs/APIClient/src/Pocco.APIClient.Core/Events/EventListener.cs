@@ -1,3 +1,4 @@
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
@@ -62,16 +63,45 @@ public class EventListener : IDisposable {
         await foreach (var eventMessage in call.ResponseStream.ReadAllAsync(_cancellationToken)) {
             // 受信したイベントメッセージの処理をここに実装
             switch (eventMessage.EventType) {
-                case ClientEvents.ON_ORGANIZATION_CREATED:
+                case ClientEvents.ON_ORGANIZATION_INFO_CREATED:
                     _client.Logger.LogInformation("Organization created event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Add(eventMessage.Payload.Fields["info_id"].StringValue);
+
+                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoCreated(
+                        eventMessage.EventId,
+                        new Organization {
+                            OrganizationId = eventMessage.Payload.Fields["info_id"].StringValue,
+                            Name = eventMessage.Payload.Fields["name"].StringValue,
+                            Description = eventMessage.Payload.Fields["description"].StringValue,
+                            CreatedBy = eventMessage.Payload.Fields["created_by"].StringValue,
+                            CreatedAt = Timestamp.FromDateTime(DateTime.Parse(eventMessage.Payload.Fields["created_at"].StringValue).ToUniversalTime()),
+                            UpdatedAt = Timestamp.FromDateTime(DateTime.Parse(eventMessage.Payload.Fields["updated_at"].StringValue).ToUniversalTime()),
+                        }
+                    ));
                     break;
-                case ClientEvents.ON_ORGANIZATION_NAME_UPDATED:
+                case ClientEvents.ON_ORGANIZATION_INFO_UPDATED:
                     _client.Logger.LogInformation("Organization name updated event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
+
+                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoUpdated(
+                        eventMessage.EventId,
+                        new Organization {
+                            OrganizationId = eventMessage.Payload.Fields["info_id"].StringValue,
+                            Name = eventMessage.Payload.Fields["name"].StringValue,
+                            Description = eventMessage.Payload.Fields["description"].StringValue,
+                            CreatedBy = eventMessage.Payload.Fields["created_by"].StringValue,
+                            CreatedAt = Timestamp.FromDateTime(DateTime.Parse(eventMessage.Payload.Fields["created_at"].StringValue).ToUniversalTime()),
+                            UpdatedAt = Timestamp.FromDateTime(DateTime.Parse(eventMessage.Payload.Fields["updated_at"].StringValue).ToUniversalTime()),
+                        }
+                    ));
                     break;
-                case ClientEvents.ON_ORGANIZATION_DELETED:
+                case ClientEvents.ON_ORGANIZATION_INFO_DELETED:
                     _client.Logger.LogInformation("Organization deleted event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Remove(eventMessage.Payload.Fields["info_id"].StringValue);
+
+                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoDeleted(
+                        eventMessage.EventId,
+                        eventMessage.Payload.Fields["info_id"].StringValue
+                    ));
                     break;
                 // 未実装はこれより下にbreakなしで追加
 
