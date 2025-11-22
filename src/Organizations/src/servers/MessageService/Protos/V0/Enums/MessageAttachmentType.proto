@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Enums";
-package pocco.svc.messages.protobufs.enums;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.MessageEnums";
+package pocco.libs.protobufs.organizations.Messageenums;
 
 
 enum MessageAttachmentType {

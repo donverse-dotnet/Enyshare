@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Types";
-package pocco.svc.messages.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.MessageServices";
+package pocco.libs.protobufs.organizations.messagetypes;
 
 import "V0/Types/Messages.proto";
 import "google/protobuf/timestamp.proto";

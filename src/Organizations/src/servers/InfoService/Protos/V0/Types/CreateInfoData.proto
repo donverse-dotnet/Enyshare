@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.InfoTypes";
 
-package pocco.libs.protobufs.types;
+package pocco.libs.protobufs.organizations.infotypes;
 
 message V0CreateOrganizationRequest{
     string name = 1;

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Services";
-package pocco.svc.messages.protobufs.services;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.MessageServices";
+package pocco.libs.protobufs.organizations.messageservices;
 
 import "V0/Types/MessagesForOrgs.proto";
 

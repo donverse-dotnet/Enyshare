@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-package pocco.libs.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.RoleTypes";
+package pocco.libs.protobufs.organizations.roletypes;
 
 import "google/protobuf/timestamp.proto";
 

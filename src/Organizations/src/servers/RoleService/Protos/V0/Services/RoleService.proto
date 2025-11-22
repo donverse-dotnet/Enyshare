@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Services";
-package pocco.libs.protobufs.services;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.RoleServices";
+package pocco.libs.protobufs.organizations.roleservices;
 
 import "V0/Types/GetRequestData.proto";
 import "V0/Types/CreateRequestData.proto";

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Services";
-package pocco.libs.protobufs.services;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.ChatServices";
+package pocco.libs.protobufs.organizations.chatservices;
 
 import "V0/Types/ChatCreateDataRequest.proto";
 import "V0/Types/ChatDeleteDataRequest.proto";

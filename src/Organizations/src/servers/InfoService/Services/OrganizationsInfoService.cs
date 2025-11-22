@@ -9,8 +9,8 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 
 // サービス定義とプロトコルバッファの型定義
-using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations.InfoServices;
+using Pocco.Libs.Protobufs.Organizations.InfoTypes;
 using InfoService.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Pocco.Svc.EventBridge.Protobufs.Services;
