@@ -1,7 +1,7 @@
 
 using System.Threading.Channels;
 using Grpc.Core;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.Svc.CoreAPI.Models;
 

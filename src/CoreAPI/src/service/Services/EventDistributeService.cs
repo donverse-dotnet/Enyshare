@@ -2,7 +2,7 @@
 
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Mvc;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.Svc.CoreAPI.Services;
 

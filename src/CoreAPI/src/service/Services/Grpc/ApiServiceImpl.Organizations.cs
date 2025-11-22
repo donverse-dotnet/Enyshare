@@ -1,5 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 using Pocco.Libs.Protobufs.Services;
 using Pocco.Libs.Protobufs.Types;
 
@@ -26,7 +27,7 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<V0EventInvokedResponse> Create(Libs.Protobufs.Services.V0CreateOrganizationRequest request, ServerCallContext context) {
+  public override async Task<V0EventInvokedResponse> Create(Libs.Protobufs.CoreAPI.Services.V0CreateOrganizationRequest request, ServerCallContext context) {
     var reply = await _orgInfoService.CreateAsync(new Libs.Protobufs.Types.V0CreateOrganizationRequest { // TODO: 名前空間の整理
       Name = request.Base.Name,
       Description = request.Description
@@ -36,7 +37,7 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<V0EventInvokedResponse> UpdateOrganization(Libs.Protobufs.Services.V0UpdateOrganizationRequest request, ServerCallContext context) {
+  public override async Task<V0EventInvokedResponse> UpdateOrganization(Libs.Protobufs.CoreAPI.Services.V0UpdateOrganizationRequest request, ServerCallContext context) {
     var reply = await _orgInfoService.UpdateAsync(new Libs.Protobufs.Types.V0UpdateOrganizationRequest {
       Id = request.OrganizationId,
       Name = request.Name,
@@ -61,10 +62,10 @@ public partial class ApiServiceImpl {
   #region Members
   public override async Task<V0ListMembersResponse> ListMembers(V0ListXRequest request, ServerCallContext context) {
     // var members = await _organizationService.ListOrganizationMembersAsync(request.Id);
-    var members = new List<Libs.Protobufs.Services.Member>
+    var members = new List<Libs.Protobufs.CoreAPI.Services.Member>
     {
-      new Libs.Protobufs.Services.Member { },
-      new Libs.Protobufs.Services.Member { }
+      new Libs.Protobufs.CoreAPI.Services.Member { },
+      new Libs.Protobufs.CoreAPI.Services.Member { }
     };
 
     var response = new V0ListMembersResponse();
@@ -72,9 +73,9 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<Libs.Protobufs.Services.Member> GetMember(V0BaseRequest request, ServerCallContext context) {
+  public override async Task<Libs.Protobufs.CoreAPI.Services.Member> GetMember(V0BaseRequest request, ServerCallContext context) {
     // var member = await _organizationService.GetOrganizationMemberByIdAsync(request.Id);
-    var member = new Libs.Protobufs.Services.Member { }; // TODO: Remove mock
+    var member = new Libs.Protobufs.CoreAPI.Services.Member { }; // TODO: Remove mock
     return member;
   }
 

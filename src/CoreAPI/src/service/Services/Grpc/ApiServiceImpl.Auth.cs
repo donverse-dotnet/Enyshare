@@ -4,7 +4,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Auth.Services;
 using Pocco.Libs.Protobufs.Auth.Types;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
