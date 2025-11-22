@@ -9,11 +9,11 @@ public class Account {
   public required string Email { get; set; }
   public required string PasswordHash { get; init; }
   public bool IsEmailVerified { get; set; } = false;
-  public string? Onetimecode { get; set; }
-  public string? Username { get; set; }
-  public string? AvatarUrl { get; set; }
+  public string Onetimecode { get; set; } = string.Empty;
+  public string Username { get; set; } = string.Empty;
+  public string AvatarUrl { get; set; } = string.Empty;
   public V0AccountStatusMessageWrapper Status { get; set; } = new(V0AccountStatus.V0Offline, "Account is active");
-  public string? Role { get; set; }
+  public string Role { get; set; } = string.Empty;
   public bool IsActive { get; set; } = false;
 
 
