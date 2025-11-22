@@ -24,18 +24,16 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Feed nuget package source for GitHub Packages
-        working-directory: ./src/Pocco.APIClient.Core
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: dotnet nuget add source --username ggg-alpha --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
-
-      - name: Find nuget.config
         run: |
-          ls -la ./src/Pocco.APIClient.Core/nuget.config
-
-      - name: Restore dependencies
-        working-directory: ./src/Pocco.APIClient.Core
-        run: dotnet restore --configfile ./nuget.config
+          dotnet nuget add source \
+            --configfile ./src/Pocco.APIClient.Core/nuget.config \
+            --username ggg-alpha \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --store-password-in-clear-text \
+            --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
+            - name: Restore dependencies
+              working-directory: ./src/Pocco.APIClient.Core
+              run: dotnet restore --configfile ./nuget.config
 
       - name: Build the project
         working-directory: ./src/Pocco.APIClient.Core
@@ -47,10 +45,8 @@ jobs:
 
       - name: Publish to GitHub Packages
         working-directory: ./src/Pocco.APIClient.Core
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet nuget push ./nupkg/*.nupkg \
             --source "https://nuget.pkg.github.com/ggg-alpha/index.json" \
-            --api-key $GITHUB_TOKEN \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
