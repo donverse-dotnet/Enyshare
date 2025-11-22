@@ -63,13 +63,15 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
   public override async Task<V0RoleChangesReply> Create(V0CreateRequest request, ServerCallContext context) {
 
+    var currentTime = DateTime.UtcNow;
+
     var model = new Role() {
       Id = ObjectId.GenerateNewId().ToString(),
       OrgId = request.OrgId,
       Name = request.Name,
       Description = "", // 作成するときは空のまま
-      CreatedAt = DateTime.UtcNow,
-      UpdatedAt = DateTime.UtcNow
+      CreatedAt = currentTime,
+      UpdatedAt = currentTime
     };
     Role createdRole = await _repo.CreateAsync(request.OrgId, model);
     _logger.LogInformation("{RoleId} is successfully created on {OrgId}", createdRole.Id, request.OrgId);
