@@ -13,14 +13,14 @@ namespace Pocco.Svc.Chats.Models;
 public class Chat {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
-  public required string Id { get; set; }
+  public required string Id { get; set; } = string.Empty;
 
   [BsonElement("OrgId")]
-  public required string OrgId { get; set; }
+  public required string OrgId { get; set; } = string.Empty;
 
   [BsonElement("name")]
   [BsonRequired]
-  public required string Name { get; set; }
+  public required string Name { get; set; } = string.Empty;
 
   [BsonElement("description")]
   [BsonRequired]
@@ -28,11 +28,11 @@ public class Chat {
 
   [BsonElement("createdBy")]
   [BsonRequired]
-  public required string CreatedBy { get; set; }
+  public required string CreatedBy { get; set; } = string.Empty;
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("createdAt")]
-  public DateTime CreatedAt { get; set; }
+  public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
   [BsonElement("isprivate")]
   public bool IsPrivate { get; set; } = false;
