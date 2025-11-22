@@ -1,7 +1,7 @@
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
-using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
+using Pocco.Libs.Protobufs.EventBridge.Services;
+using Pocco.Libs.Protobufs.EventBridge.Types;
 
 namespace Pocco.Svc.EventBridge.Services.Grpc;
 

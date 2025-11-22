@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
-package pocco.svc.eventbridge.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Types";
+package pocco.libs.protobufs.eventbridge.types;
 
 message V0EventReceivedData {
     // イベントID
