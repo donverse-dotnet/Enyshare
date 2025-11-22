@@ -20,8 +20,8 @@ public class Account {
   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-  public DateTime? DeletionRequestedAt { get; set; } = DateTime.UtcNow;
-  public DateTime? LastLoginedAt { get; set; } = DateTime.UtcNow;
+  public DateTime? DeletionRequestedAt { get; set; }
+  public DateTime? LastLoginedAt { get; set; }
 
   public V0AccountNotificationSettingWrapper Notifications { get; set; } = new(true, true, true);
 }

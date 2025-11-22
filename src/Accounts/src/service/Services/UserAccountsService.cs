@@ -76,6 +76,7 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
           request.NewAccount.Notifications.Push,
           request.NewAccount.Notifications.ShowBadge
         ))
+        .Set(acc => acc.LastLoginedAt, DateTime.UtcNow)
     };
 
     // 2.パスワードを更新
