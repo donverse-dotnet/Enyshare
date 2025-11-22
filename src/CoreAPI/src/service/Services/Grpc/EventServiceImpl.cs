@@ -2,7 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 using Pocco.Svc.CoreAPI.Models;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;

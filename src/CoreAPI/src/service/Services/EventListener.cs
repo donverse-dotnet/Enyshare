@@ -82,15 +82,15 @@ public class EventListener : IHotStartableService {
         while (await responseStream.MoveNext(cancellationToken)) {
           var eventData = responseStream.Current;
           // Process the received event data
-          var convertedEvent = new Pocco.Libs.Protobufs.Services.V0EventData {
+          var convertedEvent = new Pocco.Libs.Protobufs.CoreAPI.Services.V0EventData {
             EventId = eventData.EventId,
             EventType = eventData.EventType,
             Topic = eventData.Topic switch {
-              V0EventTopics.EventTopicUnspecified => Libs.Protobufs.Services.V0EventTopics.EventTopicUnspecified,
-              V0EventTopics.EventTopicUser => Libs.Protobufs.Services.V0EventTopics.EventTopicUser,
-              V0EventTopics.EventTopicSystem => Libs.Protobufs.Services.V0EventTopics.EventTopicSystem,
-              V0EventTopics.EventTopicOrganization => Libs.Protobufs.Services.V0EventTopics.EventTopicOrganization,
-              _ => Libs.Protobufs.Services.V0EventTopics.EventTopicUnspecified,
+              V0EventTopics.EventTopicUnspecified => Libs.Protobufs.CoreAPI.Services.V0EventTopics.EventTopicUnspecified,
+              V0EventTopics.EventTopicUser => Libs.Protobufs.CoreAPI.Services.V0EventTopics.EventTopicUser,
+              V0EventTopics.EventTopicSystem => Libs.Protobufs.CoreAPI.Services.V0EventTopics.EventTopicSystem,
+              V0EventTopics.EventTopicOrganization => Libs.Protobufs.CoreAPI.Services.V0EventTopics.EventTopicOrganization,
+              _ => Libs.Protobufs.CoreAPI.Services.V0EventTopics.EventTopicUnspecified,
             },
             Payload = eventData.Payload,
             InvokedAt = eventData.InvokedAt,
