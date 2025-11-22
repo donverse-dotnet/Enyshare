@@ -38,6 +38,9 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     if (existingAccount is not null) {
       throw new RpcException(new Status(StatusCode.AlreadyExists, "An account with this email already exists."));
     }
+
+    var currentTime = DateTime.UtcNow;
+    
     var model = new Account {
       Email = request.Email,
       IsEmailVerified = false,
@@ -46,8 +49,8 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
       Role = "User",
       IsActive = true,
 
-      CreatedAt = DateTime.UtcNow,
-      UpdatedAt = DateTime.UtcNow
+      CreatedAt = currentTime,
+      UpdatedAt = currentTime
     };
 
     await _accounts.InsertOneAsync(model);
