@@ -31,10 +31,7 @@ jobs:
 
       - name: Find nuget.config
         run: |
-          if [ -f ./src/Pocco.APIClient.Core/nuget.config ]; then
-            echo "nuget.config found in project directory."
-          else
-            echo "No such file: ./src/Pocco.APIClient.Core/nuget.config"
+          ls -la ./src/Pocco.APIClient.Core/nuget.config
 
       - name: Restore dependencies
         working-directory: ./src/Pocco.APIClient.Core
