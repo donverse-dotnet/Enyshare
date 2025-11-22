@@ -24,11 +24,21 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Feed nuget package source for GitHub Packages
-        run: dotnet nuget add source --username ggg-alpha --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
+        working-directory: ./src/Pocco.APIClient.Core
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget add source --username ggg-alpha --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
+
+      - name: Find nuget.config
+        run: |
+          if [ -f ./src/Pocco.APIClient.Core/nuget.config ]; then
+            echo "nuget.config found in project directory."
+          else
+            echo "No such file: ./src/Pocco.APIClient.Core/nuget.config"
 
       - name: Restore dependencies
         working-directory: ./src/Pocco.APIClient.Core
-        run: dotnet restore
+        run: dotnet restore --configfile ./nuget.config
 
       - name: Build the project
         working-directory: ./src/Pocco.APIClient.Core
