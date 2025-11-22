@@ -38,7 +38,6 @@ jobs:
         run: dotnet pack --configuration Release --no-build -o ./nupkg ./src/Pocco.APIClient.Core/Pocco.APIClient.Core.csproj
 
       - name: Publish to GitHub Packages
-        working-directory: ./src/Pocco.APIClient.Core
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_READ_PACKAGES }}
         run: |
