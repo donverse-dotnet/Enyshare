@@ -39,7 +39,7 @@ jobs:
 
       - name: Publish to GitHub Packages
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_READ_PACKAGES }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet nuget push ./nupkg/*.nupkg \
             --source "https://nuget.pkg.github.com/ggg-alpha/index.json" \
