@@ -66,7 +66,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     //イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnChatCreated",
+      EventType = "OnOrganizationChatCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -106,7 +106,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnChatUpdated",
+      EventType = "OnOrganizationChatUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -148,7 +148,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnChatDeleted",
+      EventType = "OnOrganizationChatDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,

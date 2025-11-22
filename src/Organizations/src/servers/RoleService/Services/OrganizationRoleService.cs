@@ -77,7 +77,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
     // イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRoleCreated",
+      EventType = "OnOrganizationRoleCreated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -118,7 +118,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRoleUpdated",
+      EventType = "OnOrganizationRoleUpdated",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
@@ -150,7 +150,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnRoleDeleted",
+      EventType = "OnOrganizationRoleDeleted",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.InvokedBy,
