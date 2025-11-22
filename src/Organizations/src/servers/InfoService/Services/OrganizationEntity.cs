@@ -18,10 +18,10 @@ public class OrganizationEntity
   public string CreatedBy { get; set; } = string.Empty;
 
   [BsonElement("createdAt")]
-  public DateTime CreatedAt { get; set; }
+  public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
   [BsonElement("updatedAt")]
-  public DateTime UpdatedAt { get; set; }
+  public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
   [BsonElement("deletedAt")]
   public DateTime? DeletedAt { get; set; }

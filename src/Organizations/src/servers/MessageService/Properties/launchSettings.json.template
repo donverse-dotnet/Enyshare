@@ -8,6 +8,7 @@
       "applicationUrl": "http://localhost:5017",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "MONGODB_CONNECTION_STRING": "CHANGE_HERE",
         "EVENTBRIDGE_URL": "CHANGE_HERE"
       }
     },

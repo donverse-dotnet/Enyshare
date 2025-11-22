@@ -34,6 +34,7 @@ public class OrganizationMessageGrpcService(
     // Get messages collection for the organization
     var messagesCollection = _mongoOrg.GetCollection<V0Messages>($"{request.ChatId}");
 
+    var currentTime = Timestamp.FromDateTime(DateTime.UtcNow);
     // Create a new message
     var newMessage = new V0Messages {
       Id = MessageIdGenerator.GenerateOrganizationMessageId(),
@@ -43,8 +44,8 @@ public class OrganizationMessageGrpcService(
       Attachments = request.Attachments,
       Mentions = request.Mentions,
       Reactions = request.Reactions,
-      CreatedAt = Timestamp.FromDateTime(DateTime.UtcNow),
-      UpdatedAt = Timestamp.FromDateTime(DateTime.UtcNow),
+      CreatedAt = currentTime,
+      UpdatedAt = currentTime,
       IsDeleted = false
     };
 
