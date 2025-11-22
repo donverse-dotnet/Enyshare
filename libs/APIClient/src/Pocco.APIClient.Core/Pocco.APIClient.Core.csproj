@@ -4,6 +4,20 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>Pocco.APIClient.Core</PackageId>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>ggg-alpha</Authors>
+    <Company>Donverse.net</Company>
+    <PackageDescription>PoccoのCoreAPIのgRPCクライアントパッケージ。</PackageDescription>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.CoreAPI.Client</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
