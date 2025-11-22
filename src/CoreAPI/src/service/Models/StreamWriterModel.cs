@@ -7,18 +7,6 @@ namespace Pocco.Svc.CoreAPI.Models;
 
 public class StreamWriterModel : IDisposable {
 
-  public StreamWriterModel(string sessionId, string userId, StreamWriterFilterModel filters, IServerStreamWriter<V0EventData> streamWriter, ServerCallContext context, ILogger logger) {
-    SessionId = sessionId;
-    UserId = userId;
-    Filters = filters;
-    StreamWriter = streamWriter;
-    StreamContext = context;
-    Logger = logger;
-
-    // Start processing the event queue
-    _processingTask = Task.Run(async () => await ProcessEventQueueAsync(_cancellationTokenSource.Token));
-  }
-
   public ILogger Logger { get; init; }
 
   public string SessionId { get; init; }
@@ -32,7 +20,18 @@ public class StreamWriterModel : IDisposable {
   private static readonly Channel<V0EventData> _channel = System.Threading.Channels.Channel.CreateUnbounded<V0EventData>();
   private readonly IAsyncEnumerable<V0EventData> _eventQueue = _channel.Reader.ReadAllAsync();
   private readonly CancellationTokenSource _cancellationTokenSource = new();
-  private readonly Task _processingTask;
+
+  public StreamWriterModel(string sessionId, string userId, StreamWriterFilterModel filters, IServerStreamWriter<V0EventData> streamWriter, ServerCallContext context, ILogger logger) {
+    SessionId = sessionId;
+    UserId = userId;
+    Filters = filters;
+    StreamWriter = streamWriter;
+    StreamContext = context;
+    Logger = logger;
+
+    // Start processing the event queue
+    Task.Run(async () => await ProcessEventQueueAsync(_cancellationTokenSource.Token));
+  }
 
   public void EnqueueEvent(V0EventData eventData) {
     var writed = _channel.Writer.TryWrite(eventData);
@@ -61,7 +60,6 @@ public class StreamWriterModel : IDisposable {
 
   public void Dispose() {
     _cancellationTokenSource.Cancel();
-    // _processingTask.Wait();
     _cancellationTokenSource.Dispose();
 
     GC.SuppressFinalize(this);
