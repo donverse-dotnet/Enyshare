@@ -23,6 +23,9 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
+      - name: Feed nuget package source for GitHub Packages
+        run: dotnet nuget add source --username ggg-alpha --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
+
       - name: Restore dependencies
         working-directory: ./src/Pocco.APIClient.Core
         run: dotnet restore
