@@ -59,7 +59,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnSendMessage",
+      EventType = "OnOrganizationSendMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,
@@ -112,7 +112,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnUpdateMessage",
+      EventType = "OnOrganizationUpdateMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,
@@ -165,7 +165,7 @@ public class OrganizationMessageGrpcService(
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
-      EventType = "OnDeleteMessage",
+      EventType = "OnOrganizationDeleteMessage",
       ApiVersion = "0",
       InvokedAt = Timestamp.FromDateTime(DateTime.UtcNow),
       InvokedBy = request.SenderId,
