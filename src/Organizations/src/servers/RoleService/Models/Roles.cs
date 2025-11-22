@@ -10,14 +10,14 @@ namespace Pocco.Svc.Roles.Models;
 public class Role {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
-  public required string Id { get; set; }
+  public required string Id { get; set; } = string.Empty;
 
   [BsonElement("orgid")]
-  public required string OrgId { get; set; }
+  public required string OrgId { get; set; } = string.Empty;
 
   [BsonElement("name")]
   [BsonRequired]
-  public required string Name { get; set; }
+  public required string Name { get; set; } = string.Empty;
 
   [BsonElement("discription")]
   [BsonRequired]
@@ -29,11 +29,11 @@ public class Role {
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("CreatedAt")]
-  public DateTime CreatedAt { get; set; }
+  public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
   [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
   [BsonElement("UpdatedAt")]
-  public DateTime UpdatedAt { get; set; }
+  public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
   public bool HasName => !string.IsNullOrWhiteSpace(Name);
 
