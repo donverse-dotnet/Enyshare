@@ -2,7 +2,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.APIClient.Core.Events;
 

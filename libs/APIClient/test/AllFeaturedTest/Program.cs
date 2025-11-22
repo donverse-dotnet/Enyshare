@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Pocco.APIClient.Core;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 var logger = LoggerFactory.Create<APIClient>();
 

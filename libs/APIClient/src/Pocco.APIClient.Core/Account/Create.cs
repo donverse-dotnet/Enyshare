@@ -1,5 +1,5 @@
 using Google.Protobuf.WellKnownTypes;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.APIClient.Core;
 

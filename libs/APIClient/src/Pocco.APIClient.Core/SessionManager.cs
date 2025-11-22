@@ -3,7 +3,7 @@ using System.Text.Json;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.APIClient.Core;
 

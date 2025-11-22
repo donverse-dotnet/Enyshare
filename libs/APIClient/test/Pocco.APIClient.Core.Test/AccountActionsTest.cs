@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.CoreAPI.Services;
 using Xunit.Abstractions;
 
 namespace Pocco.APIClient.Core.Test;
