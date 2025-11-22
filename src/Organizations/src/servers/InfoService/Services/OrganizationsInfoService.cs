@@ -45,14 +45,16 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
       throw new RpcException(new Status(StatusCode.AlreadyExists, "Organization name already exists"));
     }
 
+    var currentTime = DateTime.UtcNow;
+
     // 組織エンティティの作成
     var org = new OrganizationEntity {
       Id = ObjectId.GenerateNewId().ToString(),
       Name = request.Name,
       Description = request.Description,
       CreatedBy = request.CreatedBy,
-      CreatedAt = DateTime.UtcNow,
-      UpdatedAt = DateTime.UtcNow,
+      CreatedAt = currentTime,
+      UpdatedAt = currentTime,
       DeletedAt = null
     };
 
