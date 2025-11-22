@@ -24,19 +24,19 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore dependencies
-        working-directory: ./src/package/Pocco.APIClient.Core
+        working-directory: ./src/Pocco.APIClient.Core
         run: dotnet restore
 
       - name: Build the project
-        working-directory: ./src/package/Pocco.APIClient.Core
+        working-directory: ./src/Pocco.APIClient.Core
         run: dotnet build --configuration Release --no-restore
 
       - name: Pack the project
-        working-directory: ./src/package/Pocco.APIClient.Core
+        working-directory: ./src/Pocco.APIClient.Core
         run: dotnet pack --configuration Release --no-build -o ./nupkg
 
       - name: Publish to GitHub Packages
-        working-directory: ./src/package/Pocco.APIClient.Core
+        working-directory: ./src/Pocco.APIClient.Core
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
