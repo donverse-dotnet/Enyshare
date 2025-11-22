@@ -6,7 +6,7 @@ using Pocco.Libs.Protobufs.Services;
 namespace Pocco.APIClient.Core;
 
 public partial class APIClient : IDisposable {
-    public readonly ILogger<APIClient> Logger;
+    public readonly ILogger Logger;
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
     public readonly EventListener EventListener;
@@ -20,7 +20,7 @@ public partial class APIClient : IDisposable {
     /// </summary>
     /// <param name="config">クライアントの設定</param>
     /// <param name="logger">ロガーインスタンス</param>
-    public APIClient(APIClientConfigurations config, ILogger<APIClient> logger) {
+    public APIClient(APIClientConfigurations config, ILogger logger) {
         _config = config;
         Logger = logger;
         Logger.LogInformation("Initializing APIClient...");
