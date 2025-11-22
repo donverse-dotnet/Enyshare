@@ -25,7 +25,7 @@ jobs:
 
       - name: Feed nuget package source for GitHub Packages
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_READ_PACKAGES }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet nuget add source --username ggg-alpha --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
 
       - name: Restore dependencies
