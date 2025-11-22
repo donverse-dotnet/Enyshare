@@ -10,8 +10,6 @@
     <Authors>ggg-alpha</Authors>
     <Company>Donverse.net</Company>
     <PackageDescription>PoccoのCoreAPIのgRPCクライアントパッケージ。</PackageDescription>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.CoreAPI.Client</RepositoryUrl>
   </PropertyGroup>
 
