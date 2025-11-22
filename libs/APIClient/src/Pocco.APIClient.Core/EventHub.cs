@@ -12,7 +12,7 @@ public class EventHub : IDisposable {
     /// </summary>
     /// <typeparam name="TEvent"><see cref="BaseEvent"/>を継承したイベントレコード</typeparam>
     /// <param name="e">イベントデータ</param>
-    public void Publish<TEvent>(TEvent e) where TEvent : BaseEvent {
+    public void Push<TEvent>(TEvent e) where TEvent : BaseEvent {
         _eventPool.OnNext(e);
     }
     /// <summary>

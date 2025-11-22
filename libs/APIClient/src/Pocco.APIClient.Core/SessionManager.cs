@@ -1,3 +1,4 @@
+using System.Reactive.Linq;
 using System.Text.Json;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -7,13 +8,16 @@ using Pocco.Libs.Protobufs.Services;
 namespace Pocco.APIClient.Core;
 
 public class SessionManager : IDisposable {
+    private const int EXPIRE_BEFORE_MINUTES = 5;
+    private const int REFRESH_SESSION_THRESHOLD_SECONDS = 20;
     private SessionData? _sessionData;
     private readonly APIClient _client;
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly CancellationToken _cancellationToken;
 
-    public SessionManager(APIClient apiClient, CancellationToken cancellationToken = default) {
+    public SessionManager(APIClient apiClient) {
         _client = apiClient;
-        _cancellationToken = cancellationToken;
+        _cancellationToken = _cancellationTokenSource.Token;
 
         _client.Logger.LogInformation("SessionManager initialized.");
     }
@@ -43,7 +47,7 @@ public class SessionManager : IDisposable {
         } finally {
             if (_sessionData is not null) {
                 _client.Logger.LogInformation("Login successful. Session ID: {SessionId}", _sessionData.SessionId);
-                _client.EventHub.Publish(new ClientEvents.OnClientLoggedIn(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
+                _client.EventHub.Push(new ClientEvents.OnClientLoggedIn(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
             } else {
                 _client.Logger.LogWarning("Login failed. No session data obtained.");
             }
@@ -74,7 +78,7 @@ public class SessionManager : IDisposable {
             return false;
         } finally {
             _sessionData = null;
-            _client.EventHub.Publish(new ClientEvents.OnClientLoggedOut(ClientEvents.PRIVATE_EVENT_ID));
+            _client.EventHub.Push(new ClientEvents.OnClientLoggedOut(ClientEvents.PRIVATE_EVENT_ID));
         }
     }
 
@@ -102,18 +106,18 @@ public class SessionManager : IDisposable {
             if (_sessionData is null) {
                 _client.Logger.LogWarning("Cannot refresh session: No session data available.");
 
-                await Task.Delay(TimeSpan.FromMilliseconds(2000));
+                await Task.Delay(TimeSpan.FromSeconds(REFRESH_SESSION_THRESHOLD_SECONDS));
                 continue;
             }
 
             if (_sessionData.IsExpired()) {
                 _client.Logger.LogWarning("Session has expired. Please log in again.");
-                _client.EventHub.Publish(new ClientEvents.OnSessionExpired(ClientEvents.PRIVATE_EVENT_ID));
+                _client.EventHub.Push(new ClientEvents.OnSessionExpired(ClientEvents.PRIVATE_EVENT_ID));
                 break;
             }
 
-            if (!_sessionData.NeedsRefresh(TimeSpan.FromMinutes(5))) {
-                await Task.Delay(TimeSpan.FromMilliseconds(2000));
+            if (!_sessionData.NeedsRefresh(TimeSpan.FromMinutes(EXPIRE_BEFORE_MINUTES))) {
+                await Task.Delay(TimeSpan.FromSeconds(REFRESH_SESSION_THRESHOLD_SECONDS));
                 continue;
             }
 
@@ -121,7 +125,6 @@ public class SessionManager : IDisposable {
 
             try {
                 var header = _sessionData.ToMetadata();
-                _client.Logger.LogInformation("{SessionData}", JsonSerializer.Serialize(_sessionData));
                 var reply = await _client.API.VerifyTokenAsync(new Empty(), header);
 
                 _sessionData = SessionData.FromProto(reply);
@@ -133,16 +136,19 @@ public class SessionManager : IDisposable {
                 _client.Logger.LogWarning("Unexpected error during session refresh: {ex}", ex);
             }
 
-            _client.EventHub.Publish(new ClientEvents.OnSessionRefreshed(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
+            _client.EventHub.Push(new ClientEvents.OnSessionRefreshed(ClientEvents.PRIVATE_EVENT_ID, _sessionData));
 
-            await Task.Delay(TimeSpan.FromMilliseconds(2000));
-            break;
+            await Task.Delay(TimeSpan.FromSeconds(REFRESH_SESSION_THRESHOLD_SECONDS));
         } while (!_cancellationToken.IsCancellationRequested);
     }
 
     public void Dispose() {
         _client.Logger.LogInformation("Disposing SessionManager.");
 
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+
+        _client.Logger.LogInformation("SessionManager disposed.");
         GC.SuppressFinalize(this);
     }
 }

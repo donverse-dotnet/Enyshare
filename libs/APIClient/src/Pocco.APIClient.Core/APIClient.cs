@@ -7,7 +7,6 @@ namespace Pocco.APIClient.Core;
 
 public partial class APIClient : IDisposable {
     public readonly ILogger<APIClient> Logger;
-    public readonly CancellationTokenSource CancellationTokenSource;
     public readonly V0ApiService.V0ApiServiceClient API;
     public readonly SessionManager SessionManager;
     public readonly EventListener EventListener;
@@ -24,14 +23,13 @@ public partial class APIClient : IDisposable {
     public APIClient(APIClientConfigurations config, ILogger<APIClient> logger) {
         _config = config;
         Logger = logger;
-        CancellationTokenSource = new CancellationTokenSource();
         Logger.LogInformation("Initializing APIClient...");
 
         var channel = GrpcChannel.ForAddress(_config.APIEndpoint);
         API = new V0ApiService.V0ApiServiceClient(channel);
 
-        SessionManager = new SessionManager(this, CancellationTokenSource.Token);
-        EventListener = new EventListener(this, CancellationTokenSource.Token);
+        SessionManager = new SessionManager(this);
+        EventListener = new EventListener(this);
         EventHub = new EventHub();
 
         EventHub.GetObservable<ClientEvents.OnLog>()
@@ -54,10 +52,8 @@ public partial class APIClient : IDisposable {
     public void Dispose() {
         Logger.LogInformation("Disposing APIClient...");
 
-        CancellationTokenSource.Cancel();
         SessionManager.Dispose();
         EventHub.Dispose();
-        CancellationTokenSource.Dispose();
 
         Logger.LogInformation("APIClient disposed.");
         GC.SuppressFinalize(this);

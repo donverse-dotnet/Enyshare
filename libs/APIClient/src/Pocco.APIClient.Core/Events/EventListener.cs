@@ -13,11 +13,12 @@ public class EventListener : IDisposable {
     private readonly V0EventsService.V0EventsServiceClient _eventListener;
     private ListenRequest _currentListeningEvents = new();
     private Task? _listeningTask;
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
     private CancellationToken _cancellationToken;
 
-    public EventListener(APIClient client, CancellationToken cancellationToken = default) {
+    public EventListener(APIClient client) {
         _client = client;
-        _cancellationToken = cancellationToken;
+        _cancellationToken = _cancellationTokenSource.Token;
 
         var channel = GrpcChannel.ForAddress(_client.APIEndpoint);
         _eventListener = new V0EventsService.V0EventsServiceClient(channel);
@@ -67,7 +68,7 @@ public class EventListener : IDisposable {
                     _client.Logger.LogInformation("Organization created event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Add(eventMessage.Payload.Fields["info_id"].StringValue);
 
-                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoCreated(
+                    _client.EventHub.Push(new ClientEvents.OnOrganizationInfoCreated(
                         eventMessage.EventId,
                         new Organization {
                             OrganizationId = eventMessage.Payload.Fields["info_id"].StringValue,
@@ -82,7 +83,7 @@ public class EventListener : IDisposable {
                 case ClientEvents.ON_ORGANIZATION_INFO_UPDATED:
                     _client.Logger.LogInformation("Organization name updated event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
 
-                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoUpdated(
+                    _client.EventHub.Push(new ClientEvents.OnOrganizationInfoUpdated(
                         eventMessage.EventId,
                         new Organization {
                             OrganizationId = eventMessage.Payload.Fields["info_id"].StringValue,
@@ -98,7 +99,7 @@ public class EventListener : IDisposable {
                     _client.Logger.LogInformation("Organization deleted event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Remove(eventMessage.Payload.Fields["info_id"].StringValue);
 
-                    _client.EventHub.Publish(new ClientEvents.OnOrganizationInfoDeleted(
+                    _client.EventHub.Push(new ClientEvents.OnOrganizationInfoDeleted(
                         eventMessage.EventId,
                         eventMessage.Payload.Fields["info_id"].StringValue
                     ));
@@ -119,8 +120,11 @@ public class EventListener : IDisposable {
     public void Dispose() {
         _client.Logger.LogInformation("Disposing EventListener...");
 
+        _cancellationTokenSource.Cancel();
         _listeningTask?.Wait();
+        _cancellationTokenSource.Dispose();
 
+        _client.Logger.LogInformation("EventListener disposed.");
         GC.SuppressFinalize(this);
     }
 }
