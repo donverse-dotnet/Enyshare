@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Services";
+package pocco.libs.protobufs.accounts.services;
+
+import "google/protobuf/empty.proto";
+import "V0/Types/Request.OrgListUpdate.proto";
+
+
+// 内部からのアカウント操作用RPCサービスの定義
+service V0InternalAccountService {
+    // アカウントの組織リストを更新するRPCメソッド
+    rpc UpdateOrgList(pocco.libs.protobufs.accounts.types.V0UpdateOrgListRequest) returns (google.protobuf.Empty);
+}
