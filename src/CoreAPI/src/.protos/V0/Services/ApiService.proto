@@ -100,8 +100,9 @@ message V0BaseAccount {
     string avatar_url = 3;
     V0AccountRoles role = 4;
     V0AccountStatus status = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
+    repeated string organization_ids = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
 }
 message V0AccountProfile {
     V0BaseAccount base = 1;

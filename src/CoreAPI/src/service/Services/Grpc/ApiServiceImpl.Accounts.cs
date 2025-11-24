@@ -53,30 +53,35 @@ public partial class ApiServiceImpl {
       Id = response.Account.Id,
       Username = response.Account.Username,
       AvatarUrl = response.Account.AvatarUrl,
-      // TODO: Role
       Status = status,
       CreatedAt = response.Account.CreatedAt,
       // TODO: UpdatedAt
     };
+    profile.OrganizationIds.AddRange(response.Account.OrganizationIds);
 
     return profile;
   }
   // UpdateProfile
   public override async Task<V0BaseAccount> UpdateProfile(V0AccountUpdateProfileRequest request, ServerCallContext context) {
     var uprd = new V0UpdateAccountRequest {
-      // NewAccount = new Libs.Protobufs.Types.V0BaseAccount {
-      // Id = request.UserId,
-      // Username = request.NewProfile.Username,
-      // AvatarUrl = request.NewProfile.AvatarUrl,
-      // }
+      NewAccount = new V0AccountModel {
+        Id = request.UserId,
+        Username = request.Username,
+        AvatarUrl = request.AvatarUrl,
+        Notifications = new Libs.Protobufs.Accounts.Types.V0AccountNotificationSettings {
+          Email = request.NotificationSettings.Email,
+          Push = request.NotificationSettings.Push,
+          ShowBadge = request.NotificationSettings.Badge
+        }
+      }
     };
 
     var response = await _accountServiceClient.UpdateAsync(uprd, cancellationToken: context.CancellationToken);
 
     var updatedProfile = new V0BaseAccount {
-      // Id = response.ResponseAsync.Result.Account.Id,
-      // Username = response.ResponseAsync.Result.Account.Username,
-      // AvatarUrl = response.ResponseAsync.Result.Account.AvatarUrl,
+      Id = response.Account.Id,
+      Username = response.Account.Username,
+      AvatarUrl = response.Account.AvatarUrl,
     };
 
     return updatedProfile;
