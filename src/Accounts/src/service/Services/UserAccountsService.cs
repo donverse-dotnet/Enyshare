@@ -30,6 +30,7 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
       Status = status,
       CreatedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(account.CreatedAt.ToUniversalTime())
     };
+    returnAccountData.OrganizationIds.AddRange(account.OrganizationIds);
 
     Console.WriteLine($"[Get Account] ID: {account.Id}, Username: {account.Username}, Status: {status.Status}, CreatedAt: {account.CreatedAt}");
 
