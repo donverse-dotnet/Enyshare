@@ -19,12 +19,13 @@ message V0AccountModel {
     bool emailVerified = 5;
 
     pocco.libs.protobufs.accounts.enums.V0AccountRoles role = 6;
-
     pocco.libs.protobufs.accounts.types.V0AccountStatusModel status = 7;
 
-    google.protobuf.Timestamp createdAt = 8;
-    google.protobuf.Timestamp updatedAt = 9;
-    google.protobuf.Timestamp lastLoginAt = 10;
+    repeated string organizationIds = 8;
 
-    pocco.libs.protobufs.accounts.types.V0AccountNotificationSettings notifications = 11;
+    google.protobuf.Timestamp createdAt = 9;
+    google.protobuf.Timestamp updatedAt = 10;
+    google.protobuf.Timestamp lastLoginAt = 11;
+
+    pocco.libs.protobufs.accounts.types.V0AccountNotificationSettings notifications = 12;
 }

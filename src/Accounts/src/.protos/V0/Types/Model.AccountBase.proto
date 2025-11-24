@@ -12,6 +12,7 @@ message V0AccountBaseModel {
     string id = 1;
     string username = 2;
     string avatarUrl = 3;
-    pocco.libs.protobufs.accounts.types.V0AccountStatusModel status = 4;
-    google.protobuf.Timestamp createdAt = 5;
+    repeated string organizationIds = 4;
+    pocco.libs.protobufs.accounts.types.V0AccountStatusModel status = 5;
+    google.protobuf.Timestamp createdAt = 6;
 }

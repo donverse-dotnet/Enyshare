@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Public -->
     <Protobuf Include="../.protos/V0/Enums/AccountRoles.proto" ProtoRoot="../.protos/" GrpcServices="None" />
     <Protobuf Include="../.protos/V0/Enums/AccountStatus.proto" ProtoRoot="../.protos/" GrpcServices="None" />
 
@@ -24,6 +25,11 @@
     <Protobuf Include="../.protos/V0/Types/Response.AccountDelete.proto" ProtoRoot="../.protos/" GrpcServices="None" />
 
     <Protobuf Include="../.protos/V0/Services/AccountService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+
+    <!-- Internal -->
+    <Protobuf Include="../.protos/V0/Enums/OrgListUpdateActions.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.OrgListUpdate.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Services/InternalAccountService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

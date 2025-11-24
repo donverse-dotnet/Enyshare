@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Types";
+package pocco.libs.protobufs.accounts.types;
+
+import "V0/Enums/OrgListUpdateActions.proto";
+
+
+message V0UpdateOrgListRequest {
+    string account_id = 1;
+    string org_id = 2;
+    pocco.libs.protobufs.accounts.enums.V0OrgListUpdateActions action = 3;
+}
