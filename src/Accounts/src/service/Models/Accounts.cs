@@ -13,6 +13,7 @@ public class Account {
   public string Username { get; set; } = string.Empty;
   public string AvatarUrl { get; set; } = string.Empty;
   public V0AccountStatusMessageWrapper Status { get; set; } = new(V0AccountStatus.V0Offline, "Account is active");
+  public List<string> OrganizationIds { get; set; } = [];
   public string Role { get; set; } = string.Empty;
   public bool IsActive { get; set; } = false;
 

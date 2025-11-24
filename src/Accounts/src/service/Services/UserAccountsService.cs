@@ -22,14 +22,19 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     var account = await _accounts.FindAsync(acc => acc.Id == ObjectId.Parse(request.Id)).Result.FirstOrDefaultAsync()
                 ?? throw new RpcException(new Status(StatusCode.NotFound, "Account not found"));
 
+    var status = account.Status.ToV0AccountStatusMessage();
+    var returnAccountData = new V0AccountBaseModel {
+      Id = account.Id.ToString(),
+      Username = account.Username,
+      AvatarUrl = account.AvatarUrl,
+      Status = status,
+      CreatedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(account.CreatedAt.ToUniversalTime())
+    };
+
+    Console.WriteLine($"[Get Account] ID: {account.Id}, Username: {account.Username}, Status: {status.Status}, CreatedAt: {account.CreatedAt}");
+
     return new V0GetAccountReply {
-      Account = new V0AccountBaseModel {
-        Id = account.Id.ToString(),
-        Username = account.Username,
-        AvatarUrl = account.AvatarUrl,
-        Status = account.Status.ToV0AccountStatusMessage(),
-        CreatedAt = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(account.CreatedAt.ToUniversalTime())
-      }
+      Account = returnAccountData
     };
   }
 
@@ -40,7 +45,7 @@ public class UserAccountsService : V0AccountService.V0AccountServiceBase {
     }
 
     var currentTime = DateTime.UtcNow;
-    
+
     var model = new Account {
       Email = request.Email,
       IsEmailVerified = false,
