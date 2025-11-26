@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Enums";
-package pocco.svc.eventbridge.protobufs.enums;
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Enums";
+package pocco.libs.protobufs.eventbridge.enums;
 
 enum V0EventTopics {
     // 未設定

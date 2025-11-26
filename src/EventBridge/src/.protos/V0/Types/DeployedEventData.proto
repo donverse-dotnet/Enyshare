@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.EventBridge.Protobufs.Types";
-package pocco.svc.eventbridge.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Types";
+package pocco.libs.protobufs.eventbridge.types;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
@@ -9,7 +9,7 @@ import "V0/Enums/V0EventTopics.proto";
 
 message V0DeployedEventData {
     // イベントトピック
-    pocco.svc.eventbridge.protobufs.enums.V0EventTopics topic = 1;
+    pocco.libs.protobufs.eventbridge.enums.V0EventTopics topic = 1;
     // イベントタイプ
     string event_type = 2;
     // イベントID
