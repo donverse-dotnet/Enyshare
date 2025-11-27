@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.InfoServices";
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Info.Services";
 
-package pocco.libs.protobufs.organizations.infoservices;
+package pocco.libs.protobufs.organizations_info.services;
 
 import "V0/Types/CreateInfoData.proto";
 import "V0/Types/DeleteInfoData.proto";

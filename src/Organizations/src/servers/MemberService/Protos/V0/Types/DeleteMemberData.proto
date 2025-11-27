@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Organizations.MemberTypes";
-package pocco.libs.protobufs.organizations.membertypes;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
+package pocco.libs.protobufs.organizations_member.types;
 
 message V0DeleteMemberRequest{
     string id = 1;

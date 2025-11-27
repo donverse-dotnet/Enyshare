@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
 
-using Pocco.Libs.Protobufs.Organizations.ChatServices;
-using Pocco.Libs.Protobufs.Organizations.ChatTypes;
+using Pocco.Libs.Protobufs.Organizations_Chat.Services;
+using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 using Pocco.Svc.Chats.Models;
 using Pocco.Svc.EventBridge.Protobufs.Enums;
 using Pocco.Svc.EventBridge.Protobufs.Services;
