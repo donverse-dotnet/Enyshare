@@ -3,9 +3,9 @@
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
-using Pocco.Svc.EventBridge.Protobufs.Enums;
-using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
+using Pocco.Libs.Protobufs.EventBridge.Enums;
+using Pocco.Libs.Protobufs.EventBridge.Services;
+using Pocco.Libs.Protobufs.EventBridge.Types;
 
 namespace Pocco.Svc.CoreAPI.Services;
 
