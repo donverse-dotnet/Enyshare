@@ -21,6 +21,13 @@ public partial class APIClient {
         return reply;
     }
 
+    /// <summary>
+    /// ロールの一覧を取得するためのメソッドを提供します。
+    /// </summary>
+    /// <param name="request">ロールの取得に必要なデータ</param>
+    /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
+    /// <returns>複数のロールを返却します。</returns>
+    /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0ListRolesResponse> ListOrganizationRolesAsync(
         V0ListXRequest request,
         CancellationToken cancellationToken = default
