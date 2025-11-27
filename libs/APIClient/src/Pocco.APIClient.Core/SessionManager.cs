@@ -147,7 +147,7 @@ public class SessionManager : IDisposable {
     /// </summary>
     /// <param name="sessionData">検証したいセッションデータ</param>
     /// <returns><seealso cref="Task"/></returns>
-    public async Task VerifySessionAsync(SessionData sessionData) {
+    public async Task<bool> VerifySessionAsync(SessionData sessionData) {
         try {
             var header = sessionData.ToMetadata();
             var reply = await _client.API.VerifyTokenAsync(new Empty(), header, cancellationToken: _cancellationToken);
@@ -155,10 +155,13 @@ public class SessionManager : IDisposable {
             _sessionData = SessionData.FromProto(reply);
 
             _client.Logger.LogInformation("Session verified successfully. Session ID: {SessionId}", _sessionData.SessionId);
+            return true;
         } catch (RpcException ex) {
             _client.Logger.LogWarning("RPC Error during session verification: {ex}", ex);
+            return false;
         } catch (Exception ex) {
             _client.Logger.LogWarning("Unexpected error during session verification: {ex}", ex);
+            return false;
         }
     }
 
