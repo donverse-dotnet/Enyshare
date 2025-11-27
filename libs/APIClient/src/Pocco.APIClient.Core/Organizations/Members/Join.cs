@@ -4,9 +4,9 @@ namespace Pocco.APIClient.Core;
 
 public partial class APIClient {
     /// <summary>
-    /// 組織を新規作成するためのメソッドを提供します。
+    /// メンバーに参加するためのメソッドを提供します。
     /// </summary>
-    /// <param name="request">組織の作成に必要なデータ</param>
+    /// <param name="request">メンバーの参加に必要なデータ</param>
     /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
