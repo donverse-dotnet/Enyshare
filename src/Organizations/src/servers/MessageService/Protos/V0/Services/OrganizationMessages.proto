@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Services";
-package pocco.svc.messages.protobufs.services;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Message.Services";
+package pocco.libs.protobufs.organizations_message.services;
 
 import "V0/Types/MessagesForOrgs.proto";
 
@@ -9,34 +9,34 @@ import "V0/Types/MessagesForOrgs.proto";
 service OrganizationMessageRpcService {
     // メッセージ送信する
     rpc TrySendMessageToOrganization (
-        pocco.svc.messages.protobufs.types.V0TrySendMessageToOrganizationRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TrySendMessageToOrganizationRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージ更新する
     rpc TryUpdateMessageInOrganization (
-        pocco.svc.messages.protobufs.types.V0TryUpdateMessageInOrganizationRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TryUpdateMessageInOrganizationRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージ削除する
     rpc TryDeleteMessageFromOrganization (
-        pocco.svc.messages.protobufs.types.V0TryDeleteMessageFromOrganizationRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TryDeleteMessageFromOrganizationRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージにリアクションを追加する
     rpc TryAddReactionToMessage (
-        pocco.svc.messages.protobufs.types.V0TryAddReactionToMessageRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TryAddReactionToMessageRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージからリアクションを削除する
     rpc TryRemoveReactionFromMessage (
-        pocco.svc.messages.protobufs.types.V0TryRemoveReactionFromMessageRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TryRemoveReactionFromMessageRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージからリアクションを一括削除する
     rpc TryBulkRemoveReactionsFromMessage (
-        pocco.svc.messages.protobufs.types.V0TryBulkRemoveReactionsFromMessageRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0TryMessageActionResponse);
+        pocco.libs.protobufs.organizations_message.types.V0TryBulkRemoveReactionsFromMessageRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0TryMessageActionResponse);
     // メッセージを取得する
     rpc GetMessageInOrganization (
-        pocco.svc.messages.protobufs.types.V0GetMessageInOrganizationRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0GetMessageInOrganizationResponse);
+        pocco.libs.protobufs.organizations_message.types.V0GetMessageInOrganizationRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0GetMessageInOrganizationResponse);
     // メッセージリストを取得する
     rpc GetMessageListInOrganization (
-        pocco.svc.messages.protobufs.types.V0GetMessageListInOrganizationRequest
-    ) returns (pocco.svc.messages.protobufs.types.V0GetMessageListInOrganizationResponse);
+        pocco.libs.protobufs.organizations_message.types.V0GetMessageListInOrganizationRequest
+    ) returns (pocco.libs.protobufs.organizations_message.types.V0GetMessageListInOrganizationResponse);
 }

@@ -3,7 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Role.Types;
 
 namespace Pocco.Svc.Roles.Models;
 

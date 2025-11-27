@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Services";
 
-package pocco.libs.protobufs.services;
+package pocco.libs.protobufs.organizations_member.services;
 
 import "V0/Types/CreateMemberData.proto";
 import "V0/Types/UpdateMemberData.proto";
@@ -16,11 +16,11 @@ import "V0/Types/MemberListResponse.proto";
 import "V0/Types/MemberResponse.proto";
 
 service V0OrganizationMemberService {
-    rpc RequestToJoin(pocco.libs.protobufs.types.V0CreateMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
-    rpc UpdateOrgUser(pocco.libs.protobufs.types.V0UpdateMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
-    rpc RequestToLeave(pocco.libs.protobufs.types.V0DeleteMemberRequest) returns (pocco.libs.protobufs.types.V0MemberChangesReply);
-    rpc Get(pocco.libs.protobufs.types.V0GetMemberRequest) returns (pocco.libs.protobufs.types.V0GetMemberReply);
-    rpc GetList (pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
+    rpc RequestToJoin(pocco.libs.protobufs.organizations_member.types.V0CreateMemberRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+    rpc UpdateOrgUser(pocco.libs.protobufs.organizations_member.types.V0UpdateMemberRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+    rpc RequestToLeave(pocco.libs.protobufs.organizations_member.types.V0DeleteMemberRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+    rpc Get(pocco.libs.protobufs.organizations_member.types.V0GetMemberRequest) returns (pocco.libs.protobufs.organizations_member.types.V0GetMemberReply);
+    rpc GetList (pocco.libs.protobufs.organizations_member.types.V0GetListRequest) returns (pocco.libs.protobufs.organizations_member.types.V0GetListReply);
 }
 
 

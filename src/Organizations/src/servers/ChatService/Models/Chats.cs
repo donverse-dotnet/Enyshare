@@ -6,7 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 
 namespace Pocco.Svc.Chats.Models;
 

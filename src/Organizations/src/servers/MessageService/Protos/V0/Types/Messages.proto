@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Svc.Messages.Protobufs.Types";
-package pocco.svc.messages.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Message.Types";
+package pocco.libs.protobufs.organizations_message.types;
 
 import "V0/Enums/MessageAttachmentType.proto";
 import "google/protobuf/timestamp.proto";
@@ -11,11 +11,11 @@ message V0MessageAttachment {
     // 添付ファイルのID（通常、IDは{userid}/pocco/{file_id}.{ext}となっている）
     string id = 1;
     // 添付ファイルのタイプ
-    pocco.svc.messages.protobufs.enums.MessageAttachmentType type = 2;
+    pocco.libs.protobufs.organizations_message.enums.MessageAttachmentType type = 2;
 }
 message V0MessageAttachments {
     // 添付ファイルのリスト
-    repeated pocco.svc.messages.protobufs.types.V0MessageAttachment attachments = 1;
+    repeated pocco.libs.protobufs.organizations_message.types.V0MessageAttachment attachments = 1;
 }
 
 message V0MessageMention {
@@ -24,7 +24,7 @@ message V0MessageMention {
 }
 message V0MessageMentions {
     // メンションされたユーザーのリスト
-    repeated pocco.svc.messages.protobufs.types.V0MessageMention mentions = 1;
+    repeated pocco.libs.protobufs.organizations_message.types.V0MessageMention mentions = 1;
 }
 
 message V0MessageReaction {
@@ -35,7 +35,7 @@ message V0MessageReaction {
 }
 message V0MessageReactions {
     // リアクションのリスト
-    repeated pocco.svc.messages.protobufs.types.V0MessageReaction reactions = 1;
+    repeated pocco.libs.protobufs.organizations_message.types.V0MessageReaction reactions = 1;
 }
 
 message V0Messages {

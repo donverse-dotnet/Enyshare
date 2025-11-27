@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Info.Types";
 
-package pocco.libs.protobufs.types;
+package pocco.libs.protobufs.organizations_info.types;
 
 message V0InfoChangesReply{
     string event_id = 1;

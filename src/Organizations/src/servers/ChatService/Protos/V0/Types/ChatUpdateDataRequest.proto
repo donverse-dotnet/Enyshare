@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Types";
-package pocco.libs.protobufs.types;
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Types";
+package pocco.libs.protobufs.organizations_chat.types;
 
 import "V0/Types/ChatsModel.proto";
 
 message V0UpdateRequest{
-    pocco.libs.protobufs.types.V0ChatsModel chatsmodel = 1;
+    pocco.libs.protobufs.organizations_chat.types.V0ChatsModel chatsmodel = 1;
     string invoked_by = 2;
 }

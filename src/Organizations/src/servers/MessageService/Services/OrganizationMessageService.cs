@@ -9,8 +9,8 @@ using MongoDB.Driver;
 using Pocco.Svc.EventBridge.Protobufs.Enums;
 using Pocco.Svc.EventBridge.Protobufs.Services;
 using Pocco.Svc.EventBridge.Protobufs.Types;
-using Pocco.Svc.Messages.Protobufs.Services;
-using Pocco.Svc.Messages.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Message.Services;
+using Pocco.Libs.Protobufs.Organizations_Message.Types;
 
 namespace MessageService.Services;
 

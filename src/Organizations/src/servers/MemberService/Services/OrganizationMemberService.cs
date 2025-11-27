@@ -1,14 +1,14 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MongoDB.Bson;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Member.Types;
 using MemberService.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Pocco.Svc.EventBridge.Protobufs.Enums;
 using Pocco.Svc.EventBridge.Protobufs.Services;
 using Pocco.Svc.EventBridge.Protobufs.Types;
 using System.Data;
-using Pocco.Libs.Protobufs.Services;
+using Pocco.Libs.Protobufs.Organizations_Member.Services;
 
 
 namespace MemberService.Services;

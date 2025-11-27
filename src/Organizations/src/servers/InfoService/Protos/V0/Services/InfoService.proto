@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Pocco.Libs.Protobufs.Services";
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Info.Services";
 
-package pocco.libs.protobufs.services;
+package pocco.libs.protobufs.organizations_info.services;
 
 import "V0/Types/CreateInfoData.proto";
 import "V0/Types/DeleteInfoData.proto";
@@ -11,8 +11,8 @@ import "V0/Types/UpdateInfoData.proto";
 import "V0/Types/InfoChangesReply.proto";
 
 service V0OrganizationInfoService{
-    rpc Create(pocco.libs.protobufs.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
-    rpc Update(pocco.libs.protobufs.types.V0UpdateOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
-    rpc Delete(pocco.libs.protobufs.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.types.V0InfoChangesReply);
-    rpc GetInfo(pocco.libs.protobufs.types.V0GetInfoOrganizationRequest) returns (pocco.libs.protobufs.types.V0GetInfoOrganizationReply);
+    rpc Create(pocco.libs.protobufs.organizations_info.types.V0CreateOrganizationRequest) returns (pocco.libs.protobufs.organizations_info.types.V0InfoChangesReply);
+    rpc Update(pocco.libs.protobufs.organizations_info.types.V0UpdateOrganizationRequest) returns (pocco.libs.protobufs.organizations_info.types.V0InfoChangesReply);
+    rpc Delete(pocco.libs.protobufs.organizations_info.types.V0DeleteOrganizationRequest) returns (pocco.libs.protobufs.organizations_info.types.V0InfoChangesReply);
+    rpc GetInfo(pocco.libs.protobufs.organizations_info.types.V0GetInfoOrganizationRequest) returns (pocco.libs.protobufs.organizations_info.types.V0GetInfoOrganizationReply);
 }
