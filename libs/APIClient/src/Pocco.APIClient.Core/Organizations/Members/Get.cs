@@ -21,14 +21,14 @@ public partial class APIClient {
         return reply;
     }
 
-    public async Task<V0ListMembersResponse> GetListOrganizationMemberAsync(
+    public async Task<V0ListMembersResponse> ListOrganizationMembersAsync(
         V0ListXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot getlist member: No session data available.");
         var header = sessionData.ToMetadata();
 
-        var reply = await API.GetListMemberAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
+        var reply = await API.ListMembersAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
 }
