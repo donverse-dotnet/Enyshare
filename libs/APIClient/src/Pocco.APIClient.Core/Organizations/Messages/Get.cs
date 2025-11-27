@@ -21,14 +21,14 @@ public partial class APIClient {
         return reply;
     }
 
-    public async Task<V0ListMessagesResponse> GetListOrganizationMessageAsync(
+    public async Task<V0ListMessagesResponse> ListOrganizationMessageAsync(
         V0ListMessagesRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot getlist message: No session data available.");
         var header = sessionData.ToMetadata();
 
-        var reply = await API.GetListMessageAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
+        var reply = await API.ListMessagesAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
 }
