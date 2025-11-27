@@ -17,7 +17,7 @@ public partial class APIClient {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot create role: No session data available.");
         var header = sessionData.ToMetadata();
 
-        var reply = await API.UpdateOrganizationRoleAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
+        var reply = await API.UpdateRoleAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
 }
