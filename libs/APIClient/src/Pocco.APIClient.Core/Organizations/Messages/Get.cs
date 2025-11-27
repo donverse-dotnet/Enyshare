@@ -20,7 +20,14 @@ public partial class APIClient {
         var reply = await API.GetMessageAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
-
+    
+    /// <summary>
+    /// メッセージの一覧を取得するためのメソッドを提供します。
+    /// </summary>
+    /// <param name="request">メッセージの取得に必要なデータ</param>
+    /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
+    /// <returns>複数のメッセージを返却します。</returns>
+    /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0ListMessagesResponse> ListOrganizationMessageAsync(
         V0ListMessagesRequest request,
         CancellationToken cancellationToken = default
