@@ -1,8 +1,7 @@
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Pocco.Libs.Protobufs.CoreAPI.Services;
-using Pocco.Libs.Protobufs.Services;
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Info.Services;
+using Pocco.Libs.Protobufs.Organizations_Info.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -28,7 +27,7 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<V0EventInvokedResponse> Create(Libs.Protobufs.CoreAPI.Services.V0CreateOrganizationRequest request, ServerCallContext context) {
-    var reply = await _orgInfoService.CreateAsync(new Libs.Protobufs.Types.V0CreateOrganizationRequest { // TODO: 名前空間の整理
+    var reply = await _orgInfoService.CreateAsync(new Libs.Protobufs.Organizations_Info.Types.V0CreateOrganizationRequest { // TODO: 名前空間の整理
       Name = request.Base.Name,
       Description = request.Description
     });
@@ -38,7 +37,7 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<V0EventInvokedResponse> UpdateOrganization(Libs.Protobufs.CoreAPI.Services.V0UpdateOrganizationRequest request, ServerCallContext context) {
-    var reply = await _orgInfoService.UpdateAsync(new Libs.Protobufs.Types.V0UpdateOrganizationRequest {
+    var reply = await _orgInfoService.UpdateAsync(new Libs.Protobufs.Organizations_Info.Types.V0UpdateOrganizationRequest {
       Id = request.OrganizationId,
       Name = request.Name,
       Description = request.Description
