@@ -6,5 +6,5 @@ package pocco.libs.protobufs.organizations_chat.types;
 import "V0/Types/ChatsModel.proto";
 
 message V0GetReply{
-    pocco.libs.protobufs.types.V0ChatsModel chatsmodel = 1;
+    pocco.libs.protobufs.organizations_chat.types.V0ChatsModel chatsmodel = 1;
 }

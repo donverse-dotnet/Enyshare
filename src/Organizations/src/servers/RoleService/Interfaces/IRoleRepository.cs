@@ -1,4 +1,4 @@
-using Pocco.Libs.Protobufs.Types;
+using Pocco.Libs.Protobufs.Organizations_Role.Types;
 using Pocco.Svc.Roles.Models;
 
 public interface IRoleRepository {

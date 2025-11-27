@@ -6,5 +6,5 @@ package pocco.libs.protobufs.organizations_role.types;
 import "V0/Types/RoleModel.proto";
 
 message V0GetListReply {
-    repeated pocco.libs.protobufs.types.V0RoleModel roles = 1;
+    repeated pocco.libs.protobufs.organizations_role.types.V0RoleModel roles = 1;
 }

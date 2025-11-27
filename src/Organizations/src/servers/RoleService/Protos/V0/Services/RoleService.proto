@@ -16,13 +16,13 @@ import "V0/Types/GetListDataReply.proto";
 
 service V0RoleService {
     //組織のロールを取得するrpcメソッド
-    rpc Get(pocco.libs.protobufs.types.V0GetRequest) returns (pocco.libs.protobufs.types.V0GetReply);
+    rpc Get(pocco.libs.protobufs.organizations_role.types.V0GetRequest) returns (pocco.libs.protobufs.organizations_role.types.V0GetReply);
     //組織のロールを作成するRPCメソッド
-    rpc Create(pocco.libs.protobufs.types.V0CreateRequest) returns (pocco.libs.protobufs.types.V0RoleChangesReply);
+    rpc Create(pocco.libs.protobufs.organizations_role.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_role.types.V0RoleChangesReply);
     //組織のロールを更新するRPCメソッド
-    rpc Update(pocco.libs.protobufs.types.V0UpdateRequest) returns (pocco.libs.protobufs.types.V0RoleChangesReply);
+    rpc Update(pocco.libs.protobufs.organizations_role.types.V0UpdateRequest) returns (pocco.libs.protobufs.organizations_role.types.V0RoleChangesReply);
     //組織のロールを削除するRPCメソッド
-    rpc Delete(pocco.libs.protobufs.types.V0DeleteRequest) returns (pocco.libs.protobufs.types.V0RoleChangesReply);
+    rpc Delete(pocco.libs.protobufs.organizations_role.types.V0DeleteRequest) returns (pocco.libs.protobufs.organizations_role.types.V0RoleChangesReply);
     //組織のロールリストを取得するRPCメソッド
-    rpc GetList(pocco.libs.protobufs.types.V0GetListRequest) returns (pocco.libs.protobufs.types.V0GetListReply);
+    rpc GetList(pocco.libs.protobufs.organizations_role.types.V0GetListRequest) returns (pocco.libs.protobufs.organizations_role.types.V0GetListReply);
 }
