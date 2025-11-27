@@ -20,11 +20,11 @@
         <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1763949362" />
         <PackageReference Include="Pocco.Svc.Auth.Grpc.Clients" Version="0.0.1-build-1763080316" />
         <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1761089015" />
-        <PackageReference Include="Pocco.Svc.Organizations.ChatService.Grpc.Clients" Version="0.0.1-build-1763020229" />
-        <PackageReference Include="Pocco.Svc.Organizations.InfoService.Grpc.Clients" Version="0.0.1-build-1763020232" />
-        <PackageReference Include="Pocco.Svc.Organizations.MemberService.Grpc.Clients" Version="0.0.1-build-1763020228" />
-        <PackageReference Include="Pocco.Svc.Organizations.MessageService.Grpc.Clients" Version="0.0.1-build-1763020230" />
-        <PackageReference Include="Pocco.Svc.Organizations.RoleService.Grpc.Clients" Version="0.0.1-build-1763020236" />
+        <PackageReference Include="Pocco.Svc.Organizations.ChatService.Grpc.Clients" Version="0.0.1-build-1764225447" />
+        <PackageReference Include="Pocco.Svc.Organizations.InfoService.Grpc.Clients" Version="0.0.1-build-1764225455" />
+        <PackageReference Include="Pocco.Svc.Organizations.MemberService.Grpc.Clients" Version="0.0.1-build-1764225452" />
+        <PackageReference Include="Pocco.Svc.Organizations.MessageService.Grpc.Clients" Version="0.0.1-build-1764225450" />
+        <PackageReference Include="Pocco.Svc.Organizations.RoleService.Grpc.Clients" Version="0.0.1-build-1764225447" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
