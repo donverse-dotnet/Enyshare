@@ -21,14 +21,14 @@ public partial class APIClient {
         return reply;
     }
 
-    public async Task<V0ListRolesResponse> GetListOrganizationRoleAsync(
+    public async Task<V0ListRolesResponse> ListOrganizationRolesAsync(
         V0ListXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot getlist role: No session data available.");
         var header = sessionData.ToMetadata();
 
-        var reply = await API.GetListRoleAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
+        var reply = await API.ListRolesAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
 }
