@@ -21,6 +21,13 @@ public partial class APIClient {
         return reply;
     }
 
+    /// <summary>
+    /// メンバーの一覧を取得するためのメソッドを提供します。
+    /// </summary>
+    /// <param name="request">メンバーの取得に必要なデータ</param>
+    /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
+    /// <returns>複数のメンバーを返却します。</returns>
+    /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0ListMembersResponse> ListOrganizationMembersAsync(
         V0ListXRequest request,
         CancellationToken cancellationToken = default
