@@ -4,9 +4,9 @@ namespace Pocco.APIClient.Core;
 
 public partial class APIClient {
     /// <summary>
-    /// 組織の名前を更新するためのメソッドを提供します。
+    /// チャットの名前を更新するためのメソッドを提供します。
     /// </summary>
-    /// <param name="request">組織の名前の変更に必要なデータ</param>
+    /// <param name="request">チャットの名前の変更に必要なデータ</param>
     /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>

@@ -4,9 +4,9 @@ namespace Pocco.APIClient.Core;
 
 public partial class APIClient {
     /// <summary>
-    /// 組織を削除するためのメソッドを提供します。
+    /// チャットを削除するためのメソッドを提供します。
     /// </summary>
-    /// <param name="request">組織の削除に必要なデータ</param>
+    /// <param name="request">チャットの削除に必要なデータ</param>
     /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
