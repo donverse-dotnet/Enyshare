@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
+package pocco.libs.protobufs.organizations_member.types;
+
+// 組織への参加リクエストを表すモデル
+message V0JoinRequest {
+    // ユーザーの一意の識別子(アカウントサービスと共有)
+    string user_id = 1;
+    // 参加を希望する組織の一意の識別子
+    string organization_id = 2;
+    // 参加リクエストの承認コード
+    string code = 3;
+
+    // リクエストを送信したユーザーの一意の識別子
+    string invoked_by = 4;
+}

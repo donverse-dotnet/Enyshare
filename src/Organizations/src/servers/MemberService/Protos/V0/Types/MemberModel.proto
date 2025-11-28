@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
+package pocco.libs.protobufs.organizations_member.types;
+
+import "google/protobuf/timestamp.proto";
+
+// メンバーの基本情報を表すモデル
+message V0MemberModel {
+    // メンバーの一意の識別子(アカウントサービスと共有)
+    string id = 1;
+    // メンバーが割り当てられている役割のリスト
+    repeated string roles = 2;
+    // メンバーが組織に参加した日時
+    google.protobuf.Timestamp joined_at = 3;
+}

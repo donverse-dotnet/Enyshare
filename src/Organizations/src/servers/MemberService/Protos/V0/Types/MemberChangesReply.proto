@@ -1,9 +1,10 @@
 syntax = "proto3";
 
 option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
-
 package pocco.libs.protobufs.organizations_member.types;
 
-message V0MemberChangesReply{
+// メンバーの変更イベントに関する返信モデル
+message V0MemberChangesReply {
+    // イベントの一意の識別子(このIDのイベントを待機することで、変更を検出できます)
     string event_id = 1;
 }

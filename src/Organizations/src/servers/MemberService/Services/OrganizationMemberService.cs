@@ -1,6 +1,5 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using MongoDB.Bson;
 using Pocco.Libs.Protobufs.Organizations_Member.Types;
 using MemberService.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -34,19 +33,65 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     _logger.LogInformation("OrganizationsMemberServiceImpl is initialized!");
   }
 
+
+  /// <summary>
+  /// メンバー情報の取得処理
+  /// - 指定IDのメンバーを検索（論理削除されていないもののみ対象）
+  /// - 該当メンバーが存在しない場合は NotFound を返却
+  /// </summary>
+  public override async Task<V0MemberModel> Get(V0GetRequest request, ServerCallContext context) {
+    var member = await _repository.GetByIdAsync(request.OrganizationId, request.MemberId);
+    if (member == null) {
+      throw new RpcException(new Status(StatusCode.NotFound, "Member not found"));
+    }
+
+    // メンバー情報をレスポンスとして返却
+    var model = new V0MemberModel {
+      Id = member.Id,
+      JoinedAt = Timestamp.FromDateTime(member.JoinedAt.ToUniversalTime()),
+    };
+    model.Roles.AddRange(member.Roles);
+
+    return model;
+  }
+
+  /// <summary>
+  /// メンバー一覧の取得処理
+  /// - 指定組織IDに紐づくメンバーを全件取得（論理削除されていないもののみ対象）
+  /// - 取得したメンバー情報をレスポンスとして返却
+  /// </summary>
+  /// <param name="request"></param>
+  /// <param name="context"></param>
+  /// <returns></returns>
+  public override async Task<V0GetListResponse> List(V0GetListRequest request, ServerCallContext context) {
+    var members = await _repository.GetListAsync(request.OrganizationId);
+
+    var response = new V0GetListResponse();
+    response.Members.AddRange(members.Select(member => new V0MemberModel {
+      Id = member.Id,
+      JoinedAt = Timestamp.FromDateTime(member.JoinedAt.ToUniversalTime()),
+      Roles = { member.Roles }
+    }));
+
+    return response;
+  }
+
   /// <summary>
   /// メンバーの新規登録処理
   /// - 組織IDとユーザーIDの重複チェック（論理処理されていないもののみ対象）
   /// - メンバーエンティティの作成とMongoDBへの保存
   /// - 登録されたメンバー情報をレスポンスとして返却
   /// </summary>
-  public override async Task<V0MemberChangesReply> RequestToJoin(V0CreateMemberRequest request, ServerCallContext context) {
+  public override async Task<V0MemberChangesReply> Join(V0JoinRequest request, ServerCallContext context) {
     // メンバーエンティティの作成
     var member = new MemberEntity {
-      Id = ObjectId.GenerateNewId().ToString()
+      Id = request.UserId,
+      JoinedAt = DateTime.UtcNow,
+      // TODO: Nicknameのアカウントサービスからの取得
+      // TODO: デフォルトのRole設定のルール策定
     };
 
-    MemberEntity createdMember = await _repository.CreateAsync(request.OrganizationId, member);
+    var createdMember = await _repository.CreateAsync(request.OrganizationId, member);
     _logger.LogInformation("{MemberId} is successfully created on {OrganizationId}", createdMember.Id, request.OrganizationId);
 
     //　イベントを伝搬させるのをEventBridgeに依頼
@@ -58,7 +103,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
-    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.UserId}" });
     newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{createdMember.Nickname}" });
     newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{createdMember.Roles}" });
     newEventData.Payload.Fields.Add("joined_at", new Value { StringValue = $"{createdMember.JoinedAt}" });
@@ -76,14 +121,14 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - RoleとUpdatedAtを更新
   /// - 更新後のメンバー情報をレスポンスとして返却
   /// </summary>
-  public override async Task<V0MemberChangesReply> UpdateOrgUser(V0UpdateMemberRequest request, ServerCallContext context) {
+  public override async Task<V0MemberChangesReply> Update(V0UpdateRequest request, ServerCallContext context) {
     // 更新結果をレスポンスとして返却
     var model = new MemberEntity {
-      Id = request.Id,
-      Nickname = request.Nickname,
+      Id = request.Member.Id,
+      // Nickname = request.
     };
 
-    var updated = await _repository.TryUpdateAsync(request.OrganizationId, request.Id, model);
+    var updated = await _repository.TryUpdateAsync(request.OrganizationId, request.MemberId, model);
     if (updated == false) {
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields update"));
     }
@@ -97,7 +142,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
-    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.MemberId}" });
     newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{model.Nickname}" });
     newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{model.Roles}" });
     newEventData.Payload.Fields.Add("joined_at", new Value { StringValue = $"{model.JoinedAt}" });
@@ -114,8 +159,8 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - 指定IDのメンバーの DeletedAt を現在時刻に設定
   /// - 該当メンバーが存在しない場合は NotFound を返却
   /// </summary>
-  public override async Task<V0MemberChangesReply> RequestToLeave(V0DeleteMemberRequest request, ServerCallContext context) {
-    var deleted = await _repository.DeleteAsync(request.OrganizationId, request.Id);
+  public override async Task<V0MemberChangesReply> Leave(V0LeaveRequest request, ServerCallContext context) {
+    var deleted = await _repository.DeleteAsync(request.OrganizationId, request.MemberId);
     if (!deleted) {
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields to delete"));
     }
@@ -129,44 +174,12 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
-    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.Id}" });
+    newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.MemberId}" });
 
     var deletedEventData = _eventBridge.NewEvent(newEventData);
 
     return new V0MemberChangesReply {
       EventId = deletedEventData.EventId
     };
-  }
-
-  /// <summary>
-  /// メンバー情報の取得処理
-  /// - 指定IDのメンバーを検索（論理削除されていないもののみ対象）
-  /// - 該当メンバーが存在しない場合は NotFound を返却
-  /// </summary>
-  public override async Task<V0GetMemberReply> Get(V0GetMemberRequest request, ServerCallContext context) {
-    var member = await _repository.GetByIdAsync(request.OrganizationId, request.Id);
-    if (member == null) {
-      throw new RpcException(new Status(StatusCode.NotFound, "Member not found"));
-    }
-
-    // メンバー情報をレスポンスとして返却
-    var model = new V0MemberModel {
-      Id = request.Id,
-      OrganizationId = request.OrganizationId,
-    };
-
-    return new V0GetMemberReply {
-      Id = model.Id
-    };
-  }
-  public override async Task<V0GetListReply> GetList(V0GetListRequest request, ServerCallContext context) {
-    var members = await _repository.GetListAsync(request.OrganizationId);
-
-    var response = new V0GetListReply();
-    response.Members.AddRange(members.Select(m => new  MemberListResponse {
-      Id = m.Id
-    }));
-
-    return response;
   }
 }
