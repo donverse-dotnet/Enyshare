@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.33.1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
-    <PackageReference Include="Pocco.Svc.CoreAPI.Grpc.Clients" Version="0.0.1-build-1764239213" />
+    <PackageReference Include="Pocco.Svc.CoreAPI.Grpc.Clients" Version="0.0.1-build-1764317059" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
   </ItemGroup>
 
