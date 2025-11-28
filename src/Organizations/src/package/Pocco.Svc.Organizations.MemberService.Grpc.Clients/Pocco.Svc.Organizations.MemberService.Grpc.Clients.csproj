@@ -26,18 +26,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/CreateMemberData.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/UpdateMemberData.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/DeleteMemberData.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetMemberRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetMemberReply.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
         <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetListRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetListReply.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/Member.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetListResponse.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/JoinRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/LeaveRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/UpdateRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
         <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberChangesReply.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberListResponse.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberResponse.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
-        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MembersModel.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberModel.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
         <Protobuf Include="../../servers/MemberService/Protos/V0/Services/MemberService.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="Client" />
     </ItemGroup>
 
