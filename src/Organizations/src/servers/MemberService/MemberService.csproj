@@ -7,19 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="./Protos/V0/Types/CreateMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/UpdateMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/DeleteMemberData.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/GetMemberRequest.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/GetMemberReply.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/GetListRequest.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/GetListReply.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/Member.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/MemberChangesReply.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/MemberListResponse.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/MemberResponse.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Types/MembersModel.proto" ProtoRoot="./Protos" GrpcServices="None" />
-    <Protobuf Include="./Protos/V0/Services/MemberService.proto" ProtoRoot="./Protos" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Types/GetListRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetListResponse.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/JoinRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/LeaveRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/UpdateRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/MemberChangesReply.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/MemberModel.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Services/MemberService.proto" ProtoRoot="Protos" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

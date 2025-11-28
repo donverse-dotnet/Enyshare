@@ -1,9 +1,14 @@
 syntax = "proto3";
 
 option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
-
 package pocco.libs.protobufs.organizations_member.types;
 
-message V0GetListRequest{
-    string OrganizationId = 1;
+// メンバーの一覧取得リクエストを表すモデル
+message V0GetListRequest {
+    // 組織の一意の識別子
+    string organization_id = 1;
+    // 取得を開始するメンバーのオフセット
+    int32 offset = 2;
+    // 取得するメンバーの最大数
+    int32 limit = 3;
 }
