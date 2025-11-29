@@ -26,6 +26,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="../../.protos/V0/Enums/OrgListUpdateActions.proto" ProtoRoot="../../.protos/"
+            GrpcServices="None" />
+
         <Protobuf Include="../../.protos/V0/Types/Request.OrgListUpdate.proto"
             ProtoRoot="../../.protos/" GrpcServices="None" />
 
