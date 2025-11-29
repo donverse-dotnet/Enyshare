@@ -33,7 +33,7 @@ service V0ApiService {
     // List: Authorized
     // rpc List (google.protobuf.Empty) returns (V0ListOrganizationsResponse);
     // Get: Authorized
-    rpc Get (V0BaseRequest) returns (Organization);
+    rpc Get (V0GetXRequest) returns (Organization);
     // Create: Authorized
     rpc Create (V0CreateOrganizationRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Update: Authorized
@@ -45,7 +45,7 @@ service V0ApiService {
     // ListMembers: Authorized
     rpc ListMembers (V0ListXRequest) returns (V0ListMembersResponse);
     // GetMember: Authorized
-    rpc GetMember (V0GetMemberRequest) returns (Member);
+    rpc GetMember (V0GetXRequest) returns (Member);
     // JoinMember: Authorized
     rpc JoinMember (V0JoinMemberRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // LeaveMember: Authorized
@@ -57,31 +57,31 @@ service V0ApiService {
     // ListRoles: Authorized
     rpc ListRoles (V0ListXRequest) returns (V0ListRolesResponse);
     // GetRole: Authorized
-    rpc GetRole (V0BaseRequest) returns (Role);
+    rpc GetRole (V0GetXRequest) returns (Role);
     // CreateRole: Authorized
     rpc CreateRole (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateRole: Authorized
     rpc UpdateRole (Role) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteRole: Authorized
-    rpc DeleteRole (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteRole (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Chats
     // ListChats: Authorized
     rpc ListChats (V0ListXRequest) returns (V0ListChatsResponse); // 全チャット取得を行うことを想定した設計に
     // GetChat: Authorized
-    rpc GetChat (V0BaseRequest) returns (Chat);
+    rpc GetChat (V0GetXRequest) returns (Chat);
     // CreateChat: Authorized
     rpc CreateChat (V0CreateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateChat: Authorized
     rpc UpdateChat (V0UpdateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteChat: Authorized
-    rpc DeleteChat (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteChat (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Messages
     // ListMessages: Authorized
     rpc ListMessages (V0ListMessagesRequest) returns (V0ListMessagesResponse);
     // GetMessage: Authorized
-    rpc GetMessage (V0BaseRequest) returns (Message);
+    rpc GetMessage (V0GetXRequest) returns (Message);
     // CreateMessage: Authorized
     rpc CreateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateMessage: Authorized
@@ -213,7 +213,13 @@ message V0ListOrganizationsResponse {
     // 組織のリスト
     repeated Organization organizations = 1;
 }
-message V0GetMemberRequest {
+message V0GetXRequest {
+    // 組織ID
+    string organization_id = 1;
+    // メンバーID
+    string id = 2;
+}
+message V0DeleteXRequest {
     // 組織ID
     string organization_id = 1;
     // メンバーID
