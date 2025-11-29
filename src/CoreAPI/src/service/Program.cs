@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.Auth.Services;
 using Pocco.Libs.Protobufs.Organizations_Info.Services;
+using Pocco.Libs.Protobufs.Organizations_Member.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
