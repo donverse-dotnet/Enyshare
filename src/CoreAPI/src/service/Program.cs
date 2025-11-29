@@ -6,6 +6,7 @@ using Pocco.Libs.Protobufs.Auth.Services;
 using Pocco.Libs.Protobufs.Organizations_Info.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
+using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Svc.CoreAPI.Auth;
 using Pocco.Svc.CoreAPI.Services;
 using Pocco.Svc.CoreAPI.Services.Grpc;
@@ -79,6 +80,12 @@ builder.Services.AddTransient(sp => {
 
   var channel = GrpcChannel.ForAddress(serverAddress);
   return new OrganizationMessageRpcService.OrganizationMessageRpcServiceClient(channel);
+});
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_ROLE_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_ROLE_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0RoleService.V0RoleServiceClient(channel);
 });
 builder.Services.AddAuthentication()
   .AddScheme<AuthenticationSchemeOptions, AuthenticateHandler>("BaseAuth", options => { });
