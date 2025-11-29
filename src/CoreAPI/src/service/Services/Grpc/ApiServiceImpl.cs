@@ -6,6 +6,7 @@ using Pocco.Libs.Protobufs.Organizations_Info.Services;
 using Pocco.Libs.Protobufs.Organizations_Member.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
+using Pocco.Libs.Protobufs.Organizations_Role.Services;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -17,6 +18,7 @@ public partial class ApiServiceImpl : V0ApiService.V0ApiServiceBase {
     [FromServices] V0OrganizationMemberService.V0OrganizationMemberServiceClient omsc,
     [FromServices] V0OrganizationChatService.V0OrganizationChatServiceClient ocsc,
     [FromServices] OrganizationMessageRpcService.OrganizationMessageRpcServiceClient omgsc,
+    [FromServices] V0RoleService.V0RoleServiceClient orsc,
     [FromServices] ILogger<ApiServiceImpl> logger
   ) {
     _logger = logger;
@@ -27,6 +29,7 @@ public partial class ApiServiceImpl : V0ApiService.V0ApiServiceBase {
     _orgMemberService = omsc;
     _orgChatService = ocsc;
     _orgMessageService = omgsc;
+    _orgRoleService = orsc;
 
     _logger.LogInformation("ApiServiceImpl initialized.");
   }
