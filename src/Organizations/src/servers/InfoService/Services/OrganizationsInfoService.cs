@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 using Pocco.Libs.Protobufs.EventBridge.Services;
 using Pocco.Libs.Protobufs.EventBridge.Types;
 using Pocco.Libs.Protobufs.EventBridge.Enums;
+using Pocco.Libs.Protobufs.Accounts.Services;
+using Pocco.Libs.Protobufs.Accounts.Types;
+using Pocco.Libs.Protobufs.Accounts.Enums;
 
 namespace InfoService.Services;
 
@@ -23,12 +26,14 @@ namespace InfoService.Services;
 public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0OrganizationInfoServiceBase {
   // MongoDBの各コレクションを保持（DIで注入）
   private readonly IMongoCollection<OrganizationEntity> _orgs;
+  private readonly V0InternalAccountService.V0InternalAccountServiceClient _internalAccountSvc;
 
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
 
   // コンストラクタ：MongoDBインスタンスから必要なコレクションを取得
-  public OrganizationsInfoServiceImpl([FromServices] IMongoDatabase mongo, [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
+  public OrganizationsInfoServiceImpl([FromServices] IMongoDatabase mongo, [FromServices] V0InternalAccountService.V0InternalAccountServiceClient internalAccountSvc, [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge) {
     _orgs = mongo.GetCollection<OrganizationEntity>("Organizations");
+    _internalAccountSvc = internalAccountSvc;
     _eventBridge = eventBridge;
   }
 
@@ -60,6 +65,15 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
 
     // MongoDBに保存
     await _orgs.InsertOneAsync(org);
+
+    var createdOrg = _orgs.FindAsync(item => item.Name == request.Name).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
+
+    // アカウントを更新
+    var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
+      AccountId = request.CreatedBy,
+      OrgId = createdOrg.Id,
+      Action = V0OrgListUpdateActions.Add
+    });
 
     //イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
