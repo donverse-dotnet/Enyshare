@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0EventInvokedResponse> LeaveOrganizationMemberAsync(
-        V0BaseRequest request,
+        V0LeaveMemberRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot leave member: No session data available.");
