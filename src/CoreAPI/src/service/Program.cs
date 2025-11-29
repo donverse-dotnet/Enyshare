@@ -60,7 +60,12 @@ builder.Services.AddTransient(sp => {
   var channel = GrpcChannel.ForAddress(serverAddress);
   return new V0OrganizationInfoService.V0OrganizationInfoServiceClient(channel);
 });
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_MEMBER_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_MEMBER_SERVICE_ADDRESS environment variable is not set.");
 
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0OrganizationMemberService.V0OrganizationMemberServiceClient(channel);
+});
 builder.Services.AddAuthentication()
   .AddScheme<AuthenticationSchemeOptions, AuthenticateHandler>("BaseAuth", options => { });
 
