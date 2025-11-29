@@ -7,6 +7,7 @@ using Pocco.Libs.Protobufs.Organizations_Member.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
+using Pocco.Libs.Protobufs.Organizations_Role.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -129,38 +130,84 @@ public partial class ApiServiceImpl {
   #endregion
 
   #region Roles
-  public override Task<CoreAPI_Service.V0ListRolesResponse> ListRoles(CoreAPI_Service.V0ListXRequest request, ServerCallContext context) {
-    // var roles = await _organizationService.ListOrganizationRolesAsync(request.Id);
-    var roles = new List<CoreAPI_Service.Role>
-    {
-      new CoreAPI_Service.Role { },
-      new CoreAPI_Service.Role { }
-    }; // TODO: Remove mock
+  public override async Task<CoreAPI_Service.V0ListRolesResponse> ListRoles(CoreAPI_Service.V0ListXRequest request, ServerCallContext context) {
+    var reply = await _orgRoleService.GetListAsync(new Libs.Protobufs.Organizations_Role.Types.V0GetListRequest {
+      OrgId = request.Base.Id
+    });
 
     var response = new CoreAPI_Service.V0ListRolesResponse();
-    response.Roles.AddRange(roles);
-    return Task.FromResult(response);
+
+    foreach (var role in reply.Roles) {
+      var r = new CoreAPI_Service.Role {
+        RoleId = role.Id,
+        Name = role.Name,
+        CreatedAt = role.CreatedAt,
+        UpdatedAt = role.UpdatedAt
+      };
+      r.Permissions.AddRange(role.Permissions);
+
+      response.Roles.Add(r);
+    }
+
+    return response;
   }
 
-  public override async Task<CoreAPI_Service.Role> GetRole(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // var role = await _organizationService.GetOrganizationRoleByIdAsync(request.Id);
-    var role = new CoreAPI_Service.Role { }; // TODO: Remove mock
+  public override async Task<CoreAPI_Service.Role> GetRole(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+    var reply = await _orgRoleService.GetAsync(new Libs.Protobufs.Organizations_Role.Types.V0GetRequest {
+      Id = request.Id,
+      OrgId = request.OrganizationId
+    });
+
+    var role = new CoreAPI_Service.Role {
+      RoleId = reply.Rolemodel.Id,
+      Name = reply.Rolemodel.Name,
+      CreatedAt = reply.Rolemodel.CreatedAt,
+      UpdatedAt = reply.Rolemodel.UpdatedAt
+    };
+    role.Permissions.AddRange(reply.Rolemodel.Permissions);
+
     return role;
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateRole(CoreAPI_Service.V0CreateXRequest request, ServerCallContext context) {
-    // await _organizationService.CreateOrganizationRoleAsync(request.Name, request.Permissions);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var reply = await _orgRoleService.CreateAsync(new V0CreateRequest {
+      Name = request.Name
+    });
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateRole(CoreAPI_Service.Role request, ServerCallContext context) {
-    // await _organizationService.UpdateOrganizationRoleAsync(request.Id, request.Name, request.Permissions);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var updateRequest = new Libs.Protobufs.Organizations_Role.Types.V0UpdateRequest {
+      Rolemodel = new V0RoleModel {
+        Id = request.RoleId,
+        OrgId = request.OrganizationId,
+        Name = request.Name,
+        Permissions = { request.Permissions },
+        CreatedAt = request.CreatedAt,
+        UpdatedAt = request.UpdatedAt,
+      },
+      InvokedBy = request.RoleId
+    };
+
+    var reply = await _orgRoleService.UpdateAsync(updateRequest);
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // await _organizationService.DeleteOrganizationRoleAsync(request.Id);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+    var reply = await _orgRoleService.DeleteAsync(new V0DeleteRequest {
+      Id = request.Id,
+      OrgId = request.OrganizationId
+    });
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
   #endregion
 
