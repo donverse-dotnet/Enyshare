@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 using MongoDB.Bson;
 
+using Pocco.Libs.Protobufs.EventBridge.Enums;
+using Pocco.Libs.Protobufs.EventBridge.Services;
+using Pocco.Libs.Protobufs.EventBridge.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 using Pocco.Svc.Chats.Models;
-using Pocco.Svc.EventBridge.Protobufs.Enums;
-using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
 
 using SharpCompress.Common;
 
