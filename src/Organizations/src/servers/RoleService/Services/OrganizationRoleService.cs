@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+using Pocco.Libs.Protobufs.EventBridge.Enums;
+using Pocco.Libs.Protobufs.EventBridge.Services;
+using Pocco.Libs.Protobufs.EventBridge.Types;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Types;
-using Pocco.Svc.EventBridge.Protobufs.Enums;
-using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
 using Pocco.Svc.Roles.Models;
 using Pocco.Svc.Roles.Repositories;
 

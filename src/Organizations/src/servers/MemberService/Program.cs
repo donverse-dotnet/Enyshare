@@ -5,7 +5,7 @@ using MemberService.Services;
 
 using MongoDB.Driver;
 
-using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Libs.Protobufs.EventBridge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -3,11 +3,11 @@ using Grpc.Core;
 using Pocco.Libs.Protobufs.Organizations_Member.Types;
 using MemberService.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Pocco.Svc.EventBridge.Protobufs.Enums;
-using Pocco.Svc.EventBridge.Protobufs.Services;
-using Pocco.Svc.EventBridge.Protobufs.Types;
 using System.Data;
 using Pocco.Libs.Protobufs.Organizations_Member.Services;
+using Pocco.Libs.Protobufs.EventBridge.Services;
+using Pocco.Libs.Protobufs.EventBridge.Types;
+using Pocco.Libs.Protobufs.EventBridge.Enums;
 
 
 namespace MemberService.Services;

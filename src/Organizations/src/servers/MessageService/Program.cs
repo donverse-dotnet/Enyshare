@@ -4,7 +4,7 @@ using MessageService.Services;
 
 using MongoDB.Driver;
 
-using Pocco.Svc.EventBridge.Protobufs.Services;
+using Pocco.Libs.Protobufs.EventBridge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services.AddSingleton<V0EventReceiver.V0EventReceiverClient>(sp => {
 if (builder.Environment.IsDevelopment()) {
   builder.Services.AddGrpcReflection();
 }
-  builder.Services.AddSingleton<DatabaseManager>();
+builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddGrpc();
 
 var app = builder.Build();

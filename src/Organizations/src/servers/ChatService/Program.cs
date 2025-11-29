@@ -1,8 +1,8 @@
 using Pocco.Svc.ChatService.Services;
 using MongoDB.Driver;
 using Pocco.Svc.Chats.Ripositories;
-using Pocco.Svc.EventBridge.Protobufs.Services;
 using Grpc.Net.Client;
+using Pocco.Libs.Protobufs.EventBridge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
