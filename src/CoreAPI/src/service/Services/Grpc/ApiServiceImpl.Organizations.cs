@@ -66,7 +66,7 @@ public partial class ApiServiceImpl {
 
   #region Members
   public override async Task<CoreAPI_Service.V0ListMembersResponse> ListMembers(CoreAPI_Service.V0ListXRequest request, ServerCallContext context) {
-    var reply = await _orgMemberService.ListAsync(new V0GetListRequest {
+    var reply = await _orgMemberService.ListAsync(new Libs.Protobufs.Organizations_Member.Types.V0GetListRequest {
       OrganizationId = request.Base.Id
     });
 
@@ -85,8 +85,8 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Member> GetMember(CoreAPI_Service.V0GetMemberRequest request, ServerCallContext context) {
-    var reply = await _orgMemberService.GetAsync(new V0GetRequest {
+  public override async Task<CoreAPI_Service.Member> GetMember(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+    var reply = await _orgMemberService.GetAsync(new Libs.Protobufs.Organizations_Member.Types.V0GetRequest {
       MemberId = request.Id,
       OrganizationId = request.OrganizationId
     });
