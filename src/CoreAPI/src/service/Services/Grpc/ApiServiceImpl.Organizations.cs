@@ -4,12 +4,14 @@ using Pocco.Libs.Protobufs.Organizations_Info.Services;
 using Pocco.Libs.Protobufs.Organizations_Info.Types;
 using Pocco.Libs.Protobufs.Organizations_Member.Services;
 using Pocco.Libs.Protobufs.Organizations_Member.Types;
+using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
 public partial class ApiServiceImpl {
   private readonly V0OrganizationInfoService.V0OrganizationInfoServiceClient _orgInfoService;
   private readonly V0OrganizationMemberService.V0OrganizationMemberServiceClient _orgMemberService;
+  private readonly V0OrganizationChatService.V0OrganizationChatServiceClient _orgChatService;
 
   #region Informations
   public override async Task<CoreAPI_Service.Organization> Get(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
