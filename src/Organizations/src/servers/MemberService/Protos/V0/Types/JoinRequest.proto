@@ -14,4 +14,7 @@ message V0JoinRequest {
 
     // リクエストを送信したユーザーの一意の識別子
     string invoked_by = 4;
+
+    string name = 5;
+    string created_by = 6;
 }
