@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.Auth.Services;
 using Pocco.Libs.Protobufs.Organizations_Info.Services;
+using Pocco.Libs.Protobufs.Organizations_Member.Services;
+using Pocco.Libs.Protobufs.Organizations_Chat.Services;
+using Pocco.Libs.Protobufs.Organizations_Message.Services;
+using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Svc.CoreAPI.Auth;
 using Pocco.Svc.CoreAPI.Services;
 using Pocco.Svc.CoreAPI.Services.Grpc;
@@ -60,7 +64,30 @@ builder.Services.AddTransient(sp => {
   var channel = GrpcChannel.ForAddress(serverAddress);
   return new V0OrganizationInfoService.V0OrganizationInfoServiceClient(channel);
 });
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_MEMBER_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_MEMBER_SERVICE_ADDRESS environment variable is not set.");
 
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0OrganizationMemberService.V0OrganizationMemberServiceClient(channel);
+});
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_CHAT_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_CHAT_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0OrganizationChatService.V0OrganizationChatServiceClient(channel);
+});
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_MESSAGE_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_MESSAGE_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new OrganizationMessageRpcService.OrganizationMessageRpcServiceClient(channel);
+});
+builder.Services.AddTransient(sp => {
+  var serverAddress = Environment.GetEnvironmentVariable("ORGANIZATION_ROLE_SERVICE_ADDRESS") ?? throw new InvalidOperationException("ORGANIZATION_ROLE_SERVICE_ADDRESS environment variable is not set.");
+
+  var channel = GrpcChannel.ForAddress(serverAddress);
+  return new V0RoleService.V0RoleServiceClient(channel);
+});
 builder.Services.AddAuthentication()
   .AddScheme<AuthenticationSchemeOptions, AuthenticateHandler>("BaseAuth", options => { });
 
