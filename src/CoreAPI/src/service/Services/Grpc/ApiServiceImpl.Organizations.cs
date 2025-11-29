@@ -19,7 +19,7 @@ public partial class ApiServiceImpl {
   private readonly V0RoleService.V0RoleServiceClient _orgRoleService;
 
   #region Informations
-  public override async Task<CoreAPI_Service.Organization> Get(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.Organization> Get(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
     var organization = await _orgInfoService.GetInfoAsync(new V0GetInfoOrganizationRequest { Id = request.Id });
 
     return new CoreAPI_Service.Organization {
