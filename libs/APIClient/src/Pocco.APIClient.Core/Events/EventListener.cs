@@ -40,10 +40,10 @@ public class EventListener : IDisposable {
 
 
     public async Task UpdateSubscriptionAsync(ListenRequest data) {
-        _client.Logger.LogInformation("Subscribed to event type: {EventType}", data);
-
         var header = _client.SessionManager.GetSessionData()?.ToMetadata() ?? [];
         await _eventListener.UpdateListenAsync(data, header, cancellationToken: _cancellationToken);
+
+        _client.Logger.LogInformation("Subscribed to event type: {EventType}", data);
         _currentListeningEvents = data;
     }
 
@@ -67,6 +67,7 @@ public class EventListener : IDisposable {
                 case ClientEvents.ON_ORGANIZATION_INFO_CREATED:
                     _client.Logger.LogInformation("Organization created event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Add(eventMessage.Payload.Fields["info_id"].StringValue);
+                    await UpdateSubscriptionAsync(_currentListeningEvents);
 
                     _client.EventHub.Push(new ClientEvents.OnOrganizationInfoCreated(
                         eventMessage.EventId,
@@ -98,6 +99,7 @@ public class EventListener : IDisposable {
                 case ClientEvents.ON_ORGANIZATION_INFO_DELETED:
                     _client.Logger.LogInformation("Organization deleted event received: {EventType} on {OrgId}", eventMessage.EventType, eventMessage.Payload.Fields["info_id"].StringValue);
                     _currentListeningEvents.OrganizationIds.Remove(eventMessage.Payload.Fields["info_id"].StringValue);
+                    await UpdateSubscriptionAsync(_currentListeningEvents);
 
                     _client.EventHub.Push(new ClientEvents.OnOrganizationInfoDeleted(
                         eventMessage.EventId,
@@ -110,8 +112,6 @@ public class EventListener : IDisposable {
                     _client.Logger.LogWarning("Unhandled event type: {EventType}", eventMessage.EventType);
                     break;
             }
-
-            _client.Logger.LogInformation("Current TempOrganizationIds: {OrgIds}", string.Join(", ", _currentListeningEvents.OrganizationIds));
         }
 
         await Task.CompletedTask;
