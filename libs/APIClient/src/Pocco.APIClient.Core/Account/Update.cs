@@ -14,7 +14,7 @@ public partial class APIClient {
         V0AccountUpdateProfileRequest request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot delete account: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot update account: No session data available.");
         var headers = sessionData.ToMetadata();
 
         var response = await API.UpdateProfileAsync(

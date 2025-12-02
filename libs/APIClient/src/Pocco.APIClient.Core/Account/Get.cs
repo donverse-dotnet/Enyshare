@@ -14,7 +14,7 @@ public partial class APIClient {
         V0AccountGetProfileRequest request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot delete account: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot get account: No session data available.");
         var headers = sessionData.ToMetadata();
 
         var response = await API.GetProfileAsync(

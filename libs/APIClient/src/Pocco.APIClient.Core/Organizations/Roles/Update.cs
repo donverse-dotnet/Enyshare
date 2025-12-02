@@ -14,7 +14,7 @@ public partial class APIClient {
         Role request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot create role: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot update role: No session data available.");
         var header = sessionData.ToMetadata();
 
         var reply = await API.UpdateRoleAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する

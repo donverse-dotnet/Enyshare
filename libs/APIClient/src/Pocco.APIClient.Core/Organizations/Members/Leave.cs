@@ -14,7 +14,7 @@ public partial class APIClient {
         V0LeaveMemberRequest request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot leave member: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot leave from organization: No session data available.");
         var header = sessionData.ToMetadata();
 
         var reply = await API.LeaveMemberAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する

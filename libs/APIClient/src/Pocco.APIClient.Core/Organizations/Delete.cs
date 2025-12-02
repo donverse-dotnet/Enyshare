@@ -14,7 +14,7 @@ public partial class APIClient {
         V0BaseRequest request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot create organization: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot delete organization: No session data available.");
         var header = sessionData.ToMetadata();
 
         var reply = await API.DeleteAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する

@@ -14,7 +14,7 @@ public partial class APIClient {
         V0JoinMemberRequest request,
         CancellationToken cancellationToken = default
     ) {
-        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot join member: No session data available.");
+        var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot join to organization: No session data available.");
         var header = sessionData.ToMetadata();
 
         var reply = await API.JoinMemberAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
