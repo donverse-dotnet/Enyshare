@@ -5,6 +5,7 @@ using MemberService.Services;
 
 using MongoDB.Driver;
 
+using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.EventBridge.Services;
 
 using Serilog;
@@ -38,6 +39,13 @@ builder.Services.AddSingleton(sp => {
 builder.Services.AddSingleton<IMemberRepository>(sp => {
   var MongoClient = sp.GetRequiredService<MongoClient>();
   return new MemberRepository(MongoClient);
+});
+
+builder.Services.AddSingleton(sp => {
+  var internalAccountSvc = Environment.GetEnvironmentVariable("INTERNAL_ACCOUNT_SVC_URL") ?? throw new ArgumentException("INTERNAL_ACCOUNT_SVC_URL is not found");
+  Console.WriteLine($"InternalAccountService URL: {internalAccountSvc}");
+  var channel = GrpcChannel.ForAddress(internalAccountSvc);
+  return new V0InternalAccountService.V0InternalAccountServiceClient(channel);
 });
 
 if (builder.Environment.IsDevelopment()) {
