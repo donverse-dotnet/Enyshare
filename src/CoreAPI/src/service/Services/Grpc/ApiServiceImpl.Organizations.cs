@@ -9,6 +9,7 @@ using Pocco.Libs.Protobufs.Organizations_Message.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
+using System.Net.Mail;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -258,7 +259,7 @@ public partial class ApiServiceImpl {
       Name = request.Base.Name,
       Type = request.Type,
     });
-    
+
     return new CoreAPI_Service.V0EventInvokedResponse {
       EventId = reply.EventId
     };
@@ -294,36 +295,83 @@ public partial class ApiServiceImpl {
 
   #region Messages
   public override async Task<CoreAPI_Service.V0ListMessagesResponse> ListMessages(CoreAPI_Service.V0ListMessagesRequest request, ServerCallContext context) {
-    // var messages = await _organizationService.ListChatMessagesAsync(request.Id);
-    var messages = new List<CoreAPI_Service.Message> {
-      new CoreAPI_Service.Message { },
-      new CoreAPI_Service.Message { }
-    };
+    var reply = await _orgMessageService.GetMessageListInOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0GetMessageListInOrganizationRequest {
+      ChatId = request.ChatId,
+    });
 
     var response = new CoreAPI_Service.V0ListMessagesResponse();
-    response.Messages.AddRange(messages);
+
+    foreach (var message in reply.Messages) {
+      var m = new CoreAPI_Service.Message {
+        MessageId = message.Id,
+        ChatId = message.ChatId,
+        SenderId = message.SenderId,
+        Content = message.Content,
+        CreatedAt = message.CreatedAt,
+        UpdatedAt = message.UpdatedAt,
+      };
+
+      response.Messages.Add(m);
+    }
+
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Message> GetMessage(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // var message = await _organizationService.GetChatMessageByIdAsync(request.Id);
-    var message = new CoreAPI_Service.Message { }; // TODO: Remove mock
+  public override async Task<CoreAPI_Service.Message> GetMessage(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+    var reply = await _orgMessageService.GetMessageInOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0GetMessageInOrganizationRequest {
+      ChatId = request.Id,
+      OrganizationId = request.Id,
+    });
+
+    var message = new CoreAPI_Service.Message {
+      MessageId = reply.Message.Id,
+      ChatId = reply.Message.ChatId,
+      SenderId = reply.Message.SenderId,
+      Content = reply.Message.Content,
+      CreatedAt = reply.Message.CreatedAt,
+      UpdatedAt = reply.Message.UpdatedAt,
+    };
+
     return message;
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateMessage(CoreAPI_Service.Message request, ServerCallContext context) {
-    // await _organizationService.SendMessageToChatAsync(request.ChatId, request.SenderId, request.Content);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var reply = await _orgMessageService.TrySendMessageToOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0TrySendMessageToOrganizationRequest {
+      ChatId = request.ChatId,
+      SenderId = request.SenderId,
+      Content = request.Content,
+    });
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.MessageSentEventId
+    };
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateMessage(CoreAPI_Service.Message request, ServerCallContext context) {
-    // await _organizationService.UpdateChatMessageAsync(request.Id, request.Content);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var updateRequest = new Libs.Protobufs.Organizations_Message.Types.V0TryUpdateMessageInOrganizationRequest {
+      MessageId = request.MessageId,
+      ChatId = request.ChatId,
+      SenderId = request.SenderId,
+      Content = request.Content,
+      CreatedAt = request.CreatedAt,
+      UpdatedAt = request.UpdatedAt,
+      
+    };
+    var reply = await _orgMessageService.TryUpdateMessageInOrganizationAsync(updateRequest);
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.MessageSentEventId
+    };
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteMessage(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // await _organizationService.DeleteChatMessageAsync(request.Id);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var reply = await _orgMessageService.TryDeleteMessageFromOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0TryDeleteMessageFromOrganizationRequest {
+      MessageId = request.Id,
+      ChatId = request.Id,
+      OrganizationId = request.Id,
+    });
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.MessageSentEventId
+    };
   }
   #endregion
 }
