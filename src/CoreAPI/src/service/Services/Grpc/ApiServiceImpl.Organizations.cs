@@ -142,6 +142,7 @@ public partial class ApiServiceImpl {
     foreach (var role in reply.Roles) {
       var r = new CoreAPI_Service.Role {
         RoleId = role.Id,
+        OrganizationId = role.OrgId,
         Name = role.Name,
         CreatedAt = role.CreatedAt,
         UpdatedAt = role.UpdatedAt
@@ -162,6 +163,7 @@ public partial class ApiServiceImpl {
 
     var role = new CoreAPI_Service.Role {
       RoleId = reply.Rolemodel.Id,
+      OrganizationId = reply.Rolemodel.OrgId,
       Name = reply.Rolemodel.Name,
       CreatedAt = reply.Rolemodel.CreatedAt,
       UpdatedAt = reply.Rolemodel.UpdatedAt
