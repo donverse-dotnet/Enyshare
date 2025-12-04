@@ -202,7 +202,7 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
-    var reply = await _orgRoleService.DeleteAsync(new V0DeleteRequest {
+    var reply = await _orgRoleService.DeleteAsync(new Libs.Protobufs.Organizations_Role.Types.V0DeleteRequest {
       Id = request.Id,
       OrgId = request.OrganizationId
     });
