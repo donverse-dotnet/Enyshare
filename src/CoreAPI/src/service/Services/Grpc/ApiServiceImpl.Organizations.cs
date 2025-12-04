@@ -8,6 +8,7 @@ using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Types;
+using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
@@ -213,37 +214,81 @@ public partial class ApiServiceImpl {
 
   #region Chats
   public override async Task<CoreAPI_Service.V0ListChatsResponse> ListChats(CoreAPI_Service.V0ListXRequest request, ServerCallContext context) {
-    // var chats = await _organizationService.ListOrganizationChatsAsync(request.Id);
-    var chats = new List<CoreAPI_Service.Chat>
-    {
-      new CoreAPI_Service.Chat { },
-      new CoreAPI_Service.Chat { }
-    }; // TODO: Remove mock
+    var reply = await _orgChatService.GetListAsync(new Libs.Protobufs.Organizations_Chat.Types.V0GetListRequest {
+      OrgId = request.Base.Id
+    });
 
     var response = new CoreAPI_Service.V0ListChatsResponse();
-    response.Chats.AddRange(chats);
+
+    foreach (var chat in reply.Chats) {
+      var c = new CoreAPI_Service.Chat {
+        ChatId = chat.Id,
+        OrganizationId = chat.OrgId,
+        Name = chat.Name,
+        Description = chat.Description,
+        CreatedAt = chat.CreatedAt,
+      };
+
+      response.Chats.Add(c);
+    }
+
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Chat> GetChat(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // var chat = await _organizationService.GetOrganizationChatByIdAsync(request.Id);
-    var chat = new CoreAPI_Service.Chat { }; // TODO: Remove mock
+  public override async Task<CoreAPI_Service.Chat> GetChat(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+    var reply = await _orgChatService.GetAsync(new Libs.Protobufs.Organizations_Chat.Types.V0GetRequest {
+      Id = request.Id,
+      OrgId = request.OrganizationId
+    });
+
+    var chat = new CoreAPI_Service.Chat {
+      ChatId = reply.Chatsmodel.Id,
+      OrganizationId = reply.Chatsmodel.OrgId,
+      Name = reply.Chatsmodel.Name,
+      Description = reply.Chatsmodel.Description,
+      CreatedAt = reply.Chatsmodel.CreatedAt,
+    };
+
     return chat;
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateChat(CoreAPI_Service.V0CreateChatRequest request, ServerCallContext context) {
-    // await _organizationService.CreateOrganizationChatAsync(request.Name, request.Description);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var reply = await _orgChatService.CreateAsync(new Libs.Protobufs.Organizations_Chat.Types.V0CreateRequest {
+      OrgId = request.OrganizationId,
+      Name = request.Base.Name,
+      Type = request.Type,
+    });
+    
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
-
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateChat(CoreAPI_Service.V0UpdateChatRequest request, ServerCallContext context) {
-    // await _organizationService.UpdateOrganizationChatAsync(request.Id, request.Name, request.Description);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+    var updateRequest = new Libs.Protobufs.Organizations_Chat.Types.V0UpdateRequest {
+      Chatsmodel = new V0ChatsModel {
+        Id = request.ChatId,
+        OrgId = request.OrganizationId,
+        Name = request.Name,
+        Description = request.Description,
+      },
+      InvokedBy = request.ChatId
+    };
+    var reply = await _orgChatService.UpdateAsync(updateRequest);
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteChat(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
-    // await _organizationService.DeleteOrganizationChatAsync(request.Id);
-    return new CoreAPI_Service.V0EventInvokedResponse();
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteChat(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+    var reply = await _orgChatService.DeleteAsync(new Libs.Protobufs.Organizations_Chat.Types.V0DeleteRequest {
+      Id = request.Id,
+      OrgId = request.OrganizationId
+    });
+
+    return new CoreAPI_Service.V0EventInvokedResponse {
+      EventId = reply.EventId
+    };
   }
   #endregion
 
