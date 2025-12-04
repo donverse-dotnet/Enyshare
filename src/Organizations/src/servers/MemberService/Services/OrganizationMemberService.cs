@@ -92,9 +92,15 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - 登録されたメンバー情報をレスポンスとして返却
   /// </summary>
   public override async Task<V0MemberChangesReply> Join(V0JoinRequest request, ServerCallContext context) {
+
+    var account = await _internalAccountSvc.GetAccountInfoAsync(new V0GetAccountRequest {
+        Id = request.UserId
+    });
+
     // メンバーエンティティの作成
     var member = new MemberEntity {
-      Id = request.UserId,
+      Id = ObjectId.GenerateNewId().ToString(),
+      Nickname = account.Username,
       JoinedAt = DateTime.UtcNow,
       // TODO: Nicknameのアカウントサービスからの取得
       // TODO: デフォルトのRole設定のルール策定
@@ -103,17 +109,11 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     var createdMember = await _repository.CreateAsync(request.OrganizationId, member);
     _logger.LogInformation("{MemberId} is successfully created on {OrganizationId}", createdMember.Id, request.OrganizationId);
 
-    // var org = new MemberEntity {
-    //     Id = ObjectId.GenerateNewId().ToString()
-    // };
-
-    // await _orgs.InsertOneAsync(org);
-
-    var createdOrg = _orgs.FindAsync(item => item.Nickname == request.Name).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization mayde created but can't found."));
+    var createdOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization mayde created but can't found."));
 
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
-        AccountId = request.CreatedBy,
+        AccountId = request.UserId,
         OrgId = createdOrg.Id,
         Action = V0OrgListUpdateActions.Add
     });
@@ -189,11 +189,15 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields to delete"));
     }
 
-    var deletedOrg = _orgs.FindAsync(item => item.Name == request.Name).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
+    var account = await _internalAccountSvc.GetAccountInfoAsync(new V0GetAccountRequest {
+        Id = request.MemberId
+    });
+
+    var deletedOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
 
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
-        AccountId = request.DeletedBy,
+        AccountId = request.MemberId,
         OrgId = deletedOrg.Id,
         Action = V0OrgListUpdateActions.Remove
     });
