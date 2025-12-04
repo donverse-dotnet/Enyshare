@@ -12,7 +12,4 @@ message V0LeaveRequest {
 
     // リクエストを送信したユーザーの一意の識別子
     string invoked_by = 3;
-
-    string name = 4;
-    string deleted_by = 5;
 }

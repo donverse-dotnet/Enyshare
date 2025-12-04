@@ -11,9 +11,6 @@ public class MemberEntity {
   [BsonElement("nickname")]
   public string Nickname { get; set; } = string.Empty;// 表示名
 
-  [BsonElement("name")]
-  public string Name { get; set; } = string.Empty;
-
   [BsonElement("roles")]
   public List<string> Roles { get; set; } = new(); // 権限ロール（例：admin, member)
 
