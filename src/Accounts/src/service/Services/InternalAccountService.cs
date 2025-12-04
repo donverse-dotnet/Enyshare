@@ -38,4 +38,21 @@ public class InternalAccountServiceImpl : V0InternalAccountService.V0InternalAcc
 
     return new Empty();
   }
+
+  public override async Task<V0AccountBaseModel> GetAccountInfo(V0GetAccountRequest request, ServerCallContext context) {
+    var account = await _accounts.FindAsync(acc => acc.Id == ObjectId.Parse(request.Id)).Result.FirstOrDefaultAsync()
+                  ?? throw new RpcException(new Status(StatusCode.NotFound, "Account not found"));
+
+    var status = account.Status.ToV0AccountStatusMessage();
+    var response = new V0AccountBaseModel {
+      Id = account.Id.ToString(),
+      Username = account.Username,
+      AvatarUrl = account.AvatarUrl,
+      Status = status,
+      CreatedAt = Timestamp.FromDateTime(account.CreatedAt.ToUniversalTime())
+    };
+    response.OrganizationIds.AddRange(account.OrganizationIds);
+
+    return response;
+  }
 }

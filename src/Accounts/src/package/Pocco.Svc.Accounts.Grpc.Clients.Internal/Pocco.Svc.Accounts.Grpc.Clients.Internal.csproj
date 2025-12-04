@@ -31,6 +31,10 @@
 
         <Protobuf Include="../../.protos/V0/Types/Request.OrgListUpdate.proto"
             ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountGet.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountBase.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
 
         <Protobuf Include="../../.protos/V0/Services/InternalAccountService.proto"
             ProtoRoot="../../.protos/" GrpcServices="Client" />
