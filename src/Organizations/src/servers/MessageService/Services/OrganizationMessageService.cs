@@ -38,6 +38,7 @@ public class OrganizationMessageGrpcService(
     // Create a new message
     var newMessage = new V0Messages {
       Id = MessageIdGenerator.GenerateOrganizationMessageId(),
+      OrganizationId = request.OrganizationId,
       ChatId = request.ChatId,
       SenderId = request.SenderId,
       Content = request.Content,
