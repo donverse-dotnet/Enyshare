@@ -26,7 +26,6 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   private readonly ILogger<OrganizationsMemberServiceImpl> _logger;
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
   private readonly V0InternalAccountService.V0InternalAccountServiceClient _internalAccountSvc;
-  private readonly IMongoCollection<MemberEntity> _orgs;
 
   public OrganizationsMemberServiceImpl(
     [FromServices] IMemberRepository repository,
@@ -109,12 +108,11 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     var createdMember = await _repository.CreateAsync(request.OrganizationId, member);
     _logger.LogInformation("{MemberId} is successfully created on {OrganizationId}", createdMember.Id, request.OrganizationId);
 
-    var createdOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization mayde created but can't found."));
+    // var createdOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization mayde created but can't found."));
 
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
         AccountId = request.UserId,
-        OrgId = createdOrg.Id,
         Action = V0OrgListUpdateActions.Add
     });
 
@@ -193,12 +191,9 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
         Id = request.MemberId
     });
 
-    var deletedOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
-
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
         AccountId = request.MemberId,
-        OrgId = deletedOrg.Id,
         Action = V0OrgListUpdateActions.Remove
     });
 
