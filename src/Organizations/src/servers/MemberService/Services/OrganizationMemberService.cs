@@ -103,6 +103,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.UserId}" });
     newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{createdMember.Nickname}" });
     newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{createdMember.Roles}" });
@@ -142,6 +143,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.MemberId}" });
     newEventData.Payload.Fields.Add("nickname", new Value { StringValue = $"{model.Nickname}" });
     newEventData.Payload.Fields.Add("roles", new Value { StringValue = $"{model.Roles}" });
@@ -174,6 +176,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
       Payload = new Struct()
     };
 
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrganizationId}" });
     newEventData.Payload.Fields.Add("id", new Value { StringValue = $"{request.MemberId}" });
 
     var deletedEventData = _eventBridge.NewEvent(newEventData);
