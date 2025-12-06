@@ -177,9 +177,10 @@ public partial class ApiServiceImpl {
     return role;
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateRole(CoreAPI_Service.V0CreateXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateRole(CoreAPI_Service.V0CreateRollRequest request, ServerCallContext context) {
     var reply = await _orgRoleService.CreateAsync(new Libs.Protobufs.Organizations_Role.Types.V0CreateRequest {
-      Name = request.Name
+      Name = request.Base.Name,
+      OrgId = request.OrganizationId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {

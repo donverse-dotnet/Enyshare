@@ -59,7 +59,7 @@ service V0ApiService {
     // GetRole: Authorized
     rpc GetRole (V0GetXRequest) returns (Role);
     // CreateRole: Authorized
-    rpc CreateRole (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc CreateRole (V0CreateRollRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateRole: Authorized
     rpc UpdateRole (Role) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteRole: Authorized
@@ -234,6 +234,12 @@ message V0CreateOrganizationRequest {
     V0CreateXRequest base = 1;
     // 説明
     string description = 2;
+}
+message V0CreateRollRequest {
+    // ベース
+    V0CreateXRequest base = 1;
+    // 組織
+    string organization_id = 2;
 }
 message V0CreateChatRequest {
     // ベース
