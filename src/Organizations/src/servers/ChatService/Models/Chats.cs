@@ -67,7 +67,8 @@ public class Chat {
       Description = Description,
       CreatedBy = CreatedBy,
       IsPrivate = IsPrivate,
-      CreatedAt = Timestamp.FromDateTime(CreatedAt)
+      CreatedAt = Timestamp.FromDateTime(CreatedAt),
+      UpdatedAt = Timestamp.FromDateTime(UpdatedAt)
     };
   }
 }
