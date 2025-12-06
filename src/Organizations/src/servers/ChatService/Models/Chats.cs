@@ -34,6 +34,10 @@ public class Chat {
   [BsonElement("createdAt")]
   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+  [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+  [BsonElement("updatedAt")]
+  public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
   [BsonElement("isprivate")]
   public bool IsPrivate { get; set; } = false;
 

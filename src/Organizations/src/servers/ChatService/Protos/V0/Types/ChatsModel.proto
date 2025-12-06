@@ -13,5 +13,5 @@ message V0ChatsModel{
     bool is_private = 5;
     string created_by = 6;
     google.protobuf.Timestamp created_at = 7;
-
+    google.protobuf.Timestamp updated_at = 8;
 }
