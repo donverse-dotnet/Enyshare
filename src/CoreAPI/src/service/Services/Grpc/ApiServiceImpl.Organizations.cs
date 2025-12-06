@@ -281,6 +281,7 @@ public partial class ApiServiceImpl {
         OrgId = request.OrganizationId,
         Name = request.Name,
         Description = request.Description,
+        CreatedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
       },
       InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
     };
