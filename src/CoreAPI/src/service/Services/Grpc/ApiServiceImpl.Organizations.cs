@@ -236,6 +236,7 @@ public partial class ApiServiceImpl {
         Name = chat.Name,
         Description = chat.Description,
         CreatedAt = chat.CreatedAt,
+        UpdatedAt = chat.UpdatedAt
       };
 
       response.Chats.Add(c);
@@ -256,6 +257,7 @@ public partial class ApiServiceImpl {
       Name = reply.Chatsmodel.Name,
       Description = reply.Chatsmodel.Description,
       CreatedAt = reply.Chatsmodel.CreatedAt,
+      UpdatedAt = reply.Chatsmodel.UpdatedAt
     };
 
     return chat;
