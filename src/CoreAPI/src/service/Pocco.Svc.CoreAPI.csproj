@@ -20,9 +20,9 @@
         <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients" Version="0.0.1-build-1763949362" />
         <PackageReference Include="Pocco.Svc.Auth.Grpc.Clients" Version="0.0.1-build-1763080316" />
         <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1764168903" />
-        <PackageReference Include="Pocco.Svc.Organizations.ChatService.Grpc.Clients" Version="0.0.1-build-1765005897" />
+        <PackageReference Include="Pocco.Svc.Organizations.ChatService.Grpc.Clients" Version="0.0.1-build-1765015947" />
         <PackageReference Include="Pocco.Svc.Organizations.InfoService.Grpc.Clients" Version="0.0.1-build-1764225455" />
-        <PackageReference Include="Pocco.Svc.Organizations.MemberService.Grpc.Clients" Version="0.0.1-build-1764314999" />
+        <PackageReference Include="Pocco.Svc.Organizations.MemberService.Grpc.Clients" Version="0.0.1-build-1765015949" />
         <PackageReference Include="Pocco.Svc.Organizations.MessageService.Grpc.Clients" Version="0.0.1-build-1764225450" />
         <PackageReference Include="Pocco.Svc.Organizations.RoleService.Grpc.Clients" Version="0.0.1-build-1764225447" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
