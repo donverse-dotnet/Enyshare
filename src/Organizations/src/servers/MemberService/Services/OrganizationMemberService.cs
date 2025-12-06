@@ -149,7 +149,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     // 更新結果をレスポンスとして返却
     var model = new MemberEntity {
       Id = request.Member.Id,
-      // Nickname = request.
+      Roles = request.Member.Roles.ToList()
     };
 
     var updated = await _repository.TryUpdateAsync(request.OrganizationId, request.MemberId, model);
