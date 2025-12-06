@@ -43,6 +43,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Description = c.Description,
       CreatedBy = c.CreatedBy,
       CreatedAt = Timestamp.FromDateTime(c.CreatedAt),
+      UpdatedAt = Timestamp.FromDateTime(c.UpdatedAt),
       IsPrivate = c.IsPrivate
     }));
 
@@ -51,6 +52,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
 
   public override async Task<V0ChatChangesReply> Create(V0CreateRequest request, ServerCallContext context) {
 
+    var currentTime = DateTime.UtcNow;
+
     var chat = new Chat {
       Id = ObjectId.GenerateNewId().ToString(),
       OrgId = request.OrgId,
@@ -58,7 +61,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Description = "",     //作成するときは空のまま
       CreatedBy = request.CreatedBy,
       IsPrivate = false,
-      CreatedAt = DateTime.UtcNow
+      CreatedAt = currentTime,
+      UpdatedAt = currentTime
     };
     Chat createdChat = await _repository.CreateAsync(request.OrgId, chat);
     _logger.LogInformation("{ChatId} is successfully created on {OrgId}", createdChat.Id, request.OrgId);
@@ -78,6 +82,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{createdChat.Description}" });
     newEventData.Payload.Fields.Add("created_by", new Value { StringValue = $"{createdChat.CreatedBy}" });
     newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{createdChat.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{createdChat.UpdatedAt}" });
     newEventData.Payload.Fields.Add("is_private", new Value { StringValue = $"{createdChat.IsPrivate}" });
 
     var createdEventData = _eventBridge.NewEvent(
@@ -96,7 +101,8 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
       Name = request.Chatsmodel.Name,
       Description = request.Chatsmodel.Description,
       CreatedBy = request.Chatsmodel.CreatedBy,
-      IsPrivate = request.Chatsmodel.IsPrivate
+      IsPrivate = request.Chatsmodel.IsPrivate,
+      UpdatedAt = DateTime.UtcNow
     };
 
     var updated = await _repository.TryUpdateAsync(request.Chatsmodel.OrgId, request.Chatsmodel.Id, updateChat);
@@ -119,6 +125,7 @@ public class OrganizationChatService : V0OrganizationChatService.V0OrganizationC
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{updateChat.Description}" });
     newEventData.Payload.Fields.Add("created_by", new Value { StringValue = $"{updateChat.CreatedBy}" });
     newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{updateChat.CreatedAt}" });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{updateChat.UpdatedAt}" });
     newEventData.Payload.Fields.Add("is_private", new Value { StringValue = $"{updateChat.IsPrivate}" });
 
     var updatedEventData = _eventBridge.NewEvent(
