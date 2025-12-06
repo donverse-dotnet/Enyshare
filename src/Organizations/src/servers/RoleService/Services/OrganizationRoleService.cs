@@ -86,11 +86,13 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Payload = new Struct()
     };
 
+    var permString = string.Join(",", createdRole.Permissions);
+
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{createdRole.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{createdRole.Name}" });
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{createdRole.Description}" });
-    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{createdRole.Permissions}" });
+    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{permString}" });
     newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{createdRole.CreatedAt}" });
     newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{createdRole.UpdatedAt}" });
 
@@ -127,11 +129,13 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Payload = new Struct()
     };
 
+    var permString = string.Join(",", request.Rolemodel.Permissions);
+
     newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.Rolemodel.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{updateRole.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{updateRole.Name}" });
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{updateRole.Description}" });
-    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{updateRole.Permissions}" });
+    newEventData.Payload.Fields.Add("permissions", new Value { StringValue = $"{permString}" });
     newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{updateRole.CreatedAt}" });
     newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{updateRole.UpdatedAt}" });
 
