@@ -98,7 +98,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     // メンバーエンティティの作成
     var member = new MemberEntity {
-      Id = ObjectId.GenerateNewId().ToString(),
+      Id = request.UserId,
       Nickname = account.Username,
       JoinedAt = DateTime.UtcNow,
       // TODO: Nicknameのアカウントサービスからの取得
@@ -113,6 +113,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
         AccountId = request.UserId,
+        OrgId = request.OrganizationId,
         Action = V0OrgListUpdateActions.Add
     });
 
@@ -194,6 +195,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     //アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
         AccountId = request.MemberId,
+        OrgId = request.OrganizationId,
         Action = V0OrgListUpdateActions.Remove
     });
 
