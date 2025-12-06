@@ -88,7 +88,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var permString = string.Join(",", createdRole.Permissions);
 
-    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{createdRole.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{createdRole.Name}" });
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{createdRole.Description}" });
@@ -131,7 +131,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
 
     var permString = string.Join(",", request.Rolemodel.Permissions);
 
-    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.Rolemodel.OrgId}" });
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.Rolemodel.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{updateRole.Id}" });
     newEventData.Payload.Fields.Add("name", new Value { StringValue = $"{updateRole.Name}" });
     newEventData.Payload.Fields.Add("description", new Value { StringValue = $"{updateRole.Description}" });
@@ -163,7 +163,7 @@ public class OrganizationRoleService : V0RoleService.V0RoleServiceBase {
       Payload = new Struct()
     };
 
-    newEventData.Payload.Fields.Add("ornigazation_id", new Value { StringValue = $"{request.OrgId}" });
+    newEventData.Payload.Fields.Add("organization_id", new Value { StringValue = $"{request.OrgId}" });
     newEventData.Payload.Fields.Add("role_id", new Value { StringValue = $"{request.Id}" });
 
     var deletedEventData = _eventBridge.NewEvent(
