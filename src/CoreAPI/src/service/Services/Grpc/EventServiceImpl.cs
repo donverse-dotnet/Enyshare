@@ -19,6 +19,13 @@ public class EventServiceImpl : V0EventsService.V0EventsServiceBase {
   private readonly StreamHolder _streamHolder;
 
   public override async Task Listen(ListenRequest request, IServerStreamWriter<V0EventData> responseStream, ServerCallContext context) {
+    if (string.IsNullOrEmpty(request.SessionId) || string.IsNullOrEmpty(request.UserId)) {
+      _logger.LogWarning("Invalid ListenRequest: SessionId or UserId is null or empty.");
+      throw new RpcException(new Status(StatusCode.InvalidArgument, "SessionId and UserId must be provided."));
+    }
+
+    _logger.LogInformation("Client connected: SessionId={SessionId}, UserId={UserId}", request.SessionId, request.UserId);
+
     // Create a new StreamWriterModel for this connection
     var filters = new StreamWriterFilterModel(
       topics: request.Topics.Select(t => t.ToString()).ToList(),

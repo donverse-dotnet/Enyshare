@@ -3,6 +3,7 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Mvc;
 using Pocco.Libs.Protobufs.CoreAPI.Services;
+using Pocco.Svc.CoreAPI.Models;
 
 namespace Pocco.Svc.CoreAPI.Services;
 
@@ -29,17 +30,36 @@ public class EventDistributeService : IHotStartableService {
 
   private async Task ProcessEventQueueAsync(CancellationToken cancellationToken) {
     await foreach (var eventData in _eventQueue.WithCancellation(cancellationToken)) {
-      var writers = _streamHolder.GetStreamWriters(item =>
-        item.UserId == eventData.InvokedBy ||
+      //! TODO: フィルタリングの見直し -> 判定が多すぎるのと、正しく動作していない可能性がある
+      _logger.LogInformation("Processing event: to {ClientCloud} writers <- {Data}", _streamHolder.GetStreamWriters().Count, eventData);
+
+      //? 0. InvokedByのユーザーIDでフィルタリング
+      //? 1. Topicフィールドでフィルタリング
+      //? 2. EventTypeフィールドでイベント自信をフィルタリング
+      // if (topic) -> if (eventType)
+      //? 3. それぞれのイベントケースでStreamWriterをフィルタリング
+      //? 4. StreamWriterにイベントを追加
+
+      var orgId = eventData.Payload.Fields.ContainsKey("info_id")
+        ? eventData.Payload.Fields["info_id"].ToString()
+        : string.Empty;
+      var chatId = eventData.Payload.Fields.ContainsKey("chat_id")
+        ? eventData.Payload.Fields["chat_id"].ToString()
+        : string.Empty;
+
+      bool filter(StreamWriterModel item) =>
+        item.MatchesInvokedBy(eventData.InvokedBy) || //! ここが判定できていない
         item.Filters.MatchesTopic(eventData.Topic.ToString()) ||
-        item.Filters.MatchesOrganizationId(eventData.Payload.Fields["ornigazation_id"].ToString()) ||
-        item.Filters.MatchesActiveOrganizationId(eventData.Payload.Fields["ornigazation_id"].ToString()) ||
-        item.Filters.MatchesActiveOrganizationChatId(eventData.Payload.Fields["chat_id"].ToString())
-      );
+        item.Filters.MatchesOrganizationId(orgId) ||
+        item.Filters.MatchesActiveOrganizationId(orgId) ||
+        item.Filters.MatchesActiveOrganizationChatId(chatId);
+
+      var writers = _streamHolder.GetStreamWriters(filter);
+
+      _logger.LogInformation("Found {Count} writers matching event Topic={Topic}", writers.Count, eventData.Topic);
 
       foreach (var writer in writers) {
-        _logger.LogInformation("Dispatching event to SessionId={SessionId}, UserId={UserId}",
-          writer.SessionId, writer.UserId);
+        _logger.LogInformation("Dispatching event to SessionId={SessionId}, UserId={UserId}", writer.SessionId, writer.UserId);
         writer.EnqueueEvent(eventData);
       }
 

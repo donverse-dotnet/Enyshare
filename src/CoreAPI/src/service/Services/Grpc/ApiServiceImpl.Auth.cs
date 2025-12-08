@@ -68,8 +68,6 @@ public partial class ApiServiceImpl {
     var sessionData = new V0SessionData();
 
     foreach (var header in headers) {
-      _logger.LogInformation("Processing header: {Key} => {Value}", header.Key, header.Value);
-
       switch (header.Key) {
         case "authorization":
           if (header.Value.StartsWith("Bearer ")) {

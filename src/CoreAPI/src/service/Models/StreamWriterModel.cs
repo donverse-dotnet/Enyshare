@@ -41,6 +41,11 @@ public class StreamWriterModel : IDisposable {
     }
   }
 
+  public bool MatchesInvokedBy(string invokedBy) {
+    Logger.LogInformation("Matching InvokedBy: StreamWriter UserId={UserId}, InvokedBy={InvokedBy}", UserId, invokedBy);
+    return UserId == invokedBy;
+  }
+
   private async Task ProcessEventQueueAsync(CancellationToken cancellationToken) {
     await foreach (var eventData in _eventQueue.WithCancellation(cancellationToken)) {
       Logger.LogInformation("Sending event to SessionId={SessionId}, UserId={UserId}: Topic={Topic}, Payload={Payload}",
