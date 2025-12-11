@@ -1,23 +1,23 @@
 using Grpc.Core;
 using CoreAPI_Service = Pocco.Libs.Protobufs.CoreAPI.Services;
-using Pocco.Libs.Protobufs.Organizations_Info.Services;
+using OrganizationsInfo_Service = Pocco.Libs.Protobufs.Organizations_Info.Services;
+using OrganizationsMember_Service = Pocco.Libs.Protobufs.Organizations_Member.Services;
+using OrganizationsChat_Service = Pocco.Libs.Protobufs.Organizations_Chat.Services;
+using OrganizationsRole_Service = Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Info.Types;
-using Pocco.Libs.Protobufs.Organizations_Member.Services;
 using Pocco.Libs.Protobufs.Organizations_Member.Types;
-using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Message.Services;
-using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
 public partial class ApiServiceImpl {
-  private readonly V0OrganizationInfoService.V0OrganizationInfoServiceClient _orgInfoService;
-  private readonly V0OrganizationMemberService.V0OrganizationMemberServiceClient _orgMemberService;
-  private readonly V0OrganizationChatService.V0OrganizationChatServiceClient _orgChatService;
+  private readonly OrganizationsInfo_Service.V0OrganizationInfoService.V0OrganizationInfoServiceClient _orgInfoService;
+  private readonly OrganizationsMember_Service.V0OrganizationMemberService.V0OrganizationMemberServiceClient _orgMemberService;
+  private readonly OrganizationsChat_Service.V0OrganizationChatService.V0OrganizationChatServiceClient _orgChatService;
   private readonly OrganizationMessageRpcService.OrganizationMessageRpcServiceClient _orgMessageService;
-  private readonly V0RoleService.V0RoleServiceClient _orgRoleService;
+  private readonly OrganizationsRole_Service.V0RoleService.V0RoleServiceClient _orgRoleService;
 
   #region Informations
   public override async Task<CoreAPI_Service.Organization> Get(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
