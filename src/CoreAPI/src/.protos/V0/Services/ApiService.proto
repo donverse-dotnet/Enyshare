@@ -45,7 +45,7 @@ service V0ApiService {
     // ListMembers: Authorized
     rpc ListMembers (V0ListXRequest) returns (V0ListMembersResponse);
     // GetMember: Authorized
-    rpc GetMember (V0GetMemberRequest) returns (Member);
+    rpc GetMember (V0GetXRequest) returns (Member);
     // JoinMember: Authorized
     rpc JoinMember (V0JoinMemberRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // LeaveMember: Authorized
@@ -57,37 +57,37 @@ service V0ApiService {
     // ListRoles: Authorized
     rpc ListRoles (V0ListXRequest) returns (V0ListRolesResponse);
     // GetRole: Authorized
-    rpc GetRole (V0BaseRequest) returns (Role);
+    rpc GetRole (V0GetXRequest) returns (Role);
     // CreateRole: Authorized
-    rpc CreateRole (V0CreateXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc CreateRole (V0CreateRollRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateRole: Authorized
     rpc UpdateRole (Role) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteRole: Authorized
-    rpc DeleteRole (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteRole (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Chats
     // ListChats: Authorized
     rpc ListChats (V0ListXRequest) returns (V0ListChatsResponse); // 全チャット取得を行うことを想定した設計に
     // GetChat: Authorized
-    rpc GetChat (V0BaseRequest) returns (Chat);
+    rpc GetChat (V0GetXRequest) returns (Chat);
     // CreateChat: Authorized
     rpc CreateChat (V0CreateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateChat: Authorized
     rpc UpdateChat (V0UpdateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteChat: Authorized
-    rpc DeleteChat (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteChat (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Messages
     // ListMessages: Authorized
     rpc ListMessages (V0ListMessagesRequest) returns (V0ListMessagesResponse);
     // GetMessage: Authorized
-    rpc GetMessage (V0BaseRequest) returns (Message);
+    rpc GetMessage (V0GetMesssageRequest) returns (Message);
     // CreateMessage: Authorized
     rpc CreateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateMessage: Authorized
     rpc UpdateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteMessage: Authorized
-    rpc DeleteMessage (V0BaseRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteMessage (V0DeleteMessageRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 }
 
 // -------------------------------------
@@ -213,11 +213,33 @@ message V0ListOrganizationsResponse {
     // 組織のリスト
     repeated Organization organizations = 1;
 }
-message V0GetMemberRequest {
+message V0GetMesssageRequest {
+    // 組織ID
+    string organization_id = 1;
+    // チャットID
+    string chat_id = 2;
+    //メッセージID
+    string message_id = 3;
+}
+message V0GetXRequest {
     // 組織ID
     string organization_id = 1;
     // メンバーID
     string id = 2;
+}
+message V0DeleteXRequest {
+    // 組織ID
+    string organization_id = 1;
+    // メンバーID
+    string id = 2;
+}
+message V0DeleteMessageRequest {
+    // 組織ID
+    string organization_id = 1;
+    // チャットID
+    string chat_id = 2;
+    //メッセージID
+    string message_id = 3;
 }
 message V0CreateXRequest {
     // 名前
@@ -228,6 +250,12 @@ message V0CreateOrganizationRequest {
     V0CreateXRequest base = 1;
     // 説明
     string description = 2;
+}
+message V0CreateRollRequest {
+    // ベース
+    V0CreateXRequest base = 1;
+    // 組織
+    string organization_id = 2;
 }
 message V0CreateChatRequest {
     // ベース
@@ -332,9 +360,10 @@ message Chat {
 }
 message Message {
     string message_id = 1;
-    string chat_id = 2;
-    string sender_id = 3; // user_id
-    string content = 4;
-    google.protobuf.Timestamp created_at = 5; // ISO 8601形式の日時文字列
-    google.protobuf.Timestamp updated_at = 6; // ISO 8601形式の日時文字列
+    string organization_id = 2;
+    string chat_id = 3;
+    string sender_id = 4; // user_id
+    string content = 5;
+    google.protobuf.Timestamp created_at = 6; // ISO 8601形式の日時文字列
+    google.protobuf.Timestamp updated_at = 7; // ISO 8601形式の日時文字列
 }
