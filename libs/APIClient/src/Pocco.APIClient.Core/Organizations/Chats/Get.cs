@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>１つのチャットを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<Chat> GetOrganizationChatAsync(
-        V0BaseRequest request,
+        V0GetXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot get chat: No session data available.");
