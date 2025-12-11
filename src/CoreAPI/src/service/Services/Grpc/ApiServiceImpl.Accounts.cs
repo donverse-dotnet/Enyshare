@@ -1,6 +1,5 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.AspNetCore.Mvc;
 using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.Accounts.Types;
 using Pocco.Libs.Protobufs.CoreAPI.Services;

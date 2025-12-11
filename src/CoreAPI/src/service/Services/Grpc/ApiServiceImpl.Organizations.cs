@@ -9,7 +9,6 @@ using Pocco.Libs.Protobufs.Organizations_Message.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Services;
 using Pocco.Libs.Protobufs.Organizations_Role.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
-using System.Net.Mail;
 
 namespace Pocco.Svc.CoreAPI.Services.Grpc;
 
