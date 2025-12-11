@@ -33,7 +33,7 @@ service V0ApiService {
     // List: Authorized
     // rpc List (google.protobuf.Empty) returns (V0ListOrganizationsResponse);
     // Get: Authorized
-    rpc Get (V0GetXRequest) returns (Organization);
+    rpc Get (V0BaseRequest) returns (Organization);
     // Create: Authorized
     rpc Create (V0CreateOrganizationRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // Update: Authorized
