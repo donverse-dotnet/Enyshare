@@ -34,11 +34,13 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> Create(CoreAPI_Service.V0CreateOrganizationRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgInfoService.CreateAsync(new V0CreateOrganizationRequest { // TODO: 名前空間の整理
       Name = request.Base.Name,
       Description = request.Description,
-      CreatedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      CreatedBy = getAccountId,
+      InvokedBy = getAccountId
     });
     return new CoreAPI_Service.V0EventInvokedResponse {
       EventId = reply.EventId
@@ -46,11 +48,13 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateOrganization(CoreAPI_Service.V0UpdateOrganizationRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgInfoService.UpdateAsync(new V0UpdateOrganizationRequest {
       Id = request.OrganizationId,
       Name = request.Name,
       Description = request.Description,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -59,9 +63,11 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> Delete(CoreAPI_Service.V0BaseRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgInfoService.DeleteAsync(new V0DeleteOrganizationRequest {
       Id = request.Id,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
     return new CoreAPI_Service.V0EventInvokedResponse {
       EventId = reply.EventId
@@ -106,11 +112,13 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> JoinMember(CoreAPI_Service.V0JoinMemberRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgMemberService.JoinAsync(new V0JoinRequest {
       UserId = request.UserId,
       OrganizationId = request.OrganizationId,
       Code = request.InviteCode,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -119,10 +127,12 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> LeaveMember(CoreAPI_Service.V0LeaveMemberRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgMemberService.LeaveAsync(new V0LeaveRequest {
       MemberId = request.UserId,
       OrganizationId = request.OrganizationId,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -188,6 +198,8 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateRole(CoreAPI_Service.Role request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var updateRequest = new Libs.Protobufs.Organizations_Role.Types.V0UpdateRequest {
       Rolemodel = new V0RoleModel {
         Id = request.RoleId,
@@ -197,7 +209,7 @@ public partial class ApiServiceImpl {
         CreatedAt = request.CreatedAt,
         UpdatedAt = request.UpdatedAt,
       },
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     };
 
     var reply = await _orgRoleService.UpdateAsync(updateRequest);
@@ -208,10 +220,12 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgRoleService.DeleteAsync(new Libs.Protobufs.Organizations_Role.Types.V0DeleteRequest {
       Id = request.Id,
       OrgId = request.OrganizationId,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -263,12 +277,14 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateChat(CoreAPI_Service.V0CreateChatRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgChatService.CreateAsync(new Libs.Protobufs.Organizations_Chat.Types.V0CreateRequest {
       OrgId = request.OrganizationId,
       Name = request.Base.Name,
       Type = request.Type,
-      CreatedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      CreatedBy = getAccountId,
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -276,15 +292,17 @@ public partial class ApiServiceImpl {
     };
   }
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateChat(CoreAPI_Service.V0UpdateChatRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var updateRequest = new Libs.Protobufs.Organizations_Chat.Types.V0UpdateRequest {
       Chatsmodel = new V0ChatsModel {
         Id = request.ChatId,
         OrgId = request.OrganizationId,
         Name = request.Name,
         Description = request.Description,
-        CreatedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+        CreatedBy = getAccountId
       },
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     };
     var reply = await _orgChatService.UpdateAsync(updateRequest);
 
@@ -294,10 +312,12 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteChat(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgChatService.DeleteAsync(new Libs.Protobufs.Organizations_Chat.Types.V0DeleteRequest {
       Id = request.Id,
       OrgId = request.OrganizationId,
-      InvokedBy = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      InvokedBy = getAccountId
     });
 
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -314,12 +334,14 @@ public partial class ApiServiceImpl {
 
     var response = new CoreAPI_Service.V0ListMessagesResponse();
 
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     foreach (var message in reply.Messages) {
       var m = new CoreAPI_Service.Message {
         MessageId = message.Id,
         OrganizationId = message.OrganizationId,
         ChatId = message.ChatId,
-        SenderId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
+        SenderId = getAccountId,
         Content = message.Content,
         CreatedAt = message.CreatedAt,
         UpdatedAt = message.UpdatedAt,
@@ -338,11 +360,13 @@ public partial class ApiServiceImpl {
       MessageId = request.MessageId
     });
 
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var message = new CoreAPI_Service.Message {
       MessageId = reply.Message.Id,
       OrganizationId = reply.Message.OrganizationId,
       ChatId = reply.Message.ChatId,
-      SenderId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
+      SenderId = getAccountId,
       Content = reply.Message.Content,
       CreatedAt = reply.Message.CreatedAt,
       UpdatedAt = reply.Message.UpdatedAt,
@@ -352,10 +376,12 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> CreateMessage(CoreAPI_Service.Message request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgMessageService.TrySendMessageToOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0TrySendMessageToOrganizationRequest {
       ChatId = request.ChatId,
       OrganizationId = request.OrganizationId,
-      SenderId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
+      SenderId = getAccountId,
       Content = request.Content,
     });
     return new CoreAPI_Service.V0EventInvokedResponse {
@@ -364,11 +390,13 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> UpdateMessage(CoreAPI_Service.Message request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var updateRequest = new Libs.Protobufs.Organizations_Message.Types.V0TryUpdateMessageInOrganizationRequest {
       MessageId = request.MessageId,
       OrganizationId = request.OrganizationId,
       ChatId = request.ChatId,
-      SenderId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown",
+      SenderId = getAccountId,
       Content = request.Content,
       CreatedAt = request.CreatedAt,
       UpdatedAt = request.UpdatedAt,
@@ -382,11 +410,13 @@ public partial class ApiServiceImpl {
   }
 
   public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteMessage(CoreAPI_Service.V0DeleteMessageRequest request, ServerCallContext context) {
+    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
+
     var reply = await _orgMessageService.TryDeleteMessageFromOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0TryDeleteMessageFromOrganizationRequest {
       MessageId = request.MessageId,
       ChatId = request.ChatId,
       OrganizationId = request.OrganizationId,
-      SenderId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown"
+      SenderId = getAccountId
     });
     return new CoreAPI_Service.V0EventInvokedResponse {
       EventId = reply.MessageSentEventId
