@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>１つのロールを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<Role> GetOrganizationRoleAsync(
-        V0BaseRequest request,
+        V0GetXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot get role: No session data available.");
