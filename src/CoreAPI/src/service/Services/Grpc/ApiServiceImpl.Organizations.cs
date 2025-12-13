@@ -96,7 +96,7 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Member> GetMember(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.Member> GetMember(CoreAPI_Service.V0GetOrDeleteXRequest request, ServerCallContext context) {
     var reply = await _orgMemberService.GetAsync(new Libs.Protobufs.Organizations_Member.Types.V0GetRequest {
       MemberId = request.Id,
       OrganizationId = request.OrganizationId
@@ -168,7 +168,7 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Role> GetRole(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.Role> GetRole(CoreAPI_Service.V0GetOrDeleteXRequest request, ServerCallContext context) {
     var reply = await _orgRoleService.GetAsync(new Libs.Protobufs.Organizations_Role.Types.V0GetRequest {
       Id = request.Id,
       OrgId = request.OrganizationId
@@ -219,7 +219,7 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteRole(CoreAPI_Service.V0GetOrDeleteXRequest request, ServerCallContext context) {
     string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
 
     var reply = await _orgRoleService.DeleteAsync(new Libs.Protobufs.Organizations_Role.Types.V0DeleteRequest {
@@ -258,7 +258,7 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Chat> GetChat(CoreAPI_Service.V0GetXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.Chat> GetChat(CoreAPI_Service.V0GetOrDeleteXRequest request, ServerCallContext context) {
     var reply = await _orgChatService.GetAsync(new Libs.Protobufs.Organizations_Chat.Types.V0GetRequest {
       Id = request.Id,
       OrgId = request.OrganizationId
@@ -311,7 +311,7 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteChat(CoreAPI_Service.V0DeleteXRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteChat(CoreAPI_Service.V0GetOrDeleteXRequest request, ServerCallContext context) {
     string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
 
     var reply = await _orgChatService.DeleteAsync(new Libs.Protobufs.Organizations_Chat.Types.V0DeleteRequest {

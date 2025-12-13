@@ -45,7 +45,7 @@ service V0ApiService {
     // ListMembers: Authorized
     rpc ListMembers (V0ListXRequest) returns (V0ListMembersResponse);
     // GetMember: Authorized
-    rpc GetMember (V0GetXRequest) returns (Member);
+    rpc GetMember (V0GetOrDeleteXRequest) returns (Member);
     // JoinMember: Authorized
     rpc JoinMember (V0JoinMemberRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // LeaveMember: Authorized
@@ -57,25 +57,25 @@ service V0ApiService {
     // ListRoles: Authorized
     rpc ListRoles (V0ListXRequest) returns (V0ListRolesResponse);
     // GetRole: Authorized
-    rpc GetRole (V0GetXRequest) returns (Role);
+    rpc GetRole (V0GetOrDeleteXRequest) returns (Role);
     // CreateRole: Authorized
     rpc CreateRole (V0CreateRollRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateRole: Authorized
     rpc UpdateRole (Role) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteRole: Authorized
-    rpc DeleteRole (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteRole (V0GetOrDeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Chats
     // ListChats: Authorized
     rpc ListChats (V0ListXRequest) returns (V0ListChatsResponse); // 全チャット取得を行うことを想定した設計に
     // GetChat: Authorized
-    rpc GetChat (V0GetXRequest) returns (Chat);
+    rpc GetChat (V0GetOrDeleteXRequest) returns (Chat);
     // CreateChat: Authorized
     rpc CreateChat (V0CreateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateChat: Authorized
     rpc UpdateChat (V0UpdateChatRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteChat: Authorized
-    rpc DeleteChat (V0DeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteChat (V0GetOrDeleteXRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 
     // Messages
     // ListMessages: Authorized
@@ -221,16 +221,10 @@ message V0GetMesssageRequest {
     //メッセージID
     string message_id = 3;
 }
-message V0GetXRequest {
+message V0GetOrDeleteXRequest {
     // 組織ID
     string organization_id = 1;
-    // メンバーID
-    string id = 2;
-}
-message V0DeleteXRequest {
-    // 組織ID
-    string organization_id = 1;
-    // メンバーID
+    // 識別ID
     string id = 2;
 }
 message V0DeleteMessageRequest {
