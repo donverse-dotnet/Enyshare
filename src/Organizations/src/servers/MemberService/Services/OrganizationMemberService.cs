@@ -8,6 +8,11 @@ using Pocco.Libs.Protobufs.Organizations_Member.Services;
 using Pocco.Libs.Protobufs.EventBridge.Services;
 using Pocco.Libs.Protobufs.EventBridge.Types;
 using Pocco.Libs.Protobufs.EventBridge.Enums;
+using Pocco.Libs.Protobufs.Accounts.Services;
+using Pocco.Libs.Protobufs.Accounts.Types;
+using Pocco.Libs.Protobufs.Accounts.Enums;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 
 namespace MemberService.Services;
@@ -20,14 +25,17 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   private readonly IMemberRepository _repository;
   private readonly ILogger<OrganizationsMemberServiceImpl> _logger;
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
+  private readonly V0InternalAccountService.V0InternalAccountServiceClient _internalAccountSvc;
 
   public OrganizationsMemberServiceImpl(
     [FromServices] IMemberRepository repository,
     [FromServices] ILogger<OrganizationsMemberServiceImpl> logger,
+    [FromServices] V0InternalAccountService.V0InternalAccountServiceClient internalAccountSvc,
     [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge
   ) {
     _repository = repository;
     _logger = logger;
+    _internalAccountSvc = internalAccountSvc;
     _eventBridge = eventBridge;
 
     _logger.LogInformation("OrganizationsMemberServiceImpl is initialized!");
@@ -83,9 +91,15 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
   /// - 登録されたメンバー情報をレスポンスとして返却
   /// </summary>
   public override async Task<V0MemberChangesReply> Join(V0JoinRequest request, ServerCallContext context) {
+
+    var account = await _internalAccountSvc.GetAccountInfoAsync(new V0GetAccountRequest {
+        Id = request.UserId
+    });
+
     // メンバーエンティティの作成
     var member = new MemberEntity {
       Id = request.UserId,
+      Nickname = account.Username,
       JoinedAt = DateTime.UtcNow,
       // TODO: Nicknameのアカウントサービスからの取得
       // TODO: デフォルトのRole設定のルール策定
@@ -93,6 +107,15 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
 
     var createdMember = await _repository.CreateAsync(request.OrganizationId, member);
     _logger.LogInformation("{MemberId} is successfully created on {OrganizationId}", createdMember.Id, request.OrganizationId);
+
+    // var createdOrg = _orgs.FindAsync(item => item.Nickname == account.Username).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization mayde created but can't found."));
+
+    //アカウントを更新
+    var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
+        AccountId = request.UserId,
+        OrgId = request.OrganizationId,
+        Action = V0OrgListUpdateActions.Add
+    });
 
     //　イベントを伝搬させるのをEventBridgeに依頼
     var newEventData = new V0NewEventRequest {
@@ -126,7 +149,7 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     // 更新結果をレスポンスとして返却
     var model = new MemberEntity {
       Id = request.Member.Id,
-      // Nickname = request.
+      Roles = request.Member.Roles.ToList()
     };
 
     var updated = await _repository.TryUpdateAsync(request.OrganizationId, request.MemberId, model);
@@ -166,6 +189,17 @@ public class OrganizationsMemberServiceImpl : V0OrganizationMemberService.V0Orga
     if (!deleted) {
       throw new RpcException(new Status(StatusCode.NotFound, "Member not found or no fields to delete"));
     }
+
+    var account = await _internalAccountSvc.GetAccountInfoAsync(new V0GetAccountRequest {
+        Id = request.MemberId
+    });
+
+    //アカウントを更新
+    var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
+        AccountId = request.MemberId,
+        OrgId = request.OrganizationId,
+        Action = V0OrgListUpdateActions.Remove
+    });
 
     var newEventData = new V0NewEventRequest {
       Topic = V0EventTopics.EventTopicOrganization,
