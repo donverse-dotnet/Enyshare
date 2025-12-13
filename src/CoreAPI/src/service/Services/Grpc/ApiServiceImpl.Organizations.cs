@@ -353,7 +353,7 @@ public partial class ApiServiceImpl {
     return response;
   }
 
-  public override async Task<CoreAPI_Service.Message> GetMessage(CoreAPI_Service.V0GetMesssageRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.Message> GetMessage(CoreAPI_Service.V0GetOrDeleteMessageRequest request, ServerCallContext context) {
     var reply = await _orgMessageService.GetMessageInOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0GetMessageInOrganizationRequest {
       OrganizationId = request.OrganizationId,
       ChatId = request.ChatId,
@@ -409,7 +409,7 @@ public partial class ApiServiceImpl {
     };
   }
 
-  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteMessage(CoreAPI_Service.V0DeleteMessageRequest request, ServerCallContext context) {
+  public override async Task<CoreAPI_Service.V0EventInvokedResponse> DeleteMessage(CoreAPI_Service.V0GetOrDeleteMessageRequest request, ServerCallContext context) {
     string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
 
     var reply = await _orgMessageService.TryDeleteMessageFromOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0TryDeleteMessageFromOrganizationRequest {
