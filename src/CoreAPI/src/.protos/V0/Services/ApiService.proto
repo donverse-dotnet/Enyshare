@@ -81,13 +81,13 @@ service V0ApiService {
     // ListMessages: Authorized
     rpc ListMessages (V0ListMessagesRequest) returns (V0ListMessagesResponse);
     // GetMessage: Authorized
-    rpc GetMessage (V0GetMesssageRequest) returns (Message);
+    rpc GetMessage (V0GetOrDeleteMessageRequest) returns (Message);
     // CreateMessage: Authorized
     rpc CreateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // UpdateMessage: Authorized
     rpc UpdateMessage (Message) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
     // DeleteMessage: Authorized
-    rpc DeleteMessage (V0DeleteMessageRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
+    rpc DeleteMessage (V0GetOrDeleteMessageRequest) returns (V0EventInvokedResponse); // Responseはイベントにて結果を受け取る
 }
 
 // -------------------------------------
@@ -213,21 +213,13 @@ message V0ListOrganizationsResponse {
     // 組織のリスト
     repeated Organization organizations = 1;
 }
-message V0GetMesssageRequest {
-    // 組織ID
-    string organization_id = 1;
-    // チャットID
-    string chat_id = 2;
-    //メッセージID
-    string message_id = 3;
-}
 message V0GetOrDeleteXRequest {
     // 組織ID
     string organization_id = 1;
     // 識別ID
     string id = 2;
 }
-message V0DeleteMessageRequest {
+message V0GetOrDeleteMessageRequest {
     // 組織ID
     string organization_id = 1;
     // チャットID
