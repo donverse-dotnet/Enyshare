@@ -221,16 +221,10 @@ message V0GetMesssageRequest {
     //メッセージID
     string message_id = 3;
 }
-message V0GetXRequest {
+message V0GetOrDeleteXRequest {
     // 組織ID
     string organization_id = 1;
-    // メンバーID
-    string id = 2;
-}
-message V0DeleteXRequest {
-    // 組織ID
-    string organization_id = 1;
-    // メンバーID
+    // 識別ID
     string id = 2;
 }
 message V0DeleteMessageRequest {
