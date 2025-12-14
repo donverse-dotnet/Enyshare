@@ -4,6 +4,7 @@ using InfoService.Services;
 
 using MongoDB.Driver;
 
+using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.EventBridge.Services;
 
 using Serilog;
@@ -27,10 +28,17 @@ builder.Services.AddSingleton(sp => {
   return client.GetDatabase("Entities");
 });
 
-builder.Services.AddSingleton<V0EventReceiver.V0EventReceiverClient>(sp => {
+builder.Services.AddSingleton(sp => {
   var eventBridgeUrl = Environment.GetEnvironmentVariable("EVENTBRIDGE_URL") ?? throw new ArgumentException("EVENTBRIDGE_URL is not found");
   var channel = GrpcChannel.ForAddress(eventBridgeUrl);
   return new V0EventReceiver.V0EventReceiverClient(channel);
+});
+
+builder.Services.AddSingleton(sp => {
+  var internalAccountSvc = Environment.GetEnvironmentVariable("INTERNAL_ACCOUNT_SVC_URL") ?? throw new ArgumentException("INTERNAL_ACCOUNT_SVC_URL is not found");
+  Console.WriteLine($"InternalAccountService URL: {internalAccountSvc}");
+  var channel = GrpcChannel.ForAddress(internalAccountSvc);
+  return new V0InternalAccountService.V0InternalAccountServiceClient(channel);
 });
 
 builder.Services.AddGrpc();
