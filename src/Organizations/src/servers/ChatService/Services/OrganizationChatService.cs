@@ -1,4 +1,3 @@
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 using Grpc.Core;
@@ -13,8 +12,6 @@ using Pocco.Libs.Protobufs.EventBridge.Types;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
 using Pocco.Svc.Chats.Models;
-
-using SharpCompress.Common;
 
 namespace Pocco.Svc.ChatService.Services;
 

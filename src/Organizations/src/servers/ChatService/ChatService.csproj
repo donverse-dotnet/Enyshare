@@ -20,6 +20,7 @@
     <Protobuf Include="Protos/V0/Types/ChatUpdateDataRequest.proto" ProtoRoot="Protos/" GrpcServices="None" />
 
     <Protobuf Include="Protos/V0/Services/OrganizationChats.proto" ProtoRoot="Protos/" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Services/InternalChatService.proto" ProtoRoot="Protos/" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
