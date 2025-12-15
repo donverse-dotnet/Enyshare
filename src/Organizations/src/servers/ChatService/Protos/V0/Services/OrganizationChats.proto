@@ -13,7 +13,6 @@ import "V0/Types/ChatGetListDataRequest.proto";
 import "V0/Types/ChatGetListDataReply.proto";
 
 //アカウントを登録するRPCサービスの定義
-
 service V0OrganizationChatService{
     //チャットを作成するRPCメソッド
     rpc Create(pocco.libs.protobufs.organizations_chat.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0ChatChangesReply);

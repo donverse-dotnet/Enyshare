@@ -22,7 +22,7 @@ builder.Services.AddSingleton<IMongoClient>(sp => {
   return new MongoClient(connectionString);
 });
 
-builder.Services.AddSingleton<V0EventReceiver.V0EventReceiverClient>(sp => {
+builder.Services.AddSingleton(sp => {
   var eventBridgeUrl = Environment.GetEnvironmentVariable("EVENTBRIDGE_URL") ?? throw new ArgumentException("EVENTBRIDGE_URL is not found");
   var channel = GrpcChannel.ForAddress(eventBridgeUrl);
   return new V0EventReceiver.V0EventReceiverClient(channel);
@@ -44,6 +44,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<OrganizationChatService>();
+app.MapGrpcService<InternalChatServiceImpl>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 if (app.Environment.IsDevelopment()) {
