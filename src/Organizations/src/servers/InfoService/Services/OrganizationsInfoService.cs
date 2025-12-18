@@ -80,7 +80,11 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     await _orgs.InsertOneAsync(org);
     var createdOrg = _orgs.FindAsync(item => item.Name == request.Name).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
     var createdChat = await _internalOrgChatSvc.CreateAsync(new V0CreateRequest {
-      Name = "General"
+      OrgId = createdOrg.Id,
+      Name = "General",
+      Type = "text",
+      CreatedBy = request.CreatedBy,
+      InvokedBy = request.InvokedBy
     });
 
     // アカウントを更新
