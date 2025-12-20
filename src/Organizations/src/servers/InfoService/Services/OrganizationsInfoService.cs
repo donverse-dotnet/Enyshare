@@ -79,13 +79,6 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     // MongoDBに保存
     await _orgs.InsertOneAsync(org);
     var createdOrg = _orgs.FindAsync(item => item.Name == request.Name).Result.ToListAsync().Result.FirstOrDefault() ?? throw new RpcException(new Status(StatusCode.NotFound, "Organization maybe created but can't found."));
-    var createdChat = await _internalOrgChatSvc.CreateAsync(new V0CreateRequest {
-      OrgId = createdOrg.Id,
-      Name = "General",
-      Type = "text",
-      CreatedBy = request.CreatedBy,
-      InvokedBy = request.InvokedBy
-    });
 
     // アカウントを更新
     var reply = await _internalAccountSvc.UpdateOrgListAsync(new V0UpdateOrgListRequest {
@@ -115,6 +108,15 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     var createdEventData = _eventBridge.NewEvent(
       newEventData
     );
+
+    // デフォルトチャットを作成
+    var createdChat = await _internalOrgChatSvc.CreateAsync(new V0CreateRequest {
+      OrgId = createdOrg.Id,
+      Name = "General",
+      Type = "text",
+      CreatedBy = request.CreatedBy,
+      InvokedBy = request.InvokedBy
+    });
 
     // 作成された組織情報を gRPCレスポンスとして返却
     return new V0InfoChangesReply {
