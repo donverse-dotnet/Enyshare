@@ -26,9 +26,3 @@ service V0RoleService {
     //組織のロールリストを取得するRPCメソッド
     rpc GetList(pocco.libs.protobufs.organizations_role.types.V0GetListRequest) returns (pocco.libs.protobufs.organizations_role.types.V0GetListReply);
 }
-
-// 組織のロールを内部から操作するためのRPCサービスの定義
-service V0InternalOrganizationRoleService {
-    //組織のロールを作成するRPCメソッド
-    rpc Create(pocco.libs.protobufs.organizations_role.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_role.types.V0RoleModel);
-}
