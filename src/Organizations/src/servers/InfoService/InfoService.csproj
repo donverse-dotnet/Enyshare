@@ -13,6 +13,7 @@
         <PackageReference Include="Pocco.Svc.Accounts.Grpc.Clients.Internal" Version="0.0.1-build-1764392317" />
         <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1764168903" />
         <PackageReference Include="Pocco.Svc.Organizations.ChatService.Grpc.Clients.Internal" Version="0.0.1-build-1765784145" />
+        <PackageReference Include="Pocco.Svc.Organizations.RoleService.Grpc.Clients.Internal" Version="0.0.1-build-1766391711" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />

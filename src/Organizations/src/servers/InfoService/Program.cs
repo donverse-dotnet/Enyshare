@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using Pocco.Libs.Protobufs.Accounts.Services;
 using Pocco.Libs.Protobufs.EventBridge.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
+using Pocco.Libs.Protobufs.Organizations_Role.Services;
 
 using Serilog;
 
@@ -33,6 +34,12 @@ builder.Services.AddSingleton(sp => {
   var endpoint = Environment.GetEnvironmentVariable("ORG_CHAT_SVC_URL") ?? throw new ArgumentException("ORG_CHAT_SVC_URL is not found");
   var channel = GrpcChannel.ForAddress(endpoint);
   return new V0InternalOrganizationChatService.V0InternalOrganizationChatServiceClient(channel);
+});
+
+builder.Services.AddSingleton(sp => {
+  var endpoint = Environment.GetEnvironmentVariable("ORG_ROLE_SVC_URL") ?? throw new ArgumentException("ORG_ROLE_SVC_URL is not found");
+  var channel = GrpcChannel.ForAddress(endpoint);
+  return new V0InternalOrganizationRoleService.V0InternalOrganizationRoleServiceClient(channel);
 });
 
 builder.Services.AddSingleton(sp => {
