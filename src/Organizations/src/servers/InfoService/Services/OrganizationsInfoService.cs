@@ -21,6 +21,8 @@ using Pocco.Libs.Protobufs.Accounts.Types;
 using Pocco.Libs.Protobufs.Accounts.Enums;
 using Pocco.Libs.Protobufs.Organizations_Chat.Services;
 using Pocco.Libs.Protobufs.Organizations_Chat.Types;
+using Pocco.Libs.Protobufs.Organizations_Role.Services;
+using RoleService_Types = Pocco.Libs.Protobufs.Organizations_Role.Types;
 
 namespace InfoService.Services;
 
@@ -30,6 +32,7 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
   private readonly IMongoCollection<OrganizationEntity> _orgs;
   private readonly V0InternalAccountService.V0InternalAccountServiceClient _internalAccountSvc;
   private readonly V0InternalOrganizationChatService.V0InternalOrganizationChatServiceClient _internalOrgChatSvc;
+  private readonly V0InternalOrganizationRoleService.V0InternalOrganizationRoleServiceClient _internalOrgRoleSvc;
   private readonly V0EventReceiver.V0EventReceiverClient _eventBridge;
   private readonly ILogger<OrganizationsInfoServiceImpl> _logger;
 
@@ -38,12 +41,14 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
     [FromServices] IMongoDatabase mongo,
     [FromServices] V0InternalAccountService.V0InternalAccountServiceClient internalAccountSvc,
     [FromServices] V0InternalOrganizationChatService.V0InternalOrganizationChatServiceClient internalOrgChatSvc,
+    [FromServices] V0InternalOrganizationRoleService.V0InternalOrganizationRoleServiceClient internalOrgRoleSvc,
     [FromServices] V0EventReceiver.V0EventReceiverClient eventBridge,
     [FromServices] ILogger<OrganizationsInfoServiceImpl> logger
   ) {
     _orgs = mongo.GetCollection<OrganizationEntity>("Organizations");
     _internalAccountSvc = internalAccountSvc;
     _internalOrgChatSvc = internalOrgChatSvc;
+    _internalOrgRoleSvc = internalOrgRoleSvc;
     _eventBridge = eventBridge;
     _logger = logger;
 
@@ -115,6 +120,12 @@ public class OrganizationsInfoServiceImpl : V0OrganizationInfoService.V0Organiza
       Name = "General",
       Type = "text",
       CreatedBy = request.CreatedBy,
+      InvokedBy = request.InvokedBy
+    });
+    // デフォルトロールを作成
+    var createdRole = await _internalOrgRoleSvc.CreateAsync(new RoleService_Types.V0CreateRequest {
+      OrgId = createdOrg.Id,
+      Name = "Default",
       InvokedBy = request.InvokedBy
     });
 
