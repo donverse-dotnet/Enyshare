@@ -1,4 +1,4 @@
-name: Build and Publish Organizations.ChatService Internal gRPC Client Package
+name: Build and Publish Organizations.RoleService Internal gRPC Client Package
 
 on:
   push:

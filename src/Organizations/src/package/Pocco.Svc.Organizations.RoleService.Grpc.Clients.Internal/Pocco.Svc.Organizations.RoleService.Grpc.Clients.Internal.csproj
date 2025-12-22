@@ -29,7 +29,7 @@
         <Protobuf Include="../../servers/RoleService/Protos/V0/Types/CreateRequestData.proto" ProtoRoot="../../servers/RoleService/Protos" GrpcServices="None" />
         <Protobuf Include="../../servers/RoleService/Protos/V0/Types/RoleModel.proto" ProtoRoot="../../servers/RoleService/Protos" GrpcServices="None" />
 
-        <Protobuf Include="../../servers/RoleService/Protos/V0/Services/InternalRoleService.proto" ProtoRoot="../../servers/RoleService/Protos" GrpcServices="Server" />
+        <Protobuf Include="../../servers/RoleService/Protos/V0/Services/InternalRoleService.proto" ProtoRoot="../../servers/RoleService/Protos" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
