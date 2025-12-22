@@ -9,7 +9,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "POCCO_DB": "CHANGE_HERE",
-        "EVENTBRIDGE_URL": "CHANGE_HERE"
+        "ORG_CHAT_SVC_URL": "CHANGE_HERE",
+        "ORG_ROLE_SVC_URL": "CHANGE_HERE",
+        "EVENTBRIDGE_URL": "CHANGE_HERE",
+        "INTERNAL_ACCOUNT_SVC_URL": "CHANGE_HERE"
       }
     },
     "https": {
