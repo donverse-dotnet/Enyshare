@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Role.Services";
+package pocco.libs.protobufs.organizations_role.services;
+
+import "V0/Types/CreateRequestData.proto";
+import "V0/Types/RoleModel.proto";
+
+// 組織のロールを内部から操作するためのRPCサービスの定義
+service V0InternalOrganizationRoleService {
+    //組織のロールを作成するRPCメソッド
+    rpc Create(pocco.libs.protobufs.organizations_role.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_role.types.V0RoleModel);
+}
