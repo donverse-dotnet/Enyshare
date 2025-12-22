@@ -1,0 +1,48 @@
+name: Build and Publish Organizations.ChatService Internal gRPC Client Package
+
+on:
+  push:
+    branches:
+      - main
+      - canary
+      - beta
+      - alpha
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        working-directory: ./src/package/Pocco.Svc.Organizations.RoleService.Grpc.Clients.Internal
+        run: dotnet restore
+
+      - name: Build the project
+        working-directory: ./src/package/Pocco.Svc.Organizations.RoleService.Grpc.Clients.Internal
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack the project
+        working-directory: ./src/package/Pocco.Svc.Organizations.RoleService.Grpc.Clients.Internal
+        run: dotnet pack --configuration Release --no-build -o ./nupkg
+
+      - name: Publish to GitHub Packages
+        working-directory: ./src/package/Pocco.Svc.Organizations.RoleService.Grpc.Clients.Internal
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet nuget push ./nupkg/*.nupkg \
+            --source "https://nuget.pkg.github.com/ggg-alpha/index.json" \
+            --api-key $GITHUB_TOKEN \
+            --skip-duplicate
