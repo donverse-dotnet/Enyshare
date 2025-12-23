@@ -47,6 +47,11 @@ public class AssetController : ControllerBase {
       ".wav" => "audio/wav",
       ".ogg" => "audio/ogg",
       ".webm" => "video/webm",
+      ".woff" => "font/woff",
+      ".woff2" => "font/woff2",
+      ".ttf" => "font/ttf",
+      ".svg" => "image/svg+xml",
+      ".ico" => "image/x-icon",
       _ => "application/octet-stream",
     };
 
