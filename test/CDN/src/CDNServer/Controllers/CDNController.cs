@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Pocco.CDN.Controllers;
 
-[ApiController]
+[ApiController, Route("user-content")]
 public class CDNController : ControllerBase {
   private readonly ILogger<CDNController> _logger;
   private readonly string _rootPath;
