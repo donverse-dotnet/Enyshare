@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>１つのチャットを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<Chat> GetOrganizationChatAsync(
-        V0GetXRequest request,
+        V0GetOrDeleteXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot get chat: No session data available.");
@@ -28,10 +28,10 @@ public partial class APIClient {
     /// <param name="cancellationToken">このメソッドをキャンセルするためのトークン</param>
     /// <returns>複数のチャットを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
-     public async Task<V0ListChatsResponse> ListOrganizationChatsAsync(
-        V0ListXRequest request,
-        CancellationToken cancellationToken = default
-    ) {
+    public async Task<V0ListChatsResponse> ListOrganizationChatsAsync(
+       V0ListXRequest request,
+       CancellationToken cancellationToken = default
+   ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot getlist chat: No session data available.");
         var header = sessionData.ToMetadata();
 

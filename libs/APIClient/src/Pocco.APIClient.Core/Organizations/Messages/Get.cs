@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>１つのメッセージを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<Message> GetOrganizationMessageAsync(
-        V0GetMesssageRequest request,
+        V0GetOrDeleteMessageRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot get message: No session data available.");
@@ -20,7 +20,7 @@ public partial class APIClient {
         var reply = await API.GetMessageAsync(request, header, null, cancellationToken); //TODO: わかりやすい名前に変更する
         return reply;
     }
-    
+
     /// <summary>
     /// メッセージの一覧を取得するためのメソッドを提供します。
     /// </summary>

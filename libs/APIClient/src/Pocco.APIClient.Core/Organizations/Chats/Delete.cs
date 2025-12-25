@@ -11,7 +11,7 @@ public partial class APIClient {
     /// <returns>イベントIDを返却します。</returns>
     /// <exception cref="InvalidOperationException">ログインできておらず、セッションデータがないときに投げられます。</exception>
     public async Task<V0EventInvokedResponse> DeleteOrganizationChatAsync(
-        V0DeleteXRequest request,
+        V0GetOrDeleteXRequest request,
         CancellationToken cancellationToken = default
     ) {
         var sessionData = SessionManager.GetSessionData() ?? throw new InvalidOperationException("Cannot delete chat: No session data available.");
