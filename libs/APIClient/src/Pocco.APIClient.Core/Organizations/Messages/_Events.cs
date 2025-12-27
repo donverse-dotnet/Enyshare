@@ -1,3 +1,4 @@
+using Pocco.APIClient.Core.Models;
 using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.APIClient.Core;
@@ -10,5 +11,5 @@ public static partial class ClientEvents {
     public record OnOrganizationUpdateMessage(string EventId, Message NewMessage) : BaseEvent(EventId);
 
     public const string ON_ORGANIZATION_MESSAGE_DELETED = "OnOrganizationDeleteMessage";
-    public record OnOrganizationDeleteMessage(string EventId, string MessageId) : BaseEvent(EventId);
+    public record OnOrganizationDeleteMessage(string EventId, OrganizationOnItemDeletedModel Message) : BaseEvent(EventId);
 }

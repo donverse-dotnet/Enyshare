@@ -1,3 +1,4 @@
+using Pocco.APIClient.Core.Models;
 using Pocco.Libs.Protobufs.CoreAPI.Services;
 
 namespace Pocco.APIClient.Core;
@@ -10,5 +11,5 @@ public static partial class ClientEvents {
     public record OnOrganizationRoleUpdated(string EventId, Role NewRole) : BaseEvent(EventId);
 
     public const string ON_ORGANIZATION_ROLE_DELETED = "OnOrganizationRoleDeleted";
-    public record OnOrganizationRoleDeleted(string EventId, string RoleId) : BaseEvent(EventId);
+    public record OnOrganizationRoleDeleted(string EventId, OrganizationItemDeletedModel Role) : BaseEvent(EventId);
 }
