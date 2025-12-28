@@ -38,7 +38,7 @@ public class DatabaseManager : IDisposable {
     // Create a new MongoDB client for the organization
     var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING") ?? throw new InvalidOperationException("MongoDB connection string is not configured.");
     var mongoClient = new MongoClient(connectionString);
-    var mongoDatabase = mongoClient.GetDatabase($"org_{organizationId}");
+    var mongoDatabase = mongoClient.GetDatabase($"{organizationId}");
 
     var newDb = new Database(DateTime.UtcNow, mongoDatabase);
     OrganizationClients[organizationId] = newDb;
