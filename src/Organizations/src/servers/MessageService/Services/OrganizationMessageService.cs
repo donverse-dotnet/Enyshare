@@ -76,8 +76,8 @@ public class OrganizationMessageGrpcService(
     newEventData.Payload.Fields.Add("attachments", new Value { StringValue = $"{newMessage.Attachments}" });
     newEventData.Payload.Fields.Add("mentions", new Value { StringValue = $"{newMessage.Mentions}" });
     newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{newMessage.Reactions}" });
-    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{newMessage.CreatedAt}" });
-    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{newMessage.UpdatedAt}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = newMessage.CreatedAt.ToDateTime().ToString() });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = newMessage.UpdatedAt.ToDateTime().ToString() });
 
     var createdEventData = _eventBridge.NewEvent(
       newEventData
@@ -129,8 +129,8 @@ public class OrganizationMessageGrpcService(
     newEventData.Payload.Fields.Add("attachments", new Value { StringValue = $"{request.Attachments}" });
     newEventData.Payload.Fields.Add("mentions", new Value { StringValue = $"{request.Mentions}" });
     newEventData.Payload.Fields.Add("reactions", new Value { StringValue = $"{request.Reactions}" });
-    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = $"{request.CreatedAt}" });
-    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = $"{request.UpdatedAt}" });
+    newEventData.Payload.Fields.Add("created_at", new Value { StringValue = request.CreatedAt.ToDateTime().ToString() });
+    newEventData.Payload.Fields.Add("updated_at", new Value { StringValue = request.UpdatedAt.ToDateTime().ToString() });
 
 
     var updatedEventData = _eventBridge.NewEvent(
