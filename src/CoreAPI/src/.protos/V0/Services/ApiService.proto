@@ -292,12 +292,14 @@ message V0ListXRequest {
     int32 page_number = 3;
 }
 message V0ListMessagesRequest {
+    // 組織ID
+    string organization_id = 1;
     // チャットID
-    string chat_id = 1;
+    string chat_id = 2;
     // ページサイズ
-    int32 page_size = 2;
+    int32 page_size = 3;
     // ページ番号
-    int32 page_number = 3;
+    int32 page_number = 4;
 }
 message V0ListRolesResponse {
     // 役割のリスト

@@ -329,19 +329,18 @@ public partial class ApiServiceImpl {
   #region Messages
   public override async Task<CoreAPI_Service.V0ListMessagesResponse> ListMessages(CoreAPI_Service.V0ListMessagesRequest request, ServerCallContext context) {
     var reply = await _orgMessageService.GetMessageListInOrganizationAsync(new Libs.Protobufs.Organizations_Message.Types.V0GetMessageListInOrganizationRequest {
+      OrganizationId = request.OrganizationId,
       ChatId = request.ChatId,
     });
 
     var response = new CoreAPI_Service.V0ListMessagesResponse();
-
-    string getAccountId = context.RequestHeaders.GetValue("x-account-id") ?? "unkown";
 
     foreach (var message in reply.Messages) {
       var m = new CoreAPI_Service.Message {
         MessageId = message.Id,
         OrganizationId = message.OrganizationId,
         ChatId = message.ChatId,
-        SenderId = getAccountId,
+        SenderId = message.SenderId,
         Content = message.Content,
         CreatedAt = message.CreatedAt,
         UpdatedAt = message.UpdatedAt,
@@ -400,7 +399,7 @@ public partial class ApiServiceImpl {
       Content = request.Content,
       CreatedAt = request.CreatedAt,
       UpdatedAt = request.UpdatedAt,
-      
+
     };
     var reply = await _orgMessageService.TryUpdateMessageInOrganizationAsync(updateRequest);
 
