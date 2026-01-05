@@ -7,8 +7,14 @@
 このプロジェクトは、 @ggg-alpha が作成する`Pocco`のテスト用CDNサーバーを提供します。
 
 ## 動作環境
-- Windows/Linux
-- .NET 9.0 SDK
+- Linux
+- Docker
+- aspnetcore 9.0
+
+## 実行方法
+1. `cd src/CDNServer`
+2. `docker build --pull --rm -f Dockerfile -t pocco-cdn:latest .`
+3. `docker run --rm -p 5197 --env ALLOWED_ORIGIN=* -d pocco-cdn:latest`
 
 ## 注意事項
 1. このサービスは、自動で全世界にデプロイされるわけではありません
