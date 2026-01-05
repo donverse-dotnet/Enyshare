@@ -3,11 +3,13 @@ namespace Pocco.CDN;
 
 public class Server {
   public static void Main(string[] args) {
+    var allowedOrigin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN") ?? throw new ArgumentNullException("ALLOWED_ORIGIN not found in environment variables");
+
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options => {
       options.AddPolicy("AllowUIRenderer", policy => {
-        policy.WithOrigins("http://localhost:5099")
+        policy.WithOrigins(allowedOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod();
       });
