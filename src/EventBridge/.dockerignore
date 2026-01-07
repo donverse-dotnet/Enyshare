@@ -1,0 +1,8 @@
+# Logging
+logs/
+
+# Properties
+Properties/
+
+# Others
+package/
