@@ -1,0 +1,10 @@
+# Logging
+logs/
+
+# .NET
+bin/
+obj/
+Properties/
+
+# Others
+package/
