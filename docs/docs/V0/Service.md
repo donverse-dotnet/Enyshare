@@ -83,7 +83,7 @@
 ### Roles
     rpc ListRoles (V0ListXRequest) returns (V0ListRolesResponse);
     rpc GetRole (V0GetOrDeleteXRequest) returns (Role);
-    rpc CreateRole (V0CreateRollRequest) returns (V0EventInvokedResponse);
+    rpc CreateRole (V0CreateRoleRequest) returns (V0EventInvokedResponse);
     rpc UpdateRole (Role) returns (V0EventInvokedResponse);
     rpc DeleteRole (V0GetOrDeleteXRequest) returns (V0EventInvokedResponse);
 
