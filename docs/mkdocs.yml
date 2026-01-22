@@ -28,14 +28,17 @@ nav:
     - 3.3. Members:
       - 3.3.1. リストを取得: V0/V0ListMembers.md
       - 3.3.2. 取得: V0/V0GetMember.md
-      - 3.3.3. 参加: V0/V0JoinMemberRequest
-      - 3.3.4. 退出: V0/V0LeaveMemberRequest
+      - 3.3.3. 参加: V0/V0JoinMember.md
+      - 3.3.4. 退出: V0/V0LeaveMember.md
     - 3.4. Roles:
-      - 3.4.1. リストを取得: V0/V0ListXRequest.md
-      - 3.4.2. 取得と削除: V0/V0GetOrDeleteXRequest.md
-      - 3.4.3. 作成: V0/V0CreateRollRequest
-      - 3.4.4. 更新: V0/Role.md
+      - 3.4.1. リストを取得: V0/V0ListRoles.md
+      - 3.4.2. 取得: V0/V0GetRole.md
+      - 3.4.3. 作成: V0/V0CreateRole.md
+      - 3.4.4. 更新: V0/V0UpdateRole.md
+      - 3.4.5. 削除: V0/V0DeleteRole.md
     - 3.5. Messages:
-      - 3.5.1. リストを取得: V0/V0ListMessagesRequest
-      - 3.5.2. 取得と削除: V0/V0GetOrDeleteMessageRequest
-      - 3.5.3. 作成と更新: V0/Message.md
+      - 3.5.1. リストを取得: V0/V0ListMessages.md
+      - 3.5.2. 取得: V0/V0GetMessage.md
+      - 3.5.3. 作成: V0/V0CreateMessage.md
+      - 3.5.4. 更新: V0/V0UpdateMessage.md
+      - 3.5.5. 削除: V0/V0DeleteMessage.md
