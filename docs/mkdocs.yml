@@ -42,3 +42,9 @@ nav:
       - 3.5.3. 作成: V0/V0CreateMessage.md
       - 3.5.4. 更新: V0/V0UpdateMessage.md
       - 3.5.5. 削除: V0/V0DeleteMessage.md
+  - 4.EventService:
+    - 4.1. イベント購読: V0/V0ListenEvent.md
+    - 4.2. 購読更新: V0/V0UpdateEvent.md
+    - 4.3. 購読停止: V0/V0UnlistenEvent.md
+  - 5. 補足:
+    - 5.1. メソッドについて: V0/V0Additional Information.md
