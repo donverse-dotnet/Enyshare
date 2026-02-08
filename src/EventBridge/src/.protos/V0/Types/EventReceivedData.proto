@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Types";
+package pocco.libs.protobufs.eventbridge.types;
+
+message V0EventReceivedData {
+    // イベントID
+    string event_id = 1;
+}

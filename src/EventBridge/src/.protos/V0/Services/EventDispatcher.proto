@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Services";
+package pocco.libs.protobufs.eventbridge.services;
+
+import "V0/Enums/V0EventTopics.proto";
+import "V0/Types/DeployedEventData.proto";
+
+service V0EventDispatcher {
+    // イベントを購読する
+    rpc Listen (ListenRequest) returns (stream pocco.libs.protobufs.eventbridge.types.V0DeployedEventData);
+}
+
+message ListenRequest {
+    // 購読するイベントトピック
+    repeated pocco.libs.protobufs.eventbridge.enums.V0EventTopics topics = 1;
+}

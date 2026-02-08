@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.EventBridge.Services";
+package pocco.libs.protobufs.eventbridge.services;
+
+import "V0/Types/EventReceivedData.proto";
+import "V0/Types/NewEventRequest.proto";
+
+service V0EventReceiver {
+    // イベントを購読する
+    rpc NewEvent (pocco.libs.protobufs.eventbridge.types.V0NewEventRequest) returns (pocco.libs.protobufs.eventbridge.types.V0EventReceivedData);
+}
