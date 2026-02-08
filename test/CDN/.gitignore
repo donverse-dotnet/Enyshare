@@ -1,0 +1,5 @@
+# Editor settings
+.vscode/
+
+# git support file
+!*.gitkeep
