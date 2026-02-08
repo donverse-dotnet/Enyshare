@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Message.Types";
+package pocco.libs.protobufs.organizations_message.types;
+
+import "V0/Types/Messages.proto";
+import "google/protobuf/timestamp.proto";
+
+message V0TryMessageActionResponse {
+    string message_sent_event_id = 1;
+}
+
+message V0TrySendMessageToOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string content = 4;
+    pocco.libs.protobufs.organizations_message.types.V0MessageAttachments attachments = 5;
+    pocco.libs.protobufs.organizations_message.types.V0MessageMentions mentions = 6;
+    pocco.libs.protobufs.organizations_message.types.V0MessageReactions reactions = 7;
+}
+message V0TryUpdateMessageInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    oneof update {
+        string content = 4;
+        pocco.libs.protobufs.organizations_message.types.V0MessageAttachments attachments = 5;
+        pocco.libs.protobufs.organizations_message.types.V0MessageMentions mentions = 6;
+        pocco.libs.protobufs.organizations_message.types.V0MessageReactions reactions = 7;
+    }
+    string message_id = 9; // メッセージID
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+}
+message V0TryDeleteMessageFromOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
+}
+message V0TryAddReactionToMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
+    pocco.libs.protobufs.organizations_message.types.V0MessageReaction reaction = 5;
+}
+message V0TryRemoveReactionFromMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
+    pocco.libs.protobufs.organizations_message.types.V0MessageReaction reaction = 5;
+}
+message V0TryBulkRemoveReactionsFromMessageRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string sender_id = 3;
+    string message_id = 4; // メッセージID
+    repeated pocco.libs.protobufs.organizations_message.types.V0MessageReaction reactions = 5;
+}
+
+message V0GetMessageInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    string message_id = 3;
+}
+message V0GetMessageInOrganizationResponse {
+    pocco.libs.protobufs.organizations_message.types.V0Messages message = 1;
+}
+
+message V0GetMessageListInOrganizationRequest {
+    string organization_id = 1;
+    string chat_id = 2;
+    int32 page_size = 3;
+    string first_message_id = 4;
+}
+message V0GetMessageListInOrganizationResponse {
+    repeated pocco.libs.protobufs.organizations_message.types.V0Messages messages = 1;
+}

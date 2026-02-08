@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Types";
+package pocco.libs.protobufs.organizations_chat.types;
+
+message V0DeleteReply{
+    bool success = 1;
+}

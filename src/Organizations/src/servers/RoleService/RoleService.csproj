@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos/V0/Types/RoleChangesReply.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetReplyData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/CreateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/UpdateRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/DeleteRequestData.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetListDataRequest.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/GetListDataReply.proto" ProtoRoot="Protos" GrpcServices="None" />
+    <Protobuf Include="Protos/V0/Types/RoleModel.proto" ProtoRoot="Protos" GrpcServices="None" />
+
+    <Protobuf Include="Protos/V0/Services/RoleService.proto" ProtoRoot="Protos" GrpcServices="Server" />
+    <Protobuf Include="Protos/V0/Services/InternalRoleService.proto" ProtoRoot="Protos" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.32.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
+    <PackageReference Include="Pocco.Svc.EventBridge.Grpc.Clients" Version="0.0.1-build-1764168903" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5065",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "POCCO_DB": "CHANGE_HERE",
+        "ORG_CHAT_SVC_URL": "CHANGE_HERE",
+        "ORG_ROLE_SVC_URL": "CHANGE_HERE",
+        "EVENTBRIDGE_URL": "CHANGE_HERE",
+        "INTERNAL_ACCOUNT_SVC_URL": "CHANGE_HERE"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7070;http://localhost:5065",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

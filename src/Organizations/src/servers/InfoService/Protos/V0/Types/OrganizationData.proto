@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Info.Types";
+
+package pocco.libs.protobufs.organizations_info.types;
+
+import "V0/Types/InfoModel.proto";
+
+message V0CreateOrganizationReply{
+    pocco.libs.protobufs.organizations_info.types.V0InfoModel organization = 1;
+}

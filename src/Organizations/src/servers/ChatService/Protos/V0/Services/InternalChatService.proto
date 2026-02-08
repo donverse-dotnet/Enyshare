@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Services";
+package pocco.libs.protobufs.organizations_chat.services;
+
+import "V0/Types/ChatCreateDataRequest.proto";
+import "V0/Types/ChatsModel.proto";
+
+// 内部から組織のチャットを操作できるようにするgRPCサービス
+service V0InternalOrganizationChatService {
+    // チャットを作成するRPCメソッド
+    rpc Create(pocco.libs.protobufs.organizations_chat.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0ChatsModel);
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Types";
+package pocco.libs.protobufs.organizations_chat.types;
+
+message V0CreateRequest{
+    string name = 1;
+    string type = 2;
+    string parent = 3;
+    string org_id = 4;
+    string created_by = 5;
+    string invoked_by = 6;
+}

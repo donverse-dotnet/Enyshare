@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Role.Types";
+package pocco.libs.protobufs.organizations_role.types;
+
+import "google/protobuf/timestamp.proto";
+
+message V0RoleModel {
+    string id = 1;
+    string org_id = 2;
+    string name = 3;
+    string descriptions = 4;
+    repeated string permissions = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}

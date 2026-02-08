@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Services";
+package pocco.libs.protobufs.organizations_chat.services;
+
+import "V0/Types/ChatCreateDataRequest.proto";
+import "V0/Types/ChatDeleteDataRequest.proto";
+import "V0/Types/ChatGetDataRequest.proto";
+import "V0/Types/ChatUpdateDataRequest.proto";
+import "V0/Types/ChatGetDataReply.proto";
+import "V0/Types/ChatChangesReply.proto";
+import "V0/Types/ChatGetListDataRequest.proto";
+import "V0/Types/ChatGetListDataReply.proto";
+
+//アカウントを登録するRPCサービスの定義
+service V0OrganizationChatService{
+    //チャットを作成するRPCメソッド
+    rpc Create(pocco.libs.protobufs.organizations_chat.types.V0CreateRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0ChatChangesReply);
+    //チャットを更新するRPCメソッド
+    rpc Update(pocco.libs.protobufs.organizations_chat.types.V0UpdateRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0ChatChangesReply);
+    //チャットを削除するRPCメソッド
+    rpc Delete(pocco.libs.protobufs.organizations_chat.types.V0DeleteRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0ChatChangesReply);
+    //チャットを情報を取得するRPCメソッド
+    rpc Get(pocco.libs.protobufs.organizations_chat.types.V0GetRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0GetReply);
+    //チャットリストを取得するRPCメソッド
+    rpc GetList(pocco.libs.protobufs.organizations_chat.types.V0GetListRequest) returns (pocco.libs.protobufs.organizations_chat.types.V0GetListReply);
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Info.Types";
+
+package pocco.libs.protobufs.organizations_info.types;
+
+message V0DeleteOrganizationRequest{
+    string id = 1;
+    string invoked_by = 2;
+}
+
+message V0DeleteOrganizationReply{
+    string id = 1;
+    bool success = 2;
+    string message = 3;
+}

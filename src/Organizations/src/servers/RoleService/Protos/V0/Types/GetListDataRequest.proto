@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Role.Types";
+package pocco.libs.protobufs.organizations_role.types;
+
+message V0GetListRequest {
+    string org_id = 1;
+}

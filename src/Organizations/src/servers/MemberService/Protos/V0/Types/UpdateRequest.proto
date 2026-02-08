@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Types";
+package pocco.libs.protobufs.organizations_member.types;
+
+import "V0/Types/MemberModel.proto";
+
+// メンバーを更新するリクエストを表すモデル
+message V0UpdateRequest {
+    // 組織の一意の識別子
+    string organization_id = 1;
+    // メンバーの一意の識別子
+    string member_id = 2;
+    // 更新するメンバーの情報
+    pocco.libs.protobufs.organizations_member.types.V0MemberModel member = 3;
+
+    // リクエストを送信したユーザーの一意の識別子
+    string invoked_by = 4;
+}

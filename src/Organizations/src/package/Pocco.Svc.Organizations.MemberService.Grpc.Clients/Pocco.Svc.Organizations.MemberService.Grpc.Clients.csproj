@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>Pocco.Svc.Organizations.MemberService.Grpc.Clients</PackageId>
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <Authors>ggg-alpha</Authors>
+        <Company>Donverse.net</Company>
+        <PackageDescription>Poccoの組織のメンバーサービスのgRPCクライアントパッケージ。</PackageDescription>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.Organizations</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetListRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetListResponse.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/GetRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/JoinRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/LeaveRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/UpdateRequest.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberChangesReply.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Types/MemberModel.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="None" />
+        <Protobuf Include="../../servers/MemberService/Protos/V0/Services/MemberService.proto" ProtoRoot="../../servers/MemberService/Protos" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.Reflection" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="all">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Chat.Types";
+package pocco.libs.protobufs.organizations_chat.types;
+
+import "V0/Types/ChatsModel.proto";
+
+message V0GetListReply {
+    repeated pocco.libs.protobufs.organizations_chat.types.V0ChatsModel chats = 1;
+}

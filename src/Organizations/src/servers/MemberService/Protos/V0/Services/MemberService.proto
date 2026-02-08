@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Organizations_Member.Services";
+package pocco.libs.protobufs.organizations_member.services;
+
+import "V0/Types/MemberModel.proto";
+import "V0/Types/GetListRequest.proto";
+import "V0/Types/GetListResponse.proto";
+import "V0/Types/GetRequest.proto";
+import "V0/Types/JoinRequest.proto";
+import "V0/Types/LeaveRequest.proto";
+import "V0/Types/UpdateRequest.proto";
+import "V0/Types/MemberChangesReply.proto";
+
+// 組織メンバーサービスの定義
+service V0OrganizationMemberService {
+    // メンバーの取得
+    rpc Get(pocco.libs.protobufs.organizations_member.types.V0GetRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberModel);
+    // メンバー一覧の取得
+    rpc List(pocco.libs.protobufs.organizations_member.types.V0GetListRequest) returns (pocco.libs.protobufs.organizations_member.types.V0GetListResponse);
+    // 参加リクエストの送信
+    rpc Join(pocco.libs.protobufs.organizations_member.types.V0JoinRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+    // 脱退リクエストの送信
+    rpc Leave(pocco.libs.protobufs.organizations_member.types.V0LeaveRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+    // 組織内のメンバー情報の更新
+    rpc Update(pocco.libs.protobufs.organizations_member.types.V0UpdateRequest) returns (pocco.libs.protobufs.organizations_member.types.V0MemberChangesReply);
+}
