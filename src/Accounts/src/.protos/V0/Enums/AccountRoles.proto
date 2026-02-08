@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Enums";
+
+package pocco.libs.protobufs.accounts.enums;
+
+enum V0AccountRoles {
+    V0_USER = 0;
+    V0_ADMIN = 1;
+}

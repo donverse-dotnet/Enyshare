@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Enums";
+package pocco.libs.protobufs.accounts.enums;
+
+
+enum V0OrgListUpdateActions {
+    V0ORG_LIST_UPDATE_ACTIONS_ADD = 0;
+    V0ORG_LIST_UPDATE_ACTIONS_REMOVE = 1;
+}

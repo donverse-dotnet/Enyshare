@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Types";
+package pocco.libs.protobufs.accounts.types;
+
+// アカウント削除リクエスト
+message V0DeleteAccountRequest {
+    string Id = 1;
+}

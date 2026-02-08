@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Accounts.Types";
+package pocco.libs.protobufs.accounts.types;
+
+import "V0/Types/Model.AccountBase.proto";
+
+
+// アカウント取得リプライ
+message V0GetAccountReply {
+    // 取得したアカウント情報
+    pocco.libs.protobufs.accounts.types.V0AccountBaseModel account = 1;
+}

@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>Pocco.Svc.Accounts.Grpc.Clients.Internal</PackageId>
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <Authors>ggg-alpha</Authors>
+        <Company>Donverse.net</Company>
+        <PackageDescription>PoccoのAccountsサービスの内部用のgRPCクライアントパッケージ。</PackageDescription>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.Accounts</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="../../.protos/V0/Enums/OrgListUpdateActions.proto" ProtoRoot="../../.protos/"
+            GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Enums/AccountStatus.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+
+        <Protobuf Include="../../.protos/V0/Types/Request.OrgListUpdate.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountStatus.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Request.AccountGet.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+        <Protobuf Include="../../.protos/V0/Types/Model.AccountBase.proto"
+            ProtoRoot="../../.protos/" GrpcServices="None" />
+
+        <Protobuf Include="../../.protos/V0/Services/InternalAccountService.proto"
+            ProtoRoot="../../.protos/" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.Reflection" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.71.0" PrivateAssets="all" />
+        <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="all">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

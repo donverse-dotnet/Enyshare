@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Public -->
+    <Protobuf Include="../.protos/V0/Enums/AccountRoles.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Enums/AccountStatus.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+
+    <Protobuf Include="../.protos/V0/Types/Model.Account.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Model.AccountBase.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Model.AccountNotificationSettings.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Model.AccountStatus.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.AccountGet.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Response.AccountGet.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.AccountRegister.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Response.AccountRegister.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.AccountUpdate.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Response.AccountUpdate.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.AccountDelete.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Response.AccountDelete.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+
+    <Protobuf Include="../.protos/V0/Services/AccountService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+
+    <!-- Internal -->
+    <Protobuf Include="../.protos/V0/Enums/OrgListUpdateActions.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Types/Request.OrgListUpdate.proto" ProtoRoot="../.protos/" GrpcServices="None" />
+    <Protobuf Include="../.protos/V0/Services/InternalAccountService.proto" ProtoRoot="../.protos/" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+  </ItemGroup>
+
+</Project>
