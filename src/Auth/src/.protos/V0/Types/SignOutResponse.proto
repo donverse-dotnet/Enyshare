@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pocco.Libs.Protobufs.Auth.Types";
+
+package pocco.libs.protobufs.auth.types;
+
+
+// ログアウトのレスポンスメッセージ
+message V0SignOutResponse {
+    // 成功フラグ
+    bool success = 1;
+    // エラーメッセージ
+    string errorMessage = 2;
+}
