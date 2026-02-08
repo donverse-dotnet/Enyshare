@@ -1,0 +1,13 @@
+# Editor
+.vs/
+.vscode/
+.idea/
+
+# OS
+.DS_Store/
+
+# Build / Debug
+bin/
+obj/
+out/
+build/
