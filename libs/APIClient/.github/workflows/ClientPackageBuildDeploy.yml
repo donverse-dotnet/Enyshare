@@ -1,0 +1,47 @@
+name: Publish Nuget Package for ClientPackage to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Feed nuget package source for GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget add source --username ggg-alpha --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ggg-alpha/index.json"
+
+      - name: Restore dependencies
+        run: dotnet restore ./src/Pocco.APIClient.Core/Pocco.APIClient.Core.csproj
+
+      - name: Build the project
+        run: dotnet build --configuration Release --no-restore ./src/Pocco.APIClient.Core/Pocco.APIClient.Core.csproj
+
+      - name: Pack the project
+        run: dotnet pack --configuration Release --no-build -o ./nupkg ./src/Pocco.APIClient.Core/Pocco.APIClient.Core.csproj
+
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet nuget push ./nupkg/*.nupkg \
+            --source "https://nuget.pkg.github.com/ggg-alpha/index.json" \
+            --api-key $GITHUB_TOKEN \
+            --skip-duplicate

@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "ConsoleApp.Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "POCCO_API_ENDPOINT": "http://localhost:5280",
+        "POCCO_TEST_EMAIL": "a@y.com",
+        "POCCO_TEST_PASSWORD": "password"
+      }
+    },
+    "ConsoleApp.Production": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}

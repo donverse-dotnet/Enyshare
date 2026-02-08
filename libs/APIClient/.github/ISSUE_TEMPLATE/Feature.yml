@@ -1,0 +1,50 @@
+name: 💡 Request features
+description: The template for requesting new features for this project.
+labels: ["change_me"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: "📝 Problem Description"
+      description: "Describe the problem you are facing that this feature would solve."
+      placeholder: "A clear and concise description of the problem."
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: "💡 Feature Description"
+      description: "Describe the feature you are requesting."
+      placeholder: "A clear and concise description of the feature."
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_cases
+    attributes:
+      label: "📋 Use Cases"
+      description: "Describe how you would use this feature."
+      placeholder: "Examples of how this feature would be used."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "🔍 Additional Context"
+      description: "Provide any additional context or information that might help us understand your request."
+      placeholder: "Any other details you think are relevant."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        Please ensure all relevant information is provided to help us evaluate your feature request effectively. Thank you!

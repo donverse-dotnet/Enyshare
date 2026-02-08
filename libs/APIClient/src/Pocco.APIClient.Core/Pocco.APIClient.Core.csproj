@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>Pocco.APIClient.Core</PackageId>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>ggg-alpha</Authors>
+    <Company>Donverse.net</Company>
+    <PackageDescription>PoccoのCoreAPIのgRPCクライアントパッケージ。</PackageDescription>
+    <RepositoryUrl>https://github.com/ggg-alpha/Pocco.Svc.CoreAPI.Client</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionSuffix>build-$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</VersionSuffix>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.33.1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+    <PackageReference Include="Pocco.Svc.CoreAPI.Grpc.Clients" Version="0.0.1-build-1766990174" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
+  </ItemGroup>
+
+</Project>

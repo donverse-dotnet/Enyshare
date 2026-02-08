@@ -1,0 +1,25 @@
+# 空白のIssueテンプレートを無効にする
+blank_issues_enabled: false
+
+# Issueテンプレートの設定
+defaults:
+  - template: "Bug.yml"
+    name: "🙋‍♂️ Report bugs"
+    about: "The template for reporting bugs for this project."
+
+  - template: "Feature.yml"
+    name: "💡 Request features"
+    about: "The template for requesting new features for this project."
+
+  - template: "Task.yml"
+    name: "🦺 Create task"
+    about: "The template for creating tasks for this project."
+
+# コミュニティへの誘導
+contact_links:
+  - name: "💬 Community Discussions"
+    url: "https://discord.com/invite/gEgjt9mbUU",
+    about: "Join the discord community discussions for help and support."
+  - name: "📚 Documentation"
+    url: "https://ggg-alpha.github.io/docs/",
+    about: "Find answers in the documentation."
