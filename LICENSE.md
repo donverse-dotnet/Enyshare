@@ -1,19 +1,20 @@
-# Copyright (c) since 2025 Donverse.net and ggg-alph All rights reserved.
+# 著作権表示 / Copyright Notice
 
-The code in this repository is publicly available. However, all copyrights are retained by Donverse.net and ggg-alpha.
+[Japanese](#日本語) | [English](#english)
 
-### Please be aware that we may take legal action if we determine you have engaged in conduct that interferes with our activities.
-Such interfering conduct includes, but is not limited to:
-- Using our code to act as if it were your own service
-- Using our code to commit criminal acts
-- Using our code for religious or ideological activities
+---
 
-### We permit hosting this code under the following conditions:
-- For personal use
-- For non-commercial use
-- For use within a private network
+## 日本語
 
+© 2025 ggg-alpha. 無断での複製、再配布、改造、販売、翻訳、派生物の作成、商用利用などは一切禁止します。
+本リポジトリ内のすべてのコンテンツ（ソースコード、ドキュメント、画像、設定ファイル等）は、 `ggg-alpha` が著作権を保有しています。
 
-We are not trying to monopolize this code. We need your coding skills, idea, illustration skills and etc. We welcome your interest and curiosity in the development of this repository and our service, “Enyshare.”
+---
 
-If you wish to become a contributor to this repository, please read [contributors.md](./CONTRIBUTORS.md).
+## English
+
+© 2025 ggg-alpha. All rights reserved.
+Unauthorized copying, redistribution, modification, sale, translation, creation of derivative works, or any commercial use of the contents of this repository (including source code, documentation, images, configuration files, etc.) is strictly prohibited.
+All content in this repository is Copyright `ggg-alpha`.
+
+---
